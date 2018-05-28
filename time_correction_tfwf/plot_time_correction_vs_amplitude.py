@@ -78,7 +78,8 @@ def main():
     y = df['t_correction'].values.reshape((n_pixels, x.size))
     c_list = plt.rcParams['axes.prop_cycle'].by_key()['color']
     for p in range(n_pixels):
-        asic = p // 4
+        asic = p // 16
+        print(asic)
         color = c_list[asic % len(c_list)]
         p_amplitude_asic.add(x, y[p], "", color)
     p_amplitude_asic.save(os.path.join(output_dir, "amplitude_asic.pdf"))

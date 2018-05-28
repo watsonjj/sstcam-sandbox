@@ -53,42 +53,46 @@ class CameraPixelCompRMSEPlotter(Plotter):
 
 def main():
     path_cr_0 = "/Volumes/gct-jason/data_checs/tf/charge_res_0_peakamp/charge_res_0_peakamp.h5"
+    path_cr_1_old = "/Volumes/gct-jason/data_checs/tf/charge_res_4_tfref_600mV/charge_resolution_4_tfref_600mV_old.h5"
     path_cr_1 = "/Volumes/gct-jason/data_checs/tf/charge_res_1_lei/charge_resolution_1_lei.h5"
     path_cr_2 = "/Volumes/gct-jason/data_checs/tf/charge_res_2_newref/charge_resolution_2_newref.h5"
     path_cr_3 = "/Volumes/gct-jason/data_checs/tf/charge_res_3_multiref/charge_resolution_3_multiref.h5"
     path_cr_4 = "/Volumes/gct-jason/data_checs/tf/charge_res_4_tfref_600mV/charge_resolution_4_tfref_600mV.h5"
     path_cr_5 = "/Volumes/gct-jason/data_checs/tf/charge_res_5_tfref_6mV/charge_resolution_5_tfref_6mV.h5"
-    path_cr_6 = ""
-    path_cr_7 = ""
+    path_cr_6 = "/Volumes/gct-jason/data_checs/tf/charge_res_6_timeshift_plus1/charge_resolution_6_timeshift_plus1.h5"
+    path_cr_7 = "/Volumes/gct-jason/data_checs/tf/charge_res_7_timeshift_minus1/charge_resolution_7_timeshift_minus1.h5"
 
     label_cr_0 = "Peak Amplitude"
+    label_cr_1_old = "Single TF-WF Reference Pulse (600mV) (old)"
     label_cr_1 = "Original Reference Pulse"
     label_cr_2 = "Updated Reference Pulse"
     label_cr_3 = "Reference Pulse Per Amplitude"
     label_cr_4 = "Single TF-WF Reference Pulse (600mV)"
     label_cr_5 = "Single TF-WF Reference Pulse (6mV)"
-    label_cr_6 = "Time Correction"
-    label_cr_7 = "Time Correction - 1 ns shift"
+    label_cr_6 = "Time Correction - plus 1ns"
+    label_cr_7 = "Time Correction - minus 1ns"
     label_cr_8 = "Multi-reference Cross-Correlation"
 
     store_cr_0 = pd.HDFStore(path_cr_0)
+    store_cr_1_old = pd.HDFStore(path_cr_1_old)
     store_cr_1 = pd.HDFStore(path_cr_1)
     store_cr_2 = pd.HDFStore(path_cr_2)
     store_cr_3 = pd.HDFStore(path_cr_3)
     store_cr_4 = pd.HDFStore(path_cr_4)
     store_cr_5 = pd.HDFStore(path_cr_5)
-    # store_cr_6 = pd.HDFStore(path_cr_6)
-    # store_cr_7 = pd.HDFStore(path_cr_7)
+    store_cr_6 = pd.HDFStore(path_cr_6)
+    store_cr_7 = pd.HDFStore(path_cr_7)
     # store_cr_8 = pd.HDFStore(path_cr_8)
 
     df_cr_0 = store_cr_0['charge_resolution_camera']
+    df_cr_1_old = store_cr_1_old['charge_resolution_camera']
     df_cr_1 = store_cr_1['charge_resolution_camera']
     df_cr_2 = store_cr_2['charge_resolution_camera']
     df_cr_3 = store_cr_3['charge_resolution_camera']
     df_cr_4 = store_cr_4['charge_resolution_camera']
     df_cr_5 = store_cr_5['charge_resolution_camera']
-    # df_cr_6 = store_cr_6['charge_resolution_camera']
-    # df_cr_7 = store_cr_7['charge_resolution_camera']
+    df_cr_6 = store_cr_6['charge_resolution_camera']
+    df_cr_7 = store_cr_7['charge_resolution_camera']
     # df_cr_8 = store_cr_8['charge_resolution_camera']
 
     df_p_cr_1 = store_cr_1['charge_resolution_pixel']
@@ -105,11 +109,12 @@ def main():
 
     p_rmse_1 = RMSEPlotter("All")
     # p_rmse_1.add(df_cr_0, label_cr_0)
+    p_rmse_1.add(df_cr_1_old, label_cr_1_old)
     p_rmse_1.add(df_cr_1, label_cr_1)
     p_rmse_1.add(df_cr_2, label_cr_2)
     p_rmse_1.add(df_cr_3, label_cr_3)
     p_rmse_1.add(df_cr_4, label_cr_4)
-    p_rmse_1.add(df_cr_5, label_cr_5)
+    # p_rmse_1.add(df_cr_5, label_cr_5)
     # p_rmse_1.add(df_cr_6, label_cr_6)
     # p_rmse_1.add(df_cr_7, label_cr_7)
     p_rmse_1.add_legend()
@@ -122,6 +127,19 @@ def main():
     # p_rmse_2.add(df_cr_5, label_cr_5)
     p_rmse_2.add_legend()
     p_rmse_2.save(os.path.join(output_dir, "rmse_2.pdf"))
+
+    p_rmse_3 = RMSEPlotter("Time Correction Impact")
+    p_rmse_3.add(df_cr_1, label_cr_1)
+    p_rmse_3.add(df_cr_6, label_cr_6)
+    p_rmse_3.add(df_cr_7, label_cr_7)
+    p_rmse_3.add_legend()
+    p_rmse_3.save(os.path.join(output_dir, "rmse_time_correction.pdf"))
+
+    p_rmse_4 = RMSEPlotter("Peak height")
+    p_rmse_4.add(df_cr_1, label_cr_1)
+    p_rmse_4.add(df_cr_0, label_cr_0)
+    p_rmse_4.add_legend()
+    p_rmse_4.save(os.path.join(output_dir, "rmse_peak_height.pdf"))
 
 
 if __name__ == '__main__':

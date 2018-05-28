@@ -32,34 +32,22 @@ def obtain_readers(files):
     return [DL1Reader(fp) for fp in files]
 
 
-class ChargeResolution:
+class TimeCorrection:
     def __init__(self):
         self._df_list = []
         self._df = pd.DataFrame()
         self._n_bytes = 0
 
-    @staticmethod
-    def rmse_abs(sum_, n):
-        return np.sqrt(sum_ / n)
+    def add(self, amplitude, df_e):
+        pixel = df_e['pixel'].values
+        t_event = df_e[['t_pulse', 'iev']].groupby('iev').transform('mean')
+        t_correction_ev = df_e['t_pulse'].values - t_event.values[:, 0]
 
-    @staticmethod
-    def rmse(true, sum_, n):
-        return ChargeResolution.rmse_abs(sum_, n) / np.abs(true)
-
-    @staticmethod
-    def charge_res_abs(true, sum_, n):
-        return np.sqrt((sum_ / n) + true)
-
-    @staticmethod
-    def charge_res(true, sum_, n):
-        return ChargeResolution.charge_res_abs(true, sum_, n) / np.abs(true)
-
-    def add(self, pixel, true, measured):
-        diff2 = np.power(measured - true, 2)
         df = pd.DataFrame(dict(
             pixel=pixel,
-            true=true,
-            sum=diff2,
+            amplitude=amplitude,
+            sum=t_correction_ev,
+            sum2=t_correction_ev**2,
             n=np.uint32(1)
         ))
         self._df_list.append(df)
@@ -69,34 +57,25 @@ class ChargeResolution:
 
     def amalgamate(self):
         self._df = pd.concat([self._df, *self._df_list], ignore_index=True)
-        self._df = self._df.groupby(['pixel', 'true']).sum().reset_index()
+        self._df = self._df.groupby(['pixel', 'amplitude']).sum().reset_index()
         self._n_bytes = 0
         self._df_list = []
 
     def finish(self):
         self.amalgamate()
         df = self._df.copy()
-        true = df['true'].values
         sum_ = df['sum'].values
+        sum2 = df['sum2'].values
         n = df['n'].values
-        df['rmse'] = self.rmse(true, sum_, n)
-        df['rmse_abs'] = self.rmse_abs(sum_, n)
-        df['charge_resolution'] = self.charge_res(true, sum_, n)
-        df['charge_resolution_abs'] = self.charge_res_abs(true, sum_, n)
-        df_camera = self._df.copy().groupby('true').sum().reset_index()
-        df_camera = df_camera.drop(columns='pixel')
-        true = df_camera['true'].values
-        sum_ = df_camera['sum'].values
-        n = df_camera['n'].values
-        df_camera['rmse'] = self.rmse(true, sum_, n)
-        df_camera['rmse_abs'] = self.rmse_abs(sum_, n)
-        df_camera['charge_resolution'] = self.charge_res(true, sum_, n)
-        df_camera['charge_resolution_abs'] = self.charge_res_abs(true, sum_, n)
-        return df, df_camera
+        mean = sum_/n
+        std = np.sqrt((sum2 / n) - (mean**2))
+        df['t_correction'] = mean
+        df['t_correction_std'] = std
+        return df
 
 
 def main():
-    description = 'Create a new HDFStore file containing the charge resolution'
+    description = 'Create a new HDFStore file containing the time corrections'
     parser = argparse.ArgumentParser(description=description,
                                      formatter_class=Formatter)
     parser.add_argument('-f', '--files', dest='input_paths',
@@ -104,15 +83,10 @@ def main():
     parser.add_argument('-o', '--output', dest='output_path',
                         action='store', required=True,
                         help='path to store the output HDFStore file')
-    parser.add_argument('-c', '--column', dest='charge_column',
-                        action='store', default='charge',
-                        help='column from the input tables to use as the '
-                             'extracted charge')
     args = parser.parse_args()
 
     files = args.input_paths
     output_path = args.output_path
-    column = args.charge_column
 
     readers = obtain_readers(files)
     amplitudes = obtain_amplitude_from_filename(files)
@@ -122,30 +96,27 @@ def main():
     if os.path.exists(output_path):
         os.remove(output_path)
 
-    cr = ChargeResolution()
+    tc = TimeCorrection()
 
     print("Created HDFStore file: {}".format(output_path))
 
     with pd.HDFStore(output_path) as store:
+        store['mapping'] = readers[0].store['mapping']
+        store.get_storer('mapping').attrs.metadata = readers[0].store.get_storer('mapping').attrs.metadata
         desc = "Looping over files"
         iter_z = zip(readers, amplitudes)
         for r, amp in tqdm(iter_z, total=len(readers), desc=desc):
-            for df in r.iterate_over_chunks():
-                df = df[[column, "pixel"]]
-                df = df.rename(columns={column: "measured"})
-                df['true'] = np.float32(amp)
-                store.append('charge', df, index=False)
-                cr.add(
-                    df['pixel'].values,
-                    df['true'].values,
-                    df['measured'].values
+            n_pixels = r.n_pixels
+            for df_event in r.iterate_over_chunks(n_pixels*10000):
+                tc.add(
+                    np.float32(amp),
+                    df_event
                 )
             r.store.close()
-        df, df_camera = cr.finish()
-        store['charge_resolution_pixel'] = df
-        store['charge_resolution_camera'] = df_camera
+        df = tc.finish()
+        store['t_correction'] = df
 
-    print("Filled file with charge resolution: {}".format(output_path))
+    print("Filled file with time correction: {}".format(output_path))
 
 
 if __name__ == '__main__':

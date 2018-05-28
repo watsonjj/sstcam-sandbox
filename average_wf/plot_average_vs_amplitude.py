@@ -5,7 +5,6 @@ import os
 from CHECLabPy.plotting.waveform import WaveformPlotter
 from CHECLabPy.plotting.setup import Plotter
 from CHECLabPy.waveform_reducers.cross_correlation import CrossCorrelation
-from IPython import embed
 
 
 class Scatter(Plotter):
@@ -28,6 +27,11 @@ class Scatter(Plotter):
         # self.ax.set_title(self.title)
         self.ax.set_xlabel(self.x_label)
         self.ax.set_ylabel(self.y_label)
+
+
+class WaveformPlotterDual(WaveformPlotter):
+    def add_reference_pulse(self, wf):
+        self.ax.plot(wf, color='black')
 
 
 def main():
@@ -55,54 +59,70 @@ def main():
         os.makedirs(ref_output_dir)
         print("Created directory: {}".format(ref_output_dir))
 
-    p_average = WaveformPlotter("Average WF Over Module for each Input Amplitude", "mV")
+    p_average = WaveformPlotter("Average WF for each Input Amplitude", "mV")
     p_cc_average = WaveformPlotter("Average Cross-Correlated WF", "mV ns")
-    p_ref = WaveformPlotter("Reference Pulse", "mV")
-    p_fwhm = Scatter("FWHM", "Input Amplitude (mV)", "FWHM (ns)")
-    p_rise_time = Scatter("Rise Time", "Input Amplitude (mV)", "Rise Time (ns)")
-    p_charge = Scatter("Charge", "Input Amplitude (mV)", "Charge (mV ns)")
+    p_ref = WaveformPlotterDual("Reference Pulse")
+    p_fwhm = Scatter("FWHM", "Illumination (p.e.)", "FWHM (ns)")
+    p_rise_time = Scatter("Rise Time", "Illumination (p.e.)", "Rise Time (ns)")
+    p_charge = Scatter("Charge", "Illumination (p.e.)", "Charge (mV ns)")
 
     average_wf_dict = np.load(input_path)
-    amplitudes = np.sort([int(a) for a in average_wf_dict.keys()])
+    average_wf_keys_float = [float(a) for a in average_wf_dict.keys()]
+    sorted_key = ["{:.3f}".format(a) for a in np.sort(average_wf_keys_float)]
+
     n_amps = len(average_wf_dict.keys())
     n_pixels = 1
-    n_samples = average_wf_dict[str(amplitudes[0])].size
+    n_samples = average_wf_dict[list(average_wf_dict.keys())[0]].size
 
-    cc = CrossCorrelation(n_pixels, n_samples)#, reference_pulse_path = "/Users/Jason/Software/CHECLabPy/CHECLabPy/data/checs_reference_pulse.txt")
+    cc = CrossCorrelation(n_pixels, n_samples)
 
+    illumination = np.zeros(n_amps)
     fwhm = np.zeros(n_amps)
     rise_time = np.zeros(n_amps)
     charge = np.zeros(n_amps)
+    cc_ref = None
 
-    for i, a in enumerate(amplitudes):
-        wf = average_wf_dict[str(a)]
-        ccwf = cc._apply_cc(wf)
-        x = np.arange(wf.size)
-        p_average.add(x, wf, a)
-        p_cc_average.add(x, ccwf, a)
+    for i, ill_str in enumerate(sorted_key):
+        ill = float(ill_str)
+        wf = average_wf_dict[ill_str]
         wf_norm = wf / np.max(wf)
-        p_ref.add(x, wf_norm, a)
-        params = cc.process(wf_norm[None, :])
+
+        params = cc.process(wf[None, :])
+        ccwf = cc._apply_cc(wf)
+
+        x = np.arange(wf.size)
+        p_average.add(x, wf, ill_str)
+        p_cc_average.add(x, ccwf, ill_str)
+        p_ref.add(x, wf_norm, ill_str)
+
+        illumination[i] = ill
         fwhm[i] = params['fwhm'][0]
         rise_time[i] = params['tr'][0]
         charge[i] = params['charge'][0]
+        if (ill > 50) & (cc_ref is None):
+            cc_ref = cc.get_reference_pulse_at_t(cc.t_event)
+            cc_ref = cc_ref / np.max(cc_ref)
 
         ref_pulse = wf / np.trapz(wf)
         x_ref_pulse = np.arange(ref_pulse.size) * 1E-9
         ref_save = np.column_stack((x_ref_pulse, ref_pulse))
-        ref_output = os.path.join(ref_output_dir, "amplitude_{}.txt".format(a))
+        fp = "amplitude_{}.txt"
+        ref_output = os.path.join(ref_output_dir, fp.format(ill))
         np.savetxt(ref_output, ref_save, fmt='%.5e')
         print("Created reference pulse: {}".format(ref_output))
 
-    p_fwhm.add(amplitudes, fwhm)
-    p_rise_time.add(amplitudes, rise_time)
-    p_charge.add(amplitudes, charge)
+    p_ref.add_reference_pulse(cc_ref)
 
-    p_fwhm.add_saturation_region(1500, np.max(amplitudes)+10)
-    p_rise_time.add_saturation_region(1500, np.max(amplitudes)+10)
-    p_charge.add_saturation_region(1500, np.max(amplitudes)+10)
+    p_fwhm.add(illumination, fwhm)
+    p_rise_time.add(illumination, rise_time)
+    p_charge.add(illumination, charge)
+
+    p_fwhm.add_saturation_region(1500, np.max(illumination)+10)
+    p_rise_time.add_saturation_region(1500, np.max(illumination)+10)
+    p_charge.add_saturation_region(1500, np.max(illumination)+10)
 
     output_path = os.path.join(output_dir, "average_wfs.pdf")
+    # p_average.add_legend()
     p_average.save(output_path)
 
     output_path = os.path.join(output_dir, "average_cc_wfs.pdf")
