@@ -1,4 +1,5 @@
 import os
+import yaml
 from tqdm import tqdm
 from CHECLabPy.core.io import DL1Reader
 from CHECLabPy.spectrum_fitters.gentile import GentileFitter
@@ -22,21 +23,21 @@ class SpectrumPlotter(Plotter):
 
 
 def main():
-    poi = 0
+    poi = 1920
 
     files = [
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36687_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36688_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36689_dl1.h5",
-        # "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36690_dl1.h5",
-        # "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36691_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36692_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36693_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36694_dl1.h5",
-        "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36695_dl1.h5",
-        # "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36696_dl1.h5",
-        # "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36697_dl1.h5",
-        # "/Volumes/gct-jason/data_checs/dynamicrange_180504/no_tf/Run36698_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43520_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43519_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43518_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43517_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43516_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43515_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43514_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43513_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43512_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43511_dl1.h5",
+        "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43510_dl1.h5",
+        # "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/Run43509_dl1.h5",
     ]
     readers = [DL1Reader(i) for i in files]
 
@@ -57,6 +58,9 @@ def main():
     fitter.range = [-25, 170]
 
     fitter.apply(*charges)
+
+    coeff = fitter.coeff
+    print(yaml.dump(coeff, indent=3))
 
     p_spectrum = SpectrumPlotter()
 
