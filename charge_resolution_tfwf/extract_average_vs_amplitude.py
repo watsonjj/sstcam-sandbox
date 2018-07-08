@@ -5,7 +5,7 @@ from argparse import ArgumentDefaultsHelpFormatter as Formatter
 import numpy as np
 from tqdm import tqdm
 from CHECLabPy.core.io import ReaderR1
-from CHECLabPy.utils.waveform import get_average_wf
+from CHECLabPy.utils.waveform import get_average_wf_per_pixel
 
 
 def commonsuffix(files):
@@ -37,7 +37,7 @@ def main():
     parser = argparse.ArgumentParser(description=description,
                                      formatter_class=Formatter)
     parser.add_argument('-f', '--files', dest='input_paths',
-                        nargs='+', help='paths to the input dl1 HDF5 files')
+                        nargs='+', help='paths to the input r1 tio files')
     parser.add_argument('-n', '--maxevents', dest='max_events', action='store',
                         help='Number of events to process', type=int)
     parser.add_argument('-o', '--output', dest='output_path',
@@ -62,8 +62,8 @@ def main():
     desc = "Looping over files"
     iter_z = zip(readers, amplitudes)
     for r, amp in tqdm(iter_z, total=len(readers), desc=desc):
-        average_wf = get_average_wf(r, t_shift)
-        average_wf_dict[amp] = average_wf
+        average_wf = get_average_wf_per_pixel(r, t_shift)[:20].mean(0)
+        average_wf_dict["{:.3f}".format(float(amp))] = average_wf
 
     np.savez(output_path, **average_wf_dict)
 

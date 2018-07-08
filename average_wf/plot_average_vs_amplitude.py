@@ -2,9 +2,13 @@ import argparse
 from argparse import ArgumentDefaultsHelpFormatter as Formatter
 import numpy as np
 import os
+
+from matplotlib.ticker import MultipleLocator
+
 from CHECLabPy.plotting.waveform import WaveformPlotter
 from CHECLabPy.plotting.setup import Plotter
 from CHECLabPy.waveform_reducers.cross_correlation import CrossCorrelation
+from matplotlib.collections import LineCollection
 
 
 class Scatter(Plotter):
@@ -32,6 +36,70 @@ class Scatter(Plotter):
 class WaveformPlotterDual(WaveformPlotter):
     def add_reference_pulse(self, wf):
         self.ax.plot(wf, color='black')
+
+
+class NormalisedWaveformPlotter(Plotter):
+    def __init__(self, title="", units="", tunits="ns", cunits="p.e.", ax=None, talk=False):
+        """
+        Create a plotter for a waveform
+
+        Parameters
+        ----------
+        title : str
+        units : str
+            Y axis units
+        tunits : str
+            X axis (time) units
+        ax : `matplotlib.axes.Axes`
+            Optionally place the plot on a pre-existing axes
+        talk : bool
+            Configure appearance to be appropriate for a presentation
+        """
+        super().__init__(ax=ax, talk=talk)
+        self.title = title
+        self.units = units
+        self.tunits = tunits
+        self.cunits = cunits
+
+        self.x = []
+        self.data = []
+        self.amplitudes = []
+
+    def add(self, x, data, amplitude):
+        data /= np.trapz(data, x)
+
+        self.x.append(x)
+        self.data.append(data)
+        self.amplitudes.append(amplitude)
+
+    def finish(self):
+        sort = np.argsort(self.amplitudes)[::-1]
+        self.x = np.array(self.x)[sort]
+        self.data = np.array(self.data)[sort]
+        self.amplitudes = np.array(self.amplitudes)[sort]
+
+        z = zip(self.x, self.data)
+        segments = [np.column_stack([x, y]) for x, y in z]
+        lc = LineCollection(segments, lw=0.5)
+        lc.set_array(np.array(self.amplitudes))
+
+        self.ax.add_collection(lc)
+        self.ax.autoscale()
+
+        cb = self.fig.colorbar(lc)
+        cb.set_label('Input Amplitude ({})'.format(self.cunits))
+
+        self.ax.set_title(self.title)
+        x_label = "Time"
+        if self.tunits:
+            x_label += " ({})".format(self.tunits)
+        self.ax.set_xlabel(x_label)
+        y_label = "Amplitude"
+        if self.units:
+            y_label += " ({})".format(self.units)
+        self.ax.set_ylabel(y_label)
+        self.ax.xaxis.set_major_locator(MultipleLocator(16))
+
 
 
 def main():
@@ -65,6 +133,7 @@ def main():
     p_fwhm = Scatter("FWHM", "Illumination (p.e.)", "FWHM (ns)")
     p_rise_time = Scatter("Rise Time", "Illumination (p.e.)", "Rise Time (ns)")
     p_charge = Scatter("Charge", "Illumination (p.e.)", "Charge (mV ns)")
+    p_average_norm = NormalisedWaveformPlotter("Average WF for each Input Amplitude", "mV", cunits="mV")
 
     average_wf_dict = np.load(input_path)
     average_wf_keys_float = [float(a) for a in average_wf_dict.keys()]
@@ -74,7 +143,7 @@ def main():
     n_pixels = 1
     n_samples = average_wf_dict[list(average_wf_dict.keys())[0]].size
 
-    cc = CrossCorrelation(n_pixels, n_samples)
+    cc = CrossCorrelation(n_pixels, n_samples, reference_pulse_path="/Users/Jason/Software/TargetCalib/install/dev/reference_pulse_checs_V1-1-0.cfg")
 
     illumination = np.zeros(n_amps)
     fwhm = np.zeros(n_amps)
@@ -84,6 +153,8 @@ def main():
 
     for i, ill_str in enumerate(sorted_key):
         ill = float(ill_str)
+        if ill > 500:
+            continue
         wf = average_wf_dict[ill_str]
         wf_norm = wf / np.max(wf)
 
@@ -94,6 +165,7 @@ def main():
         p_average.add(x, wf, ill_str)
         p_cc_average.add(x, ccwf, ill_str)
         p_ref.add(x, wf_norm, ill_str)
+        p_average_norm.add(x, wf, ill)
 
         illumination[i] = ill
         fwhm[i] = params['fwhm'][0]
@@ -130,6 +202,9 @@ def main():
 
     output_path = os.path.join(output_dir, "ref_wfs.pdf")
     p_ref.save(output_path)
+
+    output_path = os.path.join(output_dir, "average_wfs_norm.pdf")
+    p_average_norm.save(output_path)
 
     output_path = os.path.join(output_dir, "fwhm.pdf")
     p_fwhm.save(output_path)

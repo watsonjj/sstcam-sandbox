@@ -57,13 +57,13 @@ def get_distribution(opct, lambda_):
 #
 #     return s
 
-opct = 0.2
+opct = 0.38
 lambda_ = 1
 
 cr = ChargeResolution()
 cs = ChargeStatistics()
 desc = "Looping over lambdas"
-true_arr = np.geomspace(0.1, 100, 100)
+true_arr = np.geomspace(0.1, 400, 100)
 for lambda_ in tqdm(true_arr, desc=desc):
     pixel = 1920
     dist = get_distribution(opct, lambda_)

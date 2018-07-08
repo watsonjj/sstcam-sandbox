@@ -1,11 +1,12 @@
 import os
+import numpy as np
 from target_calib import CameraConfiguration
 
 
 def main():
     file_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(file_dir, "outputs")
-    output_path = os.path.join(output_dir, "checs_pixel_mapping.txt")
+    output_path = os.path.join(output_dir, "checs_pixel_mapping.dat")
 
     config = CameraConfiguration("1.1.0")
     mapping = config.GetMapping()
@@ -58,19 +59,26 @@ PixType    1 0 2 0.623   2 0.623 0.0   "transmission_pmma_vs_theta_20150422.dat"
             ypix = mapping.GetYPix(i) * 10**2
             imod = mapping.GetSlot(i)
             ichan = mapping.GetTMPixel(i)
-            l = "Pixel\t{}\t1\t{:.2f}\t{:.2f}\t{}\t0\t{}\t0x00\t1\n"
+            l = "Pixel\t{}\t1\t{:.5f}\t{:.5f}\t{}\t0\t{}\t0x00\t1\n"
             lf = l.format(ipix, xpix, ypix, imod, ichan)
             f.write(lf)
 
         f.write('\n')
+
+        from IPython import embed
 
         for i in range(mappingsp.GetNSuperPixels()):
             nei = mappingsp.GetNeighbours(i, True)
             f.write("MajorityTrigger * of ")
             for isp in [i, *nei]:
                 con = list(mappingsp.GetContainedPixels(isp))
-                f.write(str(isp))
-                f.write("[{}] ".format(','.join(str(x) for x in con)))
+                rows = [mapping.GetRow(j) for j in con]
+                cols = [mapping.GetColumn(j) for j in con]
+                min_r = np.min(rows)
+                min_c = np.min(cols)
+                con_bl = con[np.where((rows == min_r) & (cols == min_c))[0][0]]
+                con.remove(con_bl)
+                f.write('{}[{},{},{}] '.format(con_bl, *con))
             f.write('\n')
 
 

@@ -26,7 +26,7 @@ class PedestalSpread(Plotter):
 
 
 def main():
-    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/spe_three.h5"
+    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/spe_three.h5"
     file_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(file_dir, "outputs")
 

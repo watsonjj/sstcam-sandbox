@@ -18,7 +18,7 @@ class SPEHist(Plotter):
 
 
 def main():
-    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/spe_three.h5"
+    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/spe_three.h5"
     file_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(file_dir, "outputs")
 
@@ -39,8 +39,8 @@ def main():
         eped_sigma=0,
         spe=df_mean['spe'] / spe,
         spe_sigma=df_mean['spe_sigma'] / spe,
-        lambda_=1,
-        opct=df_mean['opct'],
+        lambda_=0.02,
+        opct=0.4,#df_mean['opct'],
         pap=0,
         dap=0
     )
@@ -58,7 +58,7 @@ def main():
     y_nsb = pe_signal(K, x[None, :], **d_nsb).sum(0)
 
     p_hist = SPEHist()
-    p_hist.plot(hist, edges, between, x, y, y_nsb, d['opct'])
+    p_hist.plot(hist, edges, between, x, y*25, y_nsb*25, d['opct'])
     output_path = os.path.join(output_dir, "checs_spe_spectrum.pdf")
     p_hist.save(output_path)
 

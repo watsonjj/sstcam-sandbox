@@ -29,8 +29,8 @@ class QESpread(Plotter):
 
 
 def main():
-    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/spe_three.h5"
-    runlist_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_poly/runlist.txt"
+    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/spe_three.h5"
+    runlist_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/runlist.txt"
     file_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(file_dir, "outputs")
 
