@@ -12,6 +12,9 @@ def main():
     mapping = config.GetMapping()
     mappingsp = mapping.GetMappingSP()
 
+    qe_arr = np.load(os.path.join(file_dir, 'outputs/checs_qe_variation.npy'))
+    gain_arr = np.load(os.path.join(file_dir, 'outputs/checs_gain_variation.npy'))
+
     with open(output_path, 'w') as f:
         pixtype = """# PixType format:
 # Par.  1: pixel type (here always 1)
@@ -48,6 +51,8 @@ PixType    1 0 2 0.623   2 0.623 0.0   "transmission_pmma_vs_theta_20150422.dat"
 #       7: channel number n board
 #       8: board Id number ('0x....')
 #       9: pixel on (is on if parameter is missing)
+#       10: relative QE or PDE (1 if unused)
+#       11: relative gain (1 if unused)
 
 """
 
@@ -59,13 +64,13 @@ PixType    1 0 2 0.623   2 0.623 0.0   "transmission_pmma_vs_theta_20150422.dat"
             ypix = mapping.GetYPix(i) * 10**2
             imod = mapping.GetSlot(i)
             ichan = mapping.GetTMPixel(i)
-            l = "Pixel\t{}\t1\t{:.5f}\t{:.5f}\t{}\t0\t{}\t0x00\t1\n"
-            lf = l.format(ipix, xpix, ypix, imod, ichan)
+            qe = 1#qe_arr[i]
+            gain = 1#gain_arr[i]
+            l = "Pixel\t{}\t1\t{:.5f}\t{:.5f}\t{}\t0\t{}\t0x00\t1\t{:.5f}\t{:.5f}\n"
+            lf = l.format(ipix, xpix, ypix, imod, ichan, qe, gain)
             f.write(lf)
 
         f.write('\n')
-
-        from IPython import embed
 
         for i in range(mappingsp.GetNSuperPixels()):
             nei = mappingsp.GetNeighbours(i, True)

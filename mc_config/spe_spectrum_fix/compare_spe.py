@@ -54,9 +54,9 @@ class SPEPlotterMulti(Plotter):
     def plot(self, data_fitter, mc_fitter):
         x = np.linspace(data_fitter.range[0], data_fitter.range[1], 1000)
 
-        coeff_initial = data_fitter.p0.copy()
-        initial_norm = coeff_initial['norm0']
-        initial = data_fitter.get_fit_summed(x, **coeff_initial) / initial_norm
+        # coeff_initial = data_fitter.p0.copy()
+        # initial_norm = coeff_initial['norm0']
+        # initial = data_fitter.get_fit_summed(x, **coeff_initial) / initial_norm
 
         data_coeff = data_fitter.coeff.copy()
         data_norm = data_coeff['norm0']
@@ -72,21 +72,32 @@ class SPEPlotterMulti(Plotter):
         mc_between = mc_fitter.between
         mc_fit = mc_fitter.get_fit_summed(x, **mc_coeff) / mc_norm
 
-        self.ax.plot(x, initial, label="Initial")
+        # self.ax.plot(x, initial, label="Initial")
         self.ax.hist(data_between, bins=data_edges, weights=data_hist,
-                     histtype='step', label="Data Hist")
+                     histtype='step', label="Lab Hist", color='blue')
         self.ax.hist(mc_between, bins=mc_edges, weights=mc_hist,
-                     histtype='step', label="MC Hist")
-        self.ax.plot(x, data_fit, label="Data Fit")
-        self.ax.plot(x, mc_fit, label="MC Fit")
+                     histtype='step', label="Simulation Hist", color='red')
+        self.ax.plot(x, data_fit, label="Lab Fit", color='blue')
+        self.ax.plot(x, mc_fit, label="Simulation Fit", color='red')
         self.ax.legend(loc=1, frameon=True, fancybox=True, framealpha=0.7)
         self.ax_t.axis('off')
-        columns = ['Initial', 'Data Fit', 'MC Fit']
+        # columns = ['Initial', 'Data Fit', 'MC Fit']
+        columns = ['Lab Fit', 'Simulation Fit']
         rows = list(data_coeff.keys())
-        cells = [['%.3g' % coeff_initial[i], '%.3g' % data_coeff[i], '%.3g' % mc_coeff[i]] for i in rows]
-        table = self.ax_t.table(cellText=cells, rowLabels=rows,
+        rows = ['eped', 'eped_sigma', 'spe_sigma', 'lambda_0', 'opct']
+        rows_custom_d = dict(
+            eped="Pedestal (p.e.)",
+            eped_sigma="Pedestal StdDev (p.e.)",
+            spe_sigma="PE Peak StdDev (p.e.)",
+            lambda_0="Illumination (p.e.)",
+            opct="Optical Crosstalk"
+        )
+        rows_custom = [rows_custom_d[i] for i in rows]
+        # cells = [['%.3g' % coeff_initial[i], '%.3g' % data_coeff[i], '%.3g' % mc_coeff[i]] for i in rows]
+        cells = [['%.3g' % data_coeff[i], '%.3g' % mc_coeff[i]] for i in rows]
+        table = self.ax_t.table(cellText=cells, rowLabels=rows_custom,
                                 colLabels=columns, loc='center')
-        table.set_fontsize(6)
+        table.set_fontsize(14)
 
 
 

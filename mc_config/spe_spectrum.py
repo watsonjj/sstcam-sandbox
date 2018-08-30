@@ -38,7 +38,7 @@ def main():
         eped=0,
         eped_sigma=0,
         spe=df_mean['spe'] / spe,
-        spe_sigma=df_mean['spe_sigma'] / spe,
+        spe_sigma=0.001,#df_mean['spe_sigma'] / spe,
         lambda_=0.02,
         opct=0.4,#df_mean['opct'],
         pap=0,

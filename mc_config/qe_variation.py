@@ -12,12 +12,13 @@ class QESpread(Plotter):
     def plot(self, lambda_):
         mean = np.mean(lambda_)
         std = np.std(lambda_)
+        self.frac = std/mean
 
         x = np.linspace(lambda_.min(), lambda_.max(), 100)
         gaus = norm.pdf(x, mean, std)
 
         label = ("Mean: {:.3f}, StdDev: {:.3f}, Fractional Variation: {:.3f}"
-                 .format(mean, std, std/mean))
+                 .format(mean, std, self.frac))
 
         self.ax.hist(lambda_, bins=100, normed=True)
         self.ax.plot(x, gaus, label=label)
@@ -26,6 +27,12 @@ class QESpread(Plotter):
         self.ax.set_xlabel("Gradient of Lambda_ (p.e.) versus FW_Transmission")
         self.ax.set_ylabel("Density")
         self.add_legend()
+
+    def save(self, output_path):
+        super().save(output_path)
+        np_path = output_path.replace('.pdf', '.npy')
+        rand = np.random.normal(1, self.frac, 2048)
+        np.save(np_path, rand)
 
 
 def main():

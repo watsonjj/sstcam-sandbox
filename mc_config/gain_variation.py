@@ -9,12 +9,13 @@ class GainSpread(Plotter):
     def plot(self, spe):
         mean = np.mean(spe)
         std = np.std(spe)
+        self.frac = std/mean
 
         x = np.linspace(spe.min(), spe.max(), 100)
         gaus = norm.pdf(x, mean, std)
 
         label = ("Mean: {:.3f}, StdDev: {:.3f}, Fractional Variation: {:.3f}"
-                 .format(mean, std, std/mean))
+                 .format(mean, std, self.frac))
 
         self.ax.hist(spe, bins='auto', normed=True)
         self.ax.plot(x, gaus, label=label)
@@ -24,6 +25,11 @@ class GainSpread(Plotter):
         self.ax.set_ylabel("Density")
         self.add_legend()
 
+    def save(self, output_path):
+        super().save(output_path)
+        np_path = output_path.replace('.pdf', '.npy')
+        rand = np.random.normal(1, self.frac, 2048)
+        np.save(np_path, rand)
 
 def main():
     input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/spe_three.h5"
