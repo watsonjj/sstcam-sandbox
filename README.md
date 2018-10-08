@@ -1,2 +1,3 @@
-# CHECLabPy_sandbox
-Personal scripts that primarily use the CHECLabPy package
+# CHECLabPySB
+
+Sandbox package for personal scripts primarily using the CHECLabPy Package
