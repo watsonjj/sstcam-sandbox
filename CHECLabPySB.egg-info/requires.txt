@@ -1,0 +1,10 @@
+astropy
+scipy
+numpy
+matplotlib
+tqdm
+pandas>=0.21.0
+iminuit
+numba
+PyYAML
+seaborn

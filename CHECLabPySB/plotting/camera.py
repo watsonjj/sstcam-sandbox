@@ -1,9 +1,7 @@
-from matplotlib.colors import LogNorm
-
-from ThesisAnalysis.plotting.setup import ThesisPlotter
+from CHECLabPySB.plotting.setup import Plotter
 import numpy as np
 import matplotlib as mpl
-from matplotlib import pyplot as plt
+from matplotlib.colors import LogNorm
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle
 from CHECLabPy.utils.mapping import get_clp_mapping_from_tc_mapping
@@ -11,7 +9,7 @@ import os
 from copy import copy
 
 
-class CameraImage(ThesisPlotter):
+class CameraImage(Plotter):
     def __init__(self, xpix, ypix, size, cmap=None, **kwargs):
         """
         Create a camera-image plot

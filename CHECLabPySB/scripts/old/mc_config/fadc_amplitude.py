@@ -5,6 +5,7 @@ from CHECLabPy.plotting.setup import Plotter
 from CHECLabPy.spectrum_fitters.gentile import pe_signal
 from CHECLabPy.waveform_reducers.cross_correlation import CrossCorrelation
 from target_calib import CameraConfiguration
+from IPython import embed
 
 
 class SPEHist(Plotter):
@@ -19,7 +20,7 @@ class SPEHist(Plotter):
 
 
 def main():
-    input_path = "/Volumes/gct-jason/data_checs/dynamicrange_180514/tf_pchip/spe_three.h5"
+    input_path = "/Volumes/gct-jason/thesis_data/checs/lab/dynrange/tf/tf_poly/spe.h5"
     file_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(file_dir, "outputs")
 

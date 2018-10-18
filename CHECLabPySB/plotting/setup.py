@@ -7,7 +7,7 @@ import numpy as np
 from CHECLabPy.utils.files import create_directory
 
 
-class ThesisPlotter:
+class Plotter:
     def __init__(self, ax=None, sidebyside=False, switch_backend=False):
         self.sidebyside = sidebyside
 

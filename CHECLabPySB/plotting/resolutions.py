@@ -1,5 +1,5 @@
-from ThesisAnalysis.plotting.setup import ThesisPlotter
-from ThesisAnalysis import ThesisHDF5Reader
+from CHECLabPySB.plotting.setup import Plotter
+from CHECLabPySB import HDF5Reader
 import numpy as np
 from scipy.stats import binned_statistic as bs
 from matplotlib.ticker import FuncFormatter
@@ -22,7 +22,7 @@ def bin_points(x, y, yerr):
     return x_b, y_b, yerr_b
 
 
-class ChargeResolutionPlotter(ThesisPlotter):
+class ChargeResolutionPlotter(Plotter):
     def __init__(self, n_bins=40, **kwargs):
         super().__init__(**kwargs)
         self.df_pixel = None
@@ -35,7 +35,7 @@ class ChargeResolutionPlotter(ThesisPlotter):
     def set_file(self, file):
         path = file.charge_resolution_path
         dead = file.dead
-        with ThesisHDF5Reader(path) as reader:
+        with HDF5Reader(path) as reader:
             df_p = reader.read('charge_resolution_pixel')
             self.df_pixel = df_p.loc[~df_p['pixel'].isin(dead)]
             self.df_camera = reader.read('charge_resolution_camera')
@@ -211,7 +211,7 @@ class ChargeResolutionWRRPlotter(ChargeResolutionPlotter):
             FuncFormatter(lambda x, _: '{:g}'.format(x)))
 
 
-class ChargeMeanPlotter(ThesisPlotter):
+class ChargeMeanPlotter(Plotter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.df_pixel = None
@@ -220,7 +220,7 @@ class ChargeMeanPlotter(ThesisPlotter):
         self.x_max = None
 
     def set_path(self, path):
-        with ThesisHDF5Reader(path) as reader:
+        with HDF5Reader(path) as reader:
             self.df_pixel = reader.read('charge_statistics_pixel')
             self.df_camera = reader.read('charge_statistics_camera')
 
