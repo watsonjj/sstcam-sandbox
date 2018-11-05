@@ -1,6 +1,7 @@
 from CHECLabPySB.plotting.setup import Plotter
 from CHECLabPySB import HDF5Writer, HDF5Reader
-from CHECLabPySB.scripts.cr import all_files
+from CHECLabPySB.scripts.sst_rfi.intensity_resolution import fw_files
+from CHECLabPySB.utils.sipm import PE2Photons
 import numpy as np
 import pandas as pd
 import re
@@ -10,14 +11,10 @@ import seaborn as sns
 import os
 from matplotlib.ticker import FuncFormatter
 import warnings
-from IPython import embed
 
 
 class FitPlotter(Plotter):
     def plot(self, x, y, yerr, c, m):
-
-
-        # color = self.ax._get_lines.get_next_color()
 
         for i in range(y.shape[1]):
             xf = np.linspace(x.min(), x.max(), 2)
@@ -112,6 +109,7 @@ def process(file):
     dead = file.dead
     fw_path = file.fw_path
     plot_dir = file.fw_plot_dir
+    pde = file.pde
 
     df_runs = open_runlist_dl1(runlist_path, False)
     df_runs['transmission'] = 1/df_runs['fw_atten']
@@ -129,6 +127,14 @@ def process(file):
     spe_files = meta_spe['files']
     n_pixels = meta_spe['n_pixels']
 
+    mean_opct = df_spe['opct'].mean()
+    if pde is None:
+        pe2photons = PE2Photons().convert(mean_opct)
+    else:
+        pe2photons = 1/pde
+    print("PDE = {:.3f}".format(1/pe2photons))
+    print("OPCT = {:.3f}".format(mean_opct))
+
     spe_transmission = []
     pattern = '(.+?)/Run(.+?)_dl1.h5'
     for path in spe_files:
@@ -145,7 +151,7 @@ def process(file):
     pix_lambda_err = np.zeros((n_spe_illuminations, n_pixels))
     for ill in range(n_spe_illuminations):
         key = "lambda_" + str(ill)
-        lambda_ = df_spe[['pixel', key]].sort_values('pixel')[key].values
+        lambda_ = df_spe[['pixel', key]].sort_values('pixel')[key].values * pe2photons
         lambda_err = df_spe_err[['pixel', key]].sort_values('pixel')[key].values
         pix_lambda[ill] = lambda_
         pix_lambda_err[ill] = lambda_err
@@ -251,7 +257,7 @@ def process(file):
 
 
 def main():
-    [process(f) for f in all_files]
+    [process(f) for f in fw_files]
 
 
 if __name__ == '__main__':

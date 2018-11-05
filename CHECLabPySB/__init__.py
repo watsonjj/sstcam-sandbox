@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import warnings
+from CHECLabPy.utils.files import create_directory
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 _DATA = os.path.expanduser("~/Data/CHECLabPySB/data")
@@ -8,11 +9,15 @@ _PLOT = os.path.expanduser("~/Data/CHECLabPySB/plots")
 
 
 def get_data(path):
-    return os.path.join(_DATA, path)
+    data_path = os.path.join(_DATA, path)
+    create_directory(os.path.dirname(data_path))
+    return data_path
 
 
 def get_plot(path):
-    return os.path.join(_PLOT, path)
+    plot_path = os.path.join(_PLOT, path)
+    create_directory(os.path.dirname(plot_path))
+    return plot_path
 
 
 class HDF5Writer:
