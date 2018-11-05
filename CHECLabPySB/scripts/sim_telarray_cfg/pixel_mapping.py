@@ -84,20 +84,25 @@ PixType    1 0 2 0.620   2 0.620 0.0   "funnel_perfect.dat"
 #       7: channel number n board
 #       8: board Id number ('0x....')
 #       9: pixel on (is on if parameter is missing)
+#       10: relative QE or PDE (1 if unused)
+#       11: relative gain (1 if unused)
 
 """
     file.write(pixtype)
 
 
 def write_pixel_positions(file, mapping):
+    qe_arr = np.load('checs_qe_variation.npy')
+    gain_arr = np.load('checs_gain_variation.npy')
+
     for i in range(mapping.GetNPixels()):
         ipix = mapping.GetPixel(i)
         xpix = mapping.GetXPix(i) * 10 ** 2
         ypix = mapping.GetYPix(i) * 10 ** 2
         imod = mapping.GetSlot(i)
         ichan = mapping.GetTMPixel(i)
-        l = "Pixel\t{} 1\t {:.2f}\t{:.2f}\t{} 0 {}\t0x00 1\n"
-        lf = l.format(ipix, xpix, ypix, imod, ichan)
+        l = "Pixel\t{} 1\t {:.2f}\t{:.2f}\t{} 0 {}\t0x00 1\t{:.5f}\t{:.5f}\n"
+        lf = l.format(ipix, xpix, ypix, imod, ichan, qe_arr[i], gain_arr[i])
         file.write(lf)
 
     file.write('\n')
