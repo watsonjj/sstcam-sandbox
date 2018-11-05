@@ -1,11 +1,8 @@
 from CHECLabPySB import HDF5Writer, HDF5Reader
-from CHECLabPySB.scripts.cr import all_files
-import os
+from CHECLabPySB.scripts.charge_resolution import all_files
 from tqdm import tqdm
 from CHECLabPy.utils.files import open_runlist_dl1
 from CHECLabPy.utils.resolutions import ChargeStatistics, ChargeResolution
-import pandas as pd
-import numpy as np
 
 
 def process(file):
@@ -29,6 +26,7 @@ def process(file):
     with HDF5Reader(ff_path) as reader:
         df = reader.read("data")
         ff_m = df['ff_m'].values
+        ff_c = df['ff_c'].values
 
     cr = ChargeResolution()
     cs = ChargeStatistics()
@@ -38,16 +36,11 @@ def process(file):
     for i, (_, row) in tqdm(it, total=n_runs, desc=desc0):
         reader = row['reader']
         transmission = row['transmission']
-        # pe_expected_fw = row['pe_expected']
         n_rows = n_pixels * 1000
         pixel, charge = reader.select_columns(['pixel', 'charge'], stop=n_rows)
-        # df = reader.get_first_n_events(1000)
-        # pixel = df['pixel'].values
-        # charge = df['charge'].values
 
         true = transmission * fw_m[pixel]
-        # true = pe_expected_fw
-        measured = charge / ff_m[pixel]
+        measured = (charge - ff_c[pixel]) / ff_m[pixel]
 
         cr.add(pixel, true, measured)
         cs.add(pixel, true, measured)

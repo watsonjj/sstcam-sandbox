@@ -155,7 +155,7 @@ class ChargeResolutionPlotter(Plotter):
         sigma_g = 0.1
         enf = 0.2
         defined_npe = 1000
-        lc = ChargeResolutionPlotter.limit_curves
+        lc = __class__.limit_curves
         requirement = lc(q, nsb, t_w, n_e, sigma_g, enf)
         requirement[q > defined_npe] = np.nan
 

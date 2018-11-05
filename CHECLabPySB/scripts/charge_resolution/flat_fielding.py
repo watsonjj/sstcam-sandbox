@@ -1,20 +1,19 @@
 from CHECLabPySB import HDF5Writer, HDF5Reader
 from CHECLabPySB.plotting.setup import Plotter
-from CHECLabPySB.scripts.cr import all_files
+from CHECLabPySB.scripts.charge_resolution import all_files
 import numpy as np
 import pandas as pd
 import os
 from numpy.polynomial.polynomial import polyfit, polyval
 from matplotlib.colors import LogNorm
 from matplotlib.ticker import FuncFormatter
-from IPython import embed
 
 
 class FitPlotter(Plotter):
     def plot(self, x, y, xerr, yerr, flag, c, m, merr):
 
         x_fit = np.geomspace(0.1, 1000, 20)
-        y_fit = (m + merr) * x_fit
+        y_fit = m * x_fit + c
         yerr_fit = merr * x_fit
 
         (_, caps, _) = self.ax.errorbar(x[~flag], y[~flag],
@@ -46,6 +45,9 @@ class FitPlotter(Plotter):
 
         t = r"$\gamma_{{M_i}} = \SI[separate-uncertainty = true]{{{:#.2f} \pm {:#.2f}}}{{mVns/\pe}}$"
         self.ax.text(0.5, 0.4, t.format(m, merr), transform=self.ax.transAxes)
+
+        t = "m = {:.2f}, c = {:.2f}"
+        self.ax.text(0.5, 0.3, t.format(m, c), transform=self.ax.transAxes)
 
         self.ax.set_xscale('log')
         self.ax.get_xaxis().set_major_formatter(
@@ -109,10 +111,6 @@ def process(file):
     transmission = df_avg['transmission'].values
     df_avg['illumination'] = transmission * fw_m[pixel]
     df_avg['illumination_err'] = transmission * fw_merr[pixel]
-    # df_avg['illumination'] = df_avg['pe_expected']
-
-    # pe_expected = df_avg['pe_expected']
-    # df_avg['flag'] = ((pe_expected >= 45) & (pe_expected <= 60))
 
     d_list = []
     for pix in np.unique(df_avg['pixel']):
@@ -128,10 +126,10 @@ def process(file):
 
         x = true[flag]
         y = measured[flag]
+        y_err = measured_std[flag]
 
-        p, f = polyfit(x, y, [1], full=True)
+        p, f = polyfit(x, y, [1], w=1/y_err, full=True)
         ff_c, ff_m = p
-        # embed()
 
         # n = x.size
         # sy = np.sqrt(np.sum((y - polyval(x, p))**2) / (n - 1))
