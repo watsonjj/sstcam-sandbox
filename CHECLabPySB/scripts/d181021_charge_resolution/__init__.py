@@ -75,33 +75,33 @@ class File(metaclass=ABCMeta):
 class Lab(File):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.illumination_profile_path = get_data("charge_resolution/illumination_profile/d180907_MC.h5")  # TODO: get lab_illumination_profile_correction.h5
+        self.illumination_profile_path = get_data("d181021_charge_resolution/illumination_profile/d180907_MC.h5")  # TODO: get lab_illumination_profile_correction.h5
         self.dead = [677, 293, 27, 1925, 1955]
         self.calib_class = None
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(self.__class__.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(self.__class__.__name__))
 
     @property
     def fw_plot_dir(self):
-        return get_plot("charge_resolution/fw_calibration/{}".format(self.__class__.__name__))
+        return get_plot("d181021_charge_resolution/fw_calibration/{}".format(self.__class__.__name__))
 
     @property
     def ff_path(self):
-        return get_data("charge_resolution/ff_coefficients/{}.h5".format(self.__class__.__name__))
+        return get_data("d181021_charge_resolution/ff_coefficients/{}.h5".format(self.__class__.__name__))
 
     @property
     def ff_plot_dir(self):
-        return get_plot("charge_resolution/ff_coefficients/{}".format(self.__class__.__name__))
+        return get_plot("d181021_charge_resolution/ff_coefficients/{}".format(self.__class__.__name__))
 
     @property
     def charge_averages_path(self):
-        return get_data("charge_resolution/charge_averages/{}.h5".format(self.__class__.__name__))
+        return get_data("d181021_charge_resolution/charge_averages/{}.h5".format(self.__class__.__name__))
 
     @property
     def charge_resolution_path(self):
-        return get_data("charge_resolution/charge_resolution/{}.h5".format(self.__class__.__name__))
+        return get_data("d181021_charge_resolution/charge_resolution/{}.h5".format(self.__class__.__name__))
 
 
 class d180514_Lab_TFNone(Lab):
@@ -204,7 +204,7 @@ class d181010_LabSM_40MHz_50mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
 
 
 class d181010_LabSM_40MHz_100mV_TFMix(LabSM):
@@ -215,7 +215,7 @@ class d181010_LabSM_40MHz_100mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
 
 
 class d181010_LabSM_40MHz_200mV_TFMix(LabSM):
@@ -226,7 +226,7 @@ class d181010_LabSM_40MHz_200mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
 
 
 class d181010_LabSM_125MHz_50mV_TFMix(LabSM):
@@ -237,7 +237,7 @@ class d181010_LabSM_125MHz_50mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
 
 
 class d181010_LabSM_125MHz_100mV_TFMix(LabSM):
@@ -248,7 +248,7 @@ class d181010_LabSM_125MHz_100mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
 
 
 class d181010_LabSM_125MHz_200mV_TFMix(LabSM):
@@ -259,7 +259,7 @@ class d181010_LabSM_125MHz_200mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
 
 
 class d181010_LabSM_250MHz_50mV_TFMix(LabSM):
@@ -270,7 +270,7 @@ class d181010_LabSM_250MHz_50mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
 
 
 class d181010_LabSM_250MHz_100mV_TFMix(LabSM):
@@ -281,7 +281,7 @@ class d181010_LabSM_250MHz_100mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
 
 
 class d181010_LabSM_250MHz_200mV_TFMix(LabSM):
@@ -292,7 +292,7 @@ class d181010_LabSM_250MHz_200mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
 
 
 class d181010_LabSM_1000MHz_50mV_TFMix(LabSM):
@@ -304,7 +304,7 @@ class d181010_LabSM_1000MHz_50mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV_TFMix.__name__))
 
 
 class d181010_LabSM_1000MHz_100mV_TFMix(LabSM):
@@ -316,7 +316,7 @@ class d181010_LabSM_1000MHz_100mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_TFMix.__name__))
 
 
 class d181010_LabSM_1000MHz_200mV_TFMix(LabSM):
@@ -328,7 +328,7 @@ class d181010_LabSM_1000MHz_200mV_TFMix(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV_TFMix.__name__))
 
 
 class d181010_LabSM_0MHz_100mV_SelfPed(LabSM):
@@ -346,7 +346,7 @@ class d181010_LabSM_40MHz_100mV_SelfPed(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
 
 
 class d181010_LabSM_125MHz_100mV_SelfPed(LabSM):
@@ -357,7 +357,7 @@ class d181010_LabSM_125MHz_100mV_SelfPed(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
 
 
 class d181010_LabSM_250MHz_100mV_SelfPed(LabSM):
@@ -368,7 +368,7 @@ class d181010_LabSM_250MHz_100mV_SelfPed(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
 
 
 class d181010_LabSM_1000MHz_100mV_SelfPed(LabSM):
@@ -379,7 +379,7 @@ class d181010_LabSM_1000MHz_100mV_SelfPed(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV_SelfPed.__name__))
 
 
 fw_files = [

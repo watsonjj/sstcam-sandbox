@@ -18,49 +18,49 @@ class File(metaclass=ABCMeta):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(self.__class__.__name__))
 
     @property
     def fw_plot_dir(self):
-        return get_plot("sst_rfi/intensity_resolution/fw_calibration/{}".format(self.__class__.__name__))
+        return get_plot("d181031_sst_rfi/intensity_resolution/fw_calibration/{}".format(self.__class__.__name__))
 
     @property
     def ff_path(self):
-        return get_data("sst_rfi/intensity_resolution/ff_coefficients/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/ff_coefficients/{}.h5".format(self.__class__.__name__))
 
     @property
     def ff_plot_dir(self):
-        return get_plot("sst_rfi/intensity_resolution/ff_coefficients/{}".format(self.__class__.__name__))
+        return get_plot("d181031_sst_rfi/intensity_resolution/ff_coefficients/{}".format(self.__class__.__name__))
 
     @property
     def charge_averages_path(self):
-        return get_data("sst_rfi/intensity_resolution/charge_averages/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/charge_averages/{}.h5".format(self.__class__.__name__))
 
     @property
     def intensity_resolution_path(self):
-        return get_data("sst_rfi/intensity_resolution/intensity_resolution/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/intensity_resolution/{}.h5".format(self.__class__.__name__))
 
     @property
     def fit_intensity_res_path(self):
-        return get_data("sst_rfi/intensity_resolution/fit_intensity_res/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fit_intensity_res/{}.h5".format(self.__class__.__name__))
 
     @property
     def fit_intensity_res_plot_path(self):
-        return get_plot("sst_rfi/intensity_resolution/fit_intensity_res/{}.pdf".format(self.__class__.__name__))
+        return get_plot("d181031_sst_rfi/intensity_resolution/fit_intensity_res/{}.pdf".format(self.__class__.__name__))
 
     @property
     def saturation_recovery_path(self):
-        return get_data("sst_rfi/intensity_resolution/saturation_recovery/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/saturation_recovery/{}.h5".format(self.__class__.__name__))
 
     @property
     def saturation_recovery_plot_path(self):
-        return get_plot("sst_rfi/intensity_resolution/saturation_recovery/{}.pdf".format(self.__class__.__name__))
+        return get_plot("d181031_sst_rfi/intensity_resolution/saturation_recovery/{}.pdf".format(self.__class__.__name__))
 
 
 class MCLab(File):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.illumination_profile_path = get_data("sst_rfi/intensity_resolution/illumination_profile/d180907_MC.h5")
+        self.illumination_profile_path = get_data("d181031_sst_rfi/intensity_resolution/illumination_profile/d180907_MC.h5")
         self.dead = []
 
 
@@ -81,13 +81,13 @@ class d180907_MCLab_opct40_40MHz(MCLab):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d180907_MCLab_opct40_0MHz.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d180907_MCLab_opct40_0MHz.__name__))
 
 
 class Lab(File):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.illumination_profile_path = get_data("sst_rfi/intensity_resolution/illumination_profile/d180907_MC.h5")  # TODO: get lab_illumination_profile_correction.h5
+        self.illumination_profile_path = get_data("d181031_sst_rfi/intensity_resolution/illumination_profile/d180907_MC.h5")  # TODO: get lab_illumination_profile_correction.h5
         self.dead = [677, 293, 27, 1925, 1955]
 
 
@@ -128,7 +128,7 @@ class d181010_LabSM_40MHz_50mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
 
 
 class d181010_LabSM_40MHz_100mV(LabSM):
@@ -139,7 +139,7 @@ class d181010_LabSM_40MHz_100mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
 
 
 class d181010_LabSM_40MHz_200mV(LabSM):
@@ -150,7 +150,7 @@ class d181010_LabSM_40MHz_200mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
 
 
 class d181010_LabSM_125MHz_50mV(LabSM):
@@ -161,7 +161,7 @@ class d181010_LabSM_125MHz_50mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
 
 
 class d181010_LabSM_125MHz_100mV(LabSM):
@@ -172,7 +172,7 @@ class d181010_LabSM_125MHz_100mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
 
 
 class d181010_LabSM_125MHz_200mV(LabSM):
@@ -183,7 +183,7 @@ class d181010_LabSM_125MHz_200mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
 
 
 class d181010_LabSM_250MHz_50mV(LabSM):
@@ -194,7 +194,7 @@ class d181010_LabSM_250MHz_50mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
 
 
 class d181010_LabSM_250MHz_100mV(LabSM):
@@ -205,7 +205,7 @@ class d181010_LabSM_250MHz_100mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
 
 
 class d181010_LabSM_250MHz_200mV(LabSM):
@@ -216,7 +216,7 @@ class d181010_LabSM_250MHz_200mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
 
 
 class d181010_LabSM_1000MHz_50mV(LabSM):
@@ -227,7 +227,7 @@ class d181010_LabSM_1000MHz_50mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_50mV.__name__))
 
 
 class d181010_LabSM_1000MHz_100mV(LabSM):
@@ -238,7 +238,7 @@ class d181010_LabSM_1000MHz_100mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_100mV.__name__))
 
 
 class d181010_LabSM_1000MHz_200mV(LabSM):
@@ -249,7 +249,7 @@ class d181010_LabSM_1000MHz_200mV(LabSM):
 
     @property
     def fw_path(self):
-        return get_data("sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
+        return get_data("d181031_sst_rfi/intensity_resolution/fw_calibration/{}.h5".format(d181010_LabSM_0MHz_200mV.__name__))
 
 
 fw_files = [

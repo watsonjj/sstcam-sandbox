@@ -22,10 +22,10 @@ class AngResPlotter(Plotter):
 
 
 def main():
-    x_gernot, y_gernot = np.loadtxt(get_data("sst_rfi/ang_res/gernot.txt"), unpack=True)
-    x_2tel, y_2tel = np.loadtxt(get_data("sst_rfi/ang_res/dan_2tel.txt"), unpack=True)
-    x_5tel, y_5tel = np.loadtxt(get_data("sst_rfi/ang_res/dan_5tel.txt"), unpack=True)
-    x_req, y_req = np.loadtxt(get_data("sst_rfi/ang_res/South-50h-SST-AngRes.dat"), unpack=True)
+    x_gernot, y_gernot = np.loadtxt(get_data("d181031_sst_rfi/ang_res/gernot.txt"), unpack=True)
+    x_2tel, y_2tel = np.loadtxt(get_data("d181031_sst_rfi/ang_res/dan_2tel.txt"), unpack=True)
+    x_5tel, y_5tel = np.loadtxt(get_data("d181031_sst_rfi/ang_res/dan_5tel.txt"), unpack=True)
+    x_req, y_req = np.loadtxt(get_data("d181031_sst_rfi/ang_res/South-50h-SST-AngRes.dat"), unpack=True)
 
     # x_gernot = np.log10(x_gernot)
     x_2tel = 10**x_2tel
@@ -41,7 +41,7 @@ def main():
     p_angres.plot(x_gernot, y_gernot, 's-', ms=3, color='black', label="Gernot")
     # p_angres.plot(x_2tel, y_2tel, '.:', label="2 Tel")
     p_angres.plot(x_5tel, y_5tel, '.:', label="5 Tel")
-    p_angres.save(get_plot("sst_rfi/ang_res.pdf"))
+    p_angres.save(get_plot("d181031_sst_rfi/ang_res.pdf"))
 
 
 if __name__ == '__main__':

@@ -75,7 +75,7 @@ def main():
     x_min = 2
     x_max = 4500
 
-    # output_dir = get_plot("sst_rfi/plot_intensity_resolution/gainmatching")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/gainmatching")
     # path_dict = {
     #     "50mV-GM": d181010_LabSM_0MHz_50mV(),
     #     "100mV-GM": d181010_LabSM_0MHz_100mV(),
@@ -88,7 +88,7 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
     #
-    # output_dir = get_plot("sst_rfi/plot_intensity_resolution/nsb_50mV")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_50mV")
     # path_dict = {
     #     # "0MHz": d181010_LabSM_0MHz_50mV(),
     #     "40MHz": d181010_LabSM_40MHz_50mV(),
@@ -103,7 +103,7 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    # output_dir = get_plot("sst_rfi/plot_intensity_resolution/nsb_100mV")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV")
     # path_dict = {
     #     "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
     #     "40MHz": d181010_LabSM_40MHz_100mV(),
@@ -117,7 +117,7 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    # output_dir = get_plot("sst_rfi/plot_intensity_resolution/lab_vs_mc")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/lab_vs_mc")
     # path_dict = {
     #     "40MHz": d181010_LabSM_40MHz_100mV(),
     #     "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
@@ -132,7 +132,7 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    # output_dir = get_plot("sst_rfi/plot_intensity_resolution/nsb_200mV")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_200mV")
     # path_dict = {
     #     # "0MHz": d181010_LabSM_0MHz_200mV(),
     #     "40MHz": d181010_LabSM_40MHz_200mV(),
@@ -147,7 +147,7 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    output_dir = get_plot("sst_rfi/plot_intensity_resolution/mc_prod")
+    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/mc_prod")
     path_dict = {
         "Prod3": d181030_MCOnsky_Prod3(),
         "Prod4": d181030_MCOnsky_Prod4(),

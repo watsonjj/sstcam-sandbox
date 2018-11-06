@@ -67,7 +67,7 @@ class PlotHandler:
 
 def main():
 
-    output_dir = get_plot("charge_resolution/charge_resolution/d181010_LabSM_0MHz")
+    output_dir = get_plot("d181021_charge_resolution/charge_resolution/d181010_LabSM_0MHz")
     path_dict = {
         "50mV-GM": d181010_LabSM_0MHz_50mV_TFMix(),
         "100mV-GM": d181010_LabSM_0MHz_100mV_TFMix(),
@@ -79,7 +79,7 @@ def main():
     ph.p_crwrr.ax.set_ylim(top=2)
     ph.save(output_dir)
 
-    output_dir = get_plot("charge_resolution/charge_resolution/d181010_LabSM_125MHz")
+    output_dir = get_plot("d181021_charge_resolution/charge_resolution/d181010_LabSM_125MHz")
     path_dict = {
         "50mV-GM": d181010_LabSM_125MHz_50mV_TFMix(),
         "100mV-GM": d181010_LabSM_125MHz_100mV_TFMix(),
@@ -91,7 +91,7 @@ def main():
     ph.p_crwrr.ax.set_ylim(top=2)
     ph.save(output_dir)
 
-    output_dir = get_plot("charge_resolution/charge_resolution/tf_comparison")
+    output_dir = get_plot("d181021_charge_resolution/charge_resolution/tf_comparison")
     path_dict = {
         "No TF": d181010_LabSM_0MHz_100mV_TFNone(),
         "TF (default)": d181010_LabSM_0MHz_100mV_TFPchip(),
@@ -104,7 +104,7 @@ def main():
     ph.p_crwrr.ax.set_ylim(top=2)
     ph.save(output_dir)
 
-    output_dir = get_plot("charge_resolution/charge_resolution/nsb")
+    output_dir = get_plot("d181021_charge_resolution/charge_resolution/nsb")
     path_dict = {
         "0MHz": d181010_LabSM_0MHz_100mV_TFMix(),
         "40MHz": d181010_LabSM_40MHz_100mV_TFMix(),
@@ -118,7 +118,7 @@ def main():
     ph.p_crwrr.ax.set_ylim(top=2)
     ph.save(output_dir)
 
-    output_dir = get_plot("charge_resolution/charge_resolution/nsb_selfped")
+    output_dir = get_plot("d181021_charge_resolution/charge_resolution/nsb_selfped")
     path_dict = {
         "0MHz": d181010_LabSM_0MHz_100mV_SelfPed(),
         "40MHz": d181010_LabSM_40MHz_100mV_SelfPed(),

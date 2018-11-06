@@ -15,11 +15,11 @@ class File(metaclass=ABCMeta):
 
     @property
     def mc_calib_path(self):
-        return get_data("sst_rfi/mc_intensity_resolution/mc_calibration/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/mc_intensity_resolution/mc_calibration/{}.h5".format(self.__class__.__name__))
 
     @property
     def intensity_resolution_path(self):
-        return get_data("sst_rfi/mc_intensity_resolution/{}.h5".format(self.__class__.__name__))
+        return get_data("d181031_sst_rfi/mc_intensity_resolution/{}.h5".format(self.__class__.__name__))
 
 
 class MCOnsky(File):

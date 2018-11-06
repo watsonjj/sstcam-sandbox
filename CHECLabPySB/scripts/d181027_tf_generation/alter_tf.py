@@ -98,8 +98,8 @@ def process(input_path, function):
     sn = reg_exp[2]
 
     name = function.__name__
-    output_path = get_data("tf_generation/alter_tf/{}_{}.tcal".format(name, sn))
-    plot_path = get_plot("tf_generation/alter_tf/{}_{}.pdf".format(name, sn))
+    output_path = get_data("d181027_tf_generation/alter_tf/{}_{}.tcal".format(name, sn))
+    plot_path = get_plot("d181027_tf_generation/alter_tf/{}_{}.pdf".format(name, sn))
 
     print("Reading TF: {}".format(input_path))
     reader = TFArrayReader(input_path)

@@ -164,11 +164,11 @@ def write_trigger_groups_unique(file, mapping, mappingsp):
 
 def main():
     input_path = "/Users/Jason/Software/TargetCalib/source/dev/mapping_checs_V1-1-0.cfg"
-    output_path = get_data("sim_telarray_cfg/tc_mapping.cfg")
+    output_path = get_data("d181105_sim_telarray_cfg/tc_mapping.cfg")
     create_new_mapping(input_path, output_path)
 
-    input_path = get_data("sim_telarray_cfg/tc_mapping.cfg")
-    output_path = get_data("sim_telarray_cfg/pixel_mapping.dat")
+    input_path = get_data("d181105_sim_telarray_cfg/tc_mapping.cfg")
+    output_path = get_data("d181105_sim_telarray_cfg/pixel_mapping.dat")
     create_new_camera_cfg(input_path, output_path)
 
 

@@ -41,7 +41,7 @@ class File(metaclass=ABCMeta):
 
     @property
     def averages_path(self):
-        return get_data(os.path.join("dc_tf/averages/", self.__class__.__name__))
+        return get_data(os.path.join("d181023_df_tf/averages/", self.__class__.__name__))
 
 
 class d181023_13C(File):

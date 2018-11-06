@@ -29,8 +29,8 @@ class d180514_DynRange_TFPoly(File):
         super().__init__(**kwargs)
         self.wf_paths = glob("/Volumes/gct-jason/data_checs/d180514_dynrange/tf_poly/*_r1.tio")
         self.wf_paths.sort(key=natural_keys)
-        self.data_path = get_data("average_wf/d180514_DynRange_TFPoly.h5")
-        self.plot_path = get_plot("average_wf/d180514_DynRange_TFPoly.pdf")
+        self.data_path = get_data("d181008_average_wf/d180514_DynRange_TFPoly.h5")
+        self.plot_path = get_plot("d181008_average_wf/d180514_DynRange_TFPoly.pdf")
         self.t_shift = 43
 
 
@@ -39,7 +39,7 @@ class d181004_DynRange_SM_TFNone(File):
         super().__init__(**kwargs)
         self.wf_paths = glob("/Volumes/gct-jason/data_checs/d181004_dynrange_sm/tf_none/*_r1.tio")
         self.wf_paths.sort(key=natural_keys)
-        self.data_path = get_data("average_wf/d181004_DynRange_SM_TFNone.h5")
-        self.plot_path = get_plot("average_wf/d181004_DynRange_SM_TFNone.pdf")
+        self.data_path = get_data("d181008_average_wf/d181004_DynRange_SM_TFNone.h5")
+        self.plot_path = get_plot("d181008_average_wf/d181004_DynRange_SM_TFNone.pdf")
         self.poi = 16
         self.t_shift = 43

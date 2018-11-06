@@ -44,32 +44,32 @@ class Lab(File):
 
     @property
     def fw_path(self):
-        return get_data("charge_resolution/fw_calibration/{}.h5".format(
+        return get_data("d181021_charge_resolution/fw_calibration/{}.h5".format(
             self.__class__.__name__))
 
     @property
     def fw_plot_dir(self):
-        return get_plot("charge_resolution/fw_calibration/{}".format(
+        return get_plot("d181021_charge_resolution/fw_calibration/{}".format(
             self.__class__.__name__))
 
     @property
     def ff_path(self):
-        return get_data("charge_resolution/ff_coefficients/{}.h5".format(
+        return get_data("d181021_charge_resolution/ff_coefficients/{}.h5".format(
             self.__class__.__name__))
 
     @property
     def ff_plot_dir(self):
-        return get_plot("charge_resolution/ff_coefficients/{}".format(
+        return get_plot("d181021_charge_resolution/ff_coefficients/{}".format(
             self.__class__.__name__))
 
     @property
     def charge_averages_path(self):
-        return get_data("charge_resolution/charge_averages/{}.h5".format(
+        return get_data("d181021_charge_resolution/charge_averages/{}.h5".format(
             self.__class__.__name__))
 
     @property
     def charge_resolution_path(self):
-        return get_data("charge_resolution/charge_resolution/{}.h5".format(
+        return get_data("d181021_charge_resolution/charge_resolution/{}.h5".format(
             self.__class__.__name__))
 
 
