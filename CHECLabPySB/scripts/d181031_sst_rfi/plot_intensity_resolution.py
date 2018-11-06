@@ -1,8 +1,8 @@
 from CHECLabPySB.plotting.intensity_resolution import IntensityResolutionPlotter, \
     IntensityResolutionWRRPlotter
 from CHECLabPySB.plotting.resolutions import ChargeMeanPlotter
-from CHECLabPySB.scripts.sst_rfi.intensity_resolution import *
-from CHECLabPySB.scripts.sst_rfi.mc_intensity_resolution import *
+from CHECLabPySB.scripts.d181031_sst_rfi.intensity_resolution import *
+from CHECLabPySB.scripts.d181031_sst_rfi.mc_intensity_resolution import *
 from CHECLabPySB import get_plot
 import os
 import numpy as np

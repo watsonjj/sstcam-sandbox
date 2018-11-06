@@ -1,6 +1,6 @@
 from CHECLabPySB import HDF5Writer, HDF5Reader
 from CHECLabPySB.plotting.setup import Plotter
-from CHECLabPySB.scripts.charge_resolution import all_files
+from CHECLabPySB.scripts.d181021_charge_resolution import all_files
 import numpy as np
 import pandas as pd
 import os

@@ -1,5 +1,5 @@
 from CHECLabPySB import HDF5Writer
-from CHECLabPySB.scripts.charge_resolution import all_files
+from CHECLabPySB.scripts.d181021_charge_resolution import all_files
 import pandas as pd
 from tqdm import tqdm
 from CHECLabPy.utils.files import open_runlist_dl1

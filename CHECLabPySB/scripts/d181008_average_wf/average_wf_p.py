@@ -1,6 +1,6 @@
 from CHECLabPySB.plotting.setup import Plotter
 from CHECLabPySB import HDF5Reader
-from CHECLabPySB.scripts.average_wf import *
+from CHECLabPySB.scripts.d181008_average_wf import *
 from matplotlib.ticker import MultipleLocator
 import numpy as np
 from IPython import embed

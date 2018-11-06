@@ -1,5 +1,5 @@
 from CHECLabPySB import HDF5Writer
-from CHECLabPySB.scripts.sst_rfi.mc_intensity_resolution import calib_files
+from CHECLabPySB.scripts.d181031_sst_rfi.mc_intensity_resolution import calib_files
 import numpy as np
 import pandas as pd
 from CHECLabPy.core.io import DL1Reader

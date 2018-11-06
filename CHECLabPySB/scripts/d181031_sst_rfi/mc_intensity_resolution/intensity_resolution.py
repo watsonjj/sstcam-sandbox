@@ -1,5 +1,5 @@
 from CHECLabPySB import HDF5Writer, HDF5Reader
-from CHECLabPySB.scripts.sst_rfi.mc_intensity_resolution import all_files
+from CHECLabPySB.scripts.d181031_sst_rfi.mc_intensity_resolution import all_files
 from tqdm import tqdm
 from CHECLabPy.utils.resolutions import ChargeStatistics, ChargeResolution
 from CHECLabPy.core.io import DL1Reader

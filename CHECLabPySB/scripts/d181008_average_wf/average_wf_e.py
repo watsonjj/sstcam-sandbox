@@ -1,5 +1,5 @@
 from CHECLabPySB import HDF5Writer
-from CHECLabPySB.scripts.average_wf import *
+from CHECLabPySB.scripts.d181008_average_wf import *
 import numpy as np
 import pandas as pd
 from CHECLabPy.core.io import TIOReader

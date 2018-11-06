@@ -1,4 +1,4 @@
-from CHECLabPySB.scripts.dc_tf import all_files
+from CHECLabPySB.scripts.d181023_dc_tf import all_files
 from CHECLabPySB import get_data, HDF5Writer
 from CHECLabPy.core.io import TIOReader
 import numpy as np

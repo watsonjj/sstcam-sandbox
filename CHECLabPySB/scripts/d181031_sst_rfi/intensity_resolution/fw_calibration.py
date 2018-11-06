@@ -1,6 +1,6 @@
 from CHECLabPySB.plotting.setup import Plotter
 from CHECLabPySB import HDF5Writer, HDF5Reader
-from CHECLabPySB.scripts.sst_rfi.intensity_resolution import fw_files
+from CHECLabPySB.scripts.d181031_sst_rfi.intensity_resolution import fw_files
 from CHECLabPySB.utils.sipm import PE2Photons
 import numpy as np
 import pandas as pd

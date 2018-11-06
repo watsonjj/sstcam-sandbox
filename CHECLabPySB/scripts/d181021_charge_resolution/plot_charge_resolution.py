@@ -1,6 +1,6 @@
 from CHECLabPySB.plotting.resolutions import ChargeResolutionPlotter, \
     ChargeResolutionWRRPlotter, ChargeMeanPlotter
-from CHECLabPySB.scripts.charge_resolution import *
+from CHECLabPySB.scripts.d181021_charge_resolution import *
 from CHECLabPySB import get_plot, HDF5Reader, get_data
 import os
 import numpy as np

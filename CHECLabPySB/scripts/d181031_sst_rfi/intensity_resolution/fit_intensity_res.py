@@ -1,6 +1,6 @@
 from CHECLabPySB.plotting.setup import Plotter
 from CHECLabPySB import HDF5Reader, HDF5Writer
-from CHECLabPySB.scripts.sst_rfi.intensity_resolution import fit_files
+from CHECLabPySB.scripts.d181031_sst_rfi.intensity_resolution import fit_files
 from CHECLabPySB.utils.sipm import PE2Photons
 # from ThesisAnalysis.files import Lab_TFPoly, MCLab_Opct40_5MHz, CHECM
 # from ThesisAnalysis.plotting.resolutions import ChargeResolutionWRRPlotter

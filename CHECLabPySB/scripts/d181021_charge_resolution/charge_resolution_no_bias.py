@@ -1,5 +1,5 @@
 from CHECLabPySB import HDF5Writer, HDF5Reader
-from CHECLabPySB.scripts.charge_resolution import all_files
+from CHECLabPySB.scripts.d181021_charge_resolution import all_files
 from tqdm import tqdm
 from CHECLabPy.utils.files import open_runlist_dl1
 from CHECLabPy.utils.resolutions import ChargeStatistics, ChargeResolution
