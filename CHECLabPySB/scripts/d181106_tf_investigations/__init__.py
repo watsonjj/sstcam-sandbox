@@ -10,37 +10,14 @@ class File(metaclass=ABCMeta):
         self.poi = 888
         self.dead = []
         self.runlist_path = None
-        self.fw_path = None
 
-    def get_dataframe(self, r1=False, **kwargs):
-        if r1:
-            df = open_runlist_r1(self.runlist_path, **kwargs)
-        else:
-            df = open_runlist_dl1(self.runlist_path, **kwargs)
-        df['transmission'] = 1/df['fw_atten']
+    @property
+    def waveforms_plot_dir(self):
+        return get_plot("d181106_tf_investigations/waveforms/{}".format(self.__class__.__name__))
 
-        with HDF5Reader(self.fw_path) as reader:
-            fw_m = reader.read_metadata()['fw_m_camera']
-            fw_merr = reader.read_metadata()['fw_merr_camera']
-
-        df['expected'] = df['transmission'] * fw_m
-        df['expected_err'] = df['transmission'] * fw_merr
-        return df
-
-    def get_run_with_illumination(self, illumination, r1=False):
-        df = self.get_dataframe(r1=r1, open_readers=False)
-        idxmin = np.abs(df['expected'] - illumination).idxmin()
-        expected = df.loc[idxmin]['expected']
-        epected_err = df.loc[idxmin]['expected_err']
-        print("Run at illumination {:.3f} ± {:.3f} p.e. obtained".format(expected, epected_err))
-        path = df.loc[idxmin]['path']
-        return path, expected, epected_err
-
-
-class Lab(File):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.dead = [677, 293, 27, 1925, 1955]
+    @property
+    def stats_path(self):
+        return get_data("d181106_tf_investigations/stats/{}.h5".format(self.__class__.__name__))
 
     @property
     def fw_path(self):
@@ -72,6 +49,36 @@ class Lab(File):
         return get_data("d181021_charge_resolution/charge_resolution/{}.h5".format(
             self.__class__.__name__))
 
+    def get_dataframe(self, r1=False, **kwargs):
+        if r1:
+            df = open_runlist_r1(self.runlist_path, **kwargs)
+        else:
+            df = open_runlist_dl1(self.runlist_path, **kwargs)
+        df['transmission'] = 1/df['fw_atten']
+
+        with HDF5Reader(self.fw_path) as reader:
+            fw_m = reader.read_metadata()['fw_m_camera']
+            fw_merr = reader.read_metadata()['fw_merr_camera']
+
+        df['expected'] = df['transmission'] * fw_m
+        df['expected_err'] = df['transmission'] * fw_merr
+        return df
+
+    def get_run_with_illumination(self, illumination, r1=False):
+        df = self.get_dataframe(r1=r1, open_readers=False)
+        idxmin = np.abs(df['expected'] - illumination).idxmin()
+        expected = df.loc[idxmin]['expected']
+        epected_err = df.loc[idxmin]['expected_err']
+        print("Run at illumination {:.3f} ± {:.3f} p.e. obtained".format(expected, epected_err))
+        path = df.loc[idxmin]['path']
+        return path, expected, epected_err
+
+
+class Lab(File):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.dead = [677, 293, 27, 1925, 1955]
+
 
 class LabSM(Lab):
     def __init__(self, **kwargs):
@@ -93,3 +100,9 @@ class d181010_LabSM_0MHz_100mV_TFPchip(LabSM):
         super().__init__(**kwargs)
         self.runlist_path = "/Volumes/gct-jason/data_checs/d181010_dynrange_sm/0MHz/100mV/tf_pchip/runlist.txt"
         self.spe_path = "/Volumes/gct-jason/data_checs/d181010_dynrange_sm/0MHz/100mV/tf_pchip/spe.h5"
+
+
+all_files = [
+    d181010_LabSM_0MHz_100mV_TFNone(),
+    d181010_LabSM_0MHz_100mV_TFPchip(),
+]
