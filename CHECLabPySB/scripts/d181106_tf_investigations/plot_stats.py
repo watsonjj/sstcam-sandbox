@@ -42,6 +42,8 @@ def main():
     p_charge_rms = LinePlotter("Illumination (p.e.)", "Charge RMS (mVns)")
 
     p_measured_close = LinePlotter("Illumination (p.e.)", "Closeness")
+    p_measured_std_norm = LinePlotter("Illumination (p.e.)", "Measured STD / Measured Mean")
+    p_charge_std_norm = LinePlotter("Illumination (p.e.)", "Charge STD / Charge Mean")
 
     def process(file, name):
         stats_path = file.stats_path
@@ -63,6 +65,12 @@ def main():
         y = np.abs(df_p['measured']['mean']/df_p['true'] - 1)
         p_measured_close.plot(df_p['true'], y, name)
 
+        y = df_p['measured']['std'] / df_p['measured']['mean']
+        p_measured_std_norm.plot(df_p['true'], y, name)
+
+        y = df_p['charge']['std'] / df_p['charge']['mean']
+        p_charge_std_norm.plot(df_p['true'], y, name)
+
     process(d181010_LabSM_0MHz_100mV_TFNone(), "No TF")
     process(d181010_LabSM_0MHz_100mV_TFPchip(), "TFPCHIP")
 
@@ -76,6 +84,8 @@ def main():
     p_charge_std.set_logx()
     p_charge_rms.set_logx()
     p_measured_close.set_logx()
+    p_measured_std_norm.set_logx()
+    p_charge_std_norm.set_logx()
 
     p_measured_mean.set_logy()
     p_measured_res.set_logy()
@@ -85,6 +95,8 @@ def main():
     p_charge_std.set_logy()
     p_charge_rms.set_logy()
     # p_measured_close.set_logy()
+    # p_measured_std_norm.set_logy()
+    # p_charge_std_norm.set_logy()
 
     p_measured_mean.save(get_plot("d181106_tf_investigations/stats/measured_mean.pdf"))
     p_measured_res.save(get_plot("d181106_tf_investigations/stats/measured_res.pdf"))
@@ -94,6 +106,8 @@ def main():
     p_charge_std.save(get_plot("d181106_tf_investigations/stats/charge_std.pdf"))
     p_charge_rms.save(get_plot("d181106_tf_investigations/stats/charge_rms.pdf"))
     p_measured_close.save(get_plot("d181106_tf_investigations/stats/measured_close.pdf"))
+    p_measured_std_norm.save(get_plot("d181106_tf_investigations/stats/measured_std_norm.pdf"))
+    p_charge_std_norm.save(get_plot("d181106_tf_investigations/stats/charge_std_norm.pdf"))
 
 
 if __name__ == '__main__':
