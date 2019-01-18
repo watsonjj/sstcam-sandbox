@@ -1,3 +1,4 @@
+from CHECLabPySB.d190111_trigger_stability import *
 from CHECLabPySB import get_data, HDF5Writer
 from CHECLabPy.core.io import TIOReader
 from target_calib import MappingSP, CameraConfiguration
@@ -17,7 +18,7 @@ def obtain_pixel_list(superpixels):
     return pix_dict
 
 
-def process(input_paths, output_path, superpixels):
+def process(readers, output_path, superpixels):
     pix_dict = obtain_pixel_list(superpixels)
 
     df_list = []
@@ -25,8 +26,7 @@ def process(input_paths, output_path, superpixels):
 
     desc0 = "Looping over files"
     desc1 = "Looping over events"
-    for input_file in tqdm(input_paths, total=len(input_paths), desc=desc0):
-        reader = TIOReader(input_file)
+    for reader in tqdm(readers, total=len(readers), desc=desc0):
         n_events = reader.n_events
         mapping = reader.tc_mapping
         mappingsp = MappingSP(mapping)
@@ -83,20 +83,21 @@ def process(input_paths, output_path, superpixels):
         writer.write_metadata(**meta)
 
 
+def process_file(file):
+    readers = file.tio_readers
+    name = file.__class__.__name__
+    output_path = get_data("d190111_trigger_stability/{}/amplitudes.h5".format(name))
+    superpixels = file.spoi
+    process(readers, output_path, superpixels)
+
+
 def main():
-    input_paths = [
-        "/Volumes/gct-jason/data_checs/d190111_trigger_stability/Run05974_r1.tio",
-        "/Volumes/gct-jason/data_checs/d190111_trigger_stability/Run05975_r1.tio",
+    files = [
+        d190111(),
+        # d190115_1mAcut(),
+        # d190115_1mAcut_12h(),
     ]
-    output_path = get_data("d190111_trigger_stability/extract_amplitudes.h5")
-    superpixels = {
-        151: 'Fast Dropoff',
-        101: 'Normal',
-        399: 'Dead',
-        # 296: 'High',
-        145: 'Slow Dropoff',
-    }
-    process(input_paths, output_path, superpixels)
+    [process_file(file) for file in files]
 
 
 if __name__ == '__main__':
