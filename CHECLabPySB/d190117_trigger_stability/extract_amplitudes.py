@@ -67,7 +67,8 @@ def process_file(file):
 def main():
     files = [
         # d190111(),
-        d190118(),
+        # d190118(),
+        d190121(),
     ]
     [process_file(file) for file in files]
 

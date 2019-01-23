@@ -34,12 +34,11 @@ def process(input_path, output_dir, spoi):
 
     p_amplitude = TimePlotter("Waveform Maximum (mV)", switch_backend=True)
     p_amplitudesp = TimePlotter("Superpixel-Waveform Maximum (mV)", switch_backend=True)
-    p_nabove = TimePlotter("N Samples above 50 mV", switch_backend=True)
 
     spoi.extend([0, 1])
 
     desc = "Plotting superpixels"
-    # spoi = np.arange(512)
+    spoi = np.arange(512)
     for superpixel in tqdm(spoi, total=len(spoi), desc=desc):
         df_sp = df.loc[df['superpixel'] == superpixel]
         df_sp = (df_sp
@@ -77,10 +76,8 @@ def process(input_path, output_dir, spoi):
                 x = group.index.values
                 y = group['amplitude'].values
                 ysp = group['amplitude_sp'].values
-                y_nabove = group['n_above_50'].values
                 p_amplitude.plot(x, y, color, label)
                 p_amplitudesp.plot(x, ysp, color, label)
-                p_nabove.plot(x, y_nabove, color, label)
                 first = False
             else:
                 x = group.index.values
@@ -90,7 +87,6 @@ def process(input_path, output_dir, spoi):
     p_amplitude.save(os.path.join(output_dir, "amplitude.pdf"))
     p_amplitudesp.ax.axhline(60, color='black')
     p_amplitudesp.save(os.path.join(output_dir, "amplitude_sp.pdf"))
-    p_nabove.save(os.path.join(output_dir, "n_above.pdf"))
 
 
 def process_file(file):
@@ -104,7 +100,8 @@ def process_file(file):
 def main():
     files = [
         # d190111(),
-        d190118(),
+        # d190118(),
+        d190121(),
     ]
     [process_file(file) for file in files]
 
