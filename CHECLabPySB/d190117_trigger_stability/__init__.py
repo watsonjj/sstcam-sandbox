@@ -1,3 +1,4 @@
+from CHECLabPySB import get_checs
 from glob import glob
 import re
 from CHECLabPy.core.io import TIOReader
@@ -29,39 +30,28 @@ class File:
 class d190111(File):
     def __init__(self):
         super().__init__()
-        self.directory = "/Volumes/gct-jason/data_checs/d190111_trigger_stability/d190111"
-        self.spoi = {
-            151: 'Fast Dropoff',
-            101: 'Normal',
-            399: 'Dead',
-            # 296: 'High',
-            145: 'Slow Dropoff',
-        }
+        self.directory = get_checs("d190111_trigger_stability/d190111")
+        self.spoi = [
+            151,
+            101,
+            399,
+            # 296,
+            145,
+        ]
 
 
-class d190115_1mAcut(File):
+class d190118(File):
     def __init__(self):
         super().__init__()
-        self.directory = "/Volumes/gct-jason/data_checs/d190111_trigger_stability/d190115_1mAcut"
-        self.spoi = {
-            151: 'Fast Dropoff',
-            101: 'Normal',
-            399: 'Dead',
-            # 296: 'High',
-            145: 'Slow Dropoff',
-        }
-        self.hv_path = "/Volumes/gct-jason/data_checs/d190111_trigger_stability/hvSetting_no_above_1mA.cfg"
-
-
-class d190115_1mAcut_12h(File):
-    def __init__(self):
-        super().__init__()
-        self.directory = "/Volumes/gct-jason/data_checs/d190111_trigger_stability/d190115_1mAcut_12h"
-        self.spoi = {
-            151: 'Fast Dropoff',
-            101: 'Normal',
-            399: 'Dead',
-            # 296: 'High',
-            145: 'Slow Dropoff',
-        }
-        self.hv_path = "/Volumes/gct-jason/data_checs/d190111_trigger_stability/hvSetting_no_above_1mA.cfg"
+        self.directory = get_checs("d190118_trigger_stability")
+        self.spoi = [
+            17,
+            # 296,
+            297,
+            # 298,
+            372,
+            408,
+            412,
+            415,
+            503
+        ]

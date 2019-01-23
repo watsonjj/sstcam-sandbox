@@ -6,6 +6,7 @@ from CHECLabPy.utils.files import create_directory
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 _DATA = os.path.expanduser("~/Data/CHECLabPySB/data")
 _PLOT = os.path.expanduser("~/Data/CHECLabPySB/plots")
+_CHECS = os.path.expanduser("/Volumes/gct-jason/data_checs/")
 
 
 def get_data(path):
@@ -18,6 +19,12 @@ def get_plot(path):
     plot_path = os.path.join(_PLOT, path)
     create_directory(os.path.dirname(plot_path))
     return plot_path
+
+
+def get_checs(path):
+    tio_path = os.path.join(_CHECS, path)
+    # create_directory(os.path.dirname(tio_path))
+    return tio_path
 
 
 class HDF5Writer:

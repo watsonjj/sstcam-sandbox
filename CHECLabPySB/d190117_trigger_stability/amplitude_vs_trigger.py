@@ -15,7 +15,7 @@ class AmpVsTrigger(Plotter):
         self.ax.plot(x, y, '.', ms=1, label=label, alpha=0.7, **kwargs)
 
     def finish(self):
-        self.ax.set_xlabel("Superpixel-Waveform Maximum (mV) (Averaged over 1 Minute)")
+        self.ax.set_xlabel("Superpixel-Waveform Maximum (mV)")
         self.ax.set_ylabel("Trigger Counts in past minute")
 
 
@@ -28,7 +28,7 @@ class dAmpVsdTrigger(Plotter):
         self.ax.set_ylabel("Difference in Trigger Counts")
 
 
-def process(amplitude_path, trigger_path, output_dir):
+def process(amplitude_path, trigger_path, output_dir, spoi):
     with HDF5Reader(amplitude_path) as reader:
         df_amp = reader.read("data")
         mapping = reader.read_mapping()
@@ -48,7 +48,6 @@ def process(amplitude_path, trigger_path, output_dir):
                        on="t_cpu", by='superpixel',
                        direction='nearest',
                        suffixes=('_amp', '_trig'))
-    # df2 = df.set_index("t_cpu").groupby([pd.Grouper(freq='10T'), 'superpixel']).mean().reset_index()
 
     gb = list(df.groupby("t_cpu"))
     diff = gb[-1][1]
@@ -71,25 +70,40 @@ def process(amplitude_path, trigger_path, output_dir):
     p_ampvstrig_all.ax.set_xlim((0, 200))
     p_ampvstrig_all.save(os.path.join(output_dir, "all_zoomx.pdf"))
 
-    p_diff = dAmpVsdTrigger(switch_backend=True)
-    x = diff['amplitude_sp'].values
-    y = np.abs(diff['count'].values)
-    p_diff.plot(x, y)
-    p_diff.save(os.path.join(output_dir, "dAmpVsdTrigger.pdf"))
-    p_diff.ax.set_ylim((-500, 10))
-    p_diff.save(os.path.join(output_dir, "dAmpVsdTrigger_zoom.pdf"))
+    # p_ampvstrig_spoi = AmpVsTrigger(switch_backend=True)
+    # for superpixel in tqdm(spoi, total=len(spoi)):
+    #     df_sp = df.loc[df['superpixel'] == superpixel]
+    #     label = "SP={}".format(superpixel)
+    #     x = df_sp['amplitude_sp'].values
+    #     y = df_sp['count'].values
+    #     p_ampvstrig_spoi.plot(x, y, label=label)
+    # p_ampvstrig_spoi.ax.set_xlim((0, 200))
+    # p_ampvstrig_spoi.add_legend('best')
+    # p_ampvstrig_spoi.save(os.path.join(output_dir, "spoi.pdf"))
 
+    # p_diff = dAmpVsdTrigger(switch_backend=True)
+    # x = diff['amplitude_sp'].values
+    # y = np.abs(diff['count'].values)
+    # p_diff.plot(x, y)
+    # p_diff.save(os.path.join(output_dir, "dAmpVsdTrigger.pdf"))
+    # p_diff.ax.set_ylim((-500, 10))
+    # p_diff.save(os.path.join(output_dir, "dAmpVsdTrigger_zoom.pdf"))
 
-    # p_ampvstrig_sp = AmpVsTrigger(switch_backend=True)
-    # with PdfPages(os.path.join(output_dir, "superpixels.pdf")) as pdf:
-    #     for superpixel, group in tqdm(df.groupby("superpixel"), total=512):
-    #         x = group['amplitude_sp'].values
-    #         y = group['count'].values
-    #         p_ampvstrig_sp.plot(x, y)
-    #         p_ampvstrig_sp.ax.set_title("SP {}".format(superpixel))
-    #         p_ampvstrig_sp.finish()
-    #         pdf.savefig(p_ampvstrig_sp.fig)
-    #         p_ampvstrig_sp.ax.clear()
+    p_ampvstrig_sp = AmpVsTrigger(switch_backend=True)
+    desc = "Plotting superpixels"
+    with PdfPages(os.path.join(output_dir, "superpixels.pdf")) as pdf:
+        for superpixel in tqdm(spoi, total=len(spoi), desc=desc):
+            df_sp = df.loc[df['superpixel'] == superpixel]
+            color = next(p_ampvstrig_sp.ax._get_lines.prop_cycler)['color']
+            label = "SP={}".format(superpixel)
+
+            x = df_sp['amplitude_sp'].values
+            y = df_sp['count'].values
+            p_ampvstrig_sp.plot(x, y, color=color)
+            p_ampvstrig_sp.ax.set_title("SP {}".format(superpixel))
+            p_ampvstrig_sp.finish()
+            pdf.savefig(p_ampvstrig_sp.fig)
+            p_ampvstrig_sp.ax.clear()
 
 
 
@@ -99,14 +113,14 @@ def process_file(file):
     amplitude_path = get_data("d190117_trigger_stability/{}/amplitudes.h5".format(name))
     trigger_path = get_data("d190117_trigger_stability/{}/trigger.h5".format(name))
     output_dir = get_plot("d190117_trigger_stability/amp_vs_trig/{}".format(name))
-    process(amplitude_path, trigger_path, output_dir)
+    spoi = file.spoi
+    process(amplitude_path, trigger_path, output_dir, spoi)
 
 
 def main():
     files = [
-        d190111(),
-        # d190115_1mAcut(),
-        # d190115_1mAcut_12h(),
+        # d190111(),
+        d190118(),
     ]
     [process_file(file) for file in files]
 

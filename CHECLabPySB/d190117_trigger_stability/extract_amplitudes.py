@@ -24,6 +24,8 @@ def process(readers, output_path):
 
         for wfs in tqdm(reader, total=n_events, desc=desc1):
             iev = reader.index
+            if iev % 10:
+                continue
             t_cpu_sec = reader.current_cpu_s
             t_cpu_ns = reader.current_cpu_ns
             t_cpu = pd.to_datetime(
@@ -34,6 +36,11 @@ def process(readers, output_path):
             amplitude = wfs.max(axis=1)
             sum_wfs = wfs[sp_arr].sum(1)
             amplitude_sp = sum_wfs.max(axis=1)
+
+            # plt.plot(wfs[sp_arr][372].T)
+            # plt.ylim((-25, 75))
+            # plt.pause(0.5)
+            # plt.cla()
 
             df_list.append(pd.DataFrame(dict(
                 iev=iev,
@@ -59,9 +66,8 @@ def process_file(file):
 
 def main():
     files = [
-        d190111(),
-        # d190115_1mAcut(),
-        # d190115_1mAcut_12h(),
+        # d190111(),
+        d190118(),
     ]
     [process_file(file) for file in files]
 

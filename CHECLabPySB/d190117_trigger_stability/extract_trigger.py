@@ -42,9 +42,8 @@ def process_file(file):
 
 def main():
     files = [
-        d190111(),
-        # d190115_1mAcut(),
-        # d190115_1mAcut_12h(),
+        # d190111(),
+        d190118(),
     ]
     [process_file(file) for file in files]
 
