@@ -15,8 +15,8 @@ class AmpVsHV(Plotter):
         self.ax.plot(x, y, '.', ms=1, label=label, alpha=0.7, **kwargs)
 
     def finish(self):
-        self.ax.set_xlabel("Superpixel-Waveform Maximum (mV)")
-        self.ax.set_ylabel("Superpixel Voltage (Volts)")
+        self.ax.set_xlabel("Superpixel Voltage (Volts)")
+        self.ax.set_ylabel("Superpixel-Waveform Maximum (mV)")
 
 
 def process(amplitude_path, hv_path, output_dir, spoi):
@@ -61,19 +61,22 @@ def process(amplitude_path, hv_path, output_dir, spoi):
 
     df['tm'] = df['superpixel'] // 16
     df = df.loc[df['hv'] > 56]
+    ymin = df['amplitude_sp'].min()
+    ymax = df['amplitude_sp'].max()
     p_ampvshv_tm = AmpVsHV(switch_backend=True)
     with PdfPages(os.path.join(output_dir, "tm.pdf")) as pdf:
         for tm, group_tm in tqdm(df.groupby("tm"), total=32):
             for sp, group_sp in group_tm.groupby("superpixel"):
                 color = next(p_ampvshv_tm.ax._get_lines.prop_cycler)['color']
                 label = "SP={}".format(sp)
-                x = group_sp['amplitude_sp'].values
-                y = group_sp['hv'].values
+                x = group_sp['hv'].values
+                y = group_sp['amplitude_sp'].values
                 p_ampvshv_tm.plot(x, y, color=color, label=label)
                 p_ampvshv_tm.ax.set_title("TM {}".format(tm))
             p_ampvshv_tm.finish()
             p_ampvshv_tm.add_legend(5)
-            # p_ampvshv_tm.ax.set_ylim((56, 70))
+            p_ampvshv_tm.ax.set_xlim((65, 70))
+            p_ampvshv_tm.ax.set_ylim((ymin, ymax))
             pdf.savefig(p_ampvshv_tm.fig)
             p_ampvshv_tm.ax.clear()
 
