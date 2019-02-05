@@ -4,9 +4,9 @@ import warnings
 from CHECLabPy.utils.files import create_directory
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
-_DATA = os.path.expanduser("~/Data/CHECLabPySB/data")
-_PLOT = os.path.expanduser("~/Data/CHECLabPySB/plots")
-_CHECS = os.path.expanduser("/Volumes/gct-jason/data_checs/")
+_DATA = os.path.expanduser(os.path.join(os.environ['dir_data'], "CHECLabPySB/data"))
+_PLOT = os.path.expanduser(os.path.join(os.environ['dir_data'], "CHECLabPySB/plots"))
+_CHECS = os.path.expanduser(os.environ['dir_data_checs'])
 
 
 def get_data(path):
