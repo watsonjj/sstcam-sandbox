@@ -1,6 +1,4 @@
 import matplotlib as mpl
-ORIGINAL_BACKEND = mpl.get_backend()
-mpl.use('pgf')
 from matplotlib import pyplot as plt
 import os
 import numpy as np
@@ -8,26 +6,19 @@ from CHECLabPy.utils.files import create_directory
 
 
 class Plotter:
-    def __init__(self, ax=None, sidebyside=False, switch_backend=False):
+    def __init__(self, ax=None, sidebyside=False):
         self.sidebyside = sidebyside
 
-        self.switch_backend = switch_backend
-        if self.switch_backend:
-            plt.switch_backend(ORIGINAL_BACKEND)
-
         rc = {  # setup matplotlib to use latex for output
-            "pgf.texsystem": "pdflatex", # change this if using xetex or lautex
-            "text.usetex": True,         # use LaTeX to write all text
             "font.family": 'lmodern',
-            # "font.family": "cursive",
-            "font.serif": [],            # blank entries should cause plots to inherit fonts from the document
+            "font.serif": [],
             "font.sans-serif": [],
             "font.monospace": [],
             "font.cursive": [],
             "font.size": 10,
             "axes.titlesize": 10,
-            "axes.labelsize": 10,        # LaTeX default is 10pt font.
-            "legend.fontsize": 8,        # Make the legend/label fonts a little smaller
+            "axes.labelsize": 10,
+            "legend.fontsize": 8,
             "axes.prop_cycle": plt.cycler(color=plt.cm.Dark2.colors),
 
             # Set x axis
@@ -59,16 +50,6 @@ class Plotter:
 
             "figure.figsize": self.get_figsize(),
             "lines.markeredgewidth": 1,
-            "pgf.preamble": [
-                r"\usepackage[utf8x]{inputenc}", # use utf8 fonts becasue your computer can handle it :)
-                r"\usepackage[T1]{fontenc}", # plots will be generated using this preamble
-                r"\usepackage{amsmath}",
-                r"\usepackage{pgfplots}",
-                r"\usepackage{gensymb}",
-                r"\usepackage{siunitx}",
-                r"\DeclareSIUnit{\pe}{{p.e.}}",
-                r"\newcommand*\average[1]{\bar{#1}}"
-            ]
         }
 
         mpl.rcParams.update(rc)
@@ -98,10 +79,6 @@ class Plotter:
     def create_figure(self):
         fig = plt.figure(figsize=self.get_figsize())
         ax = fig.add_subplot(1, 1, 1)
-
-        # fmt = mpl.ticker.StrMethodFormatter("{x}")
-        # ax.xaxis.set_major_formatter(fmt)
-        # ax.yaxis.set_major_formatter(fmt)
         return fig, ax
 
     def add_legend(self, loc="upper right", **kwargs):
@@ -118,11 +95,6 @@ class Plotter:
         self.finish()
         output_dir = os.path.dirname(output_path)
         self.create_directory(output_dir)
-        # self.fig.tight_layout()
         self.fig.savefig(output_path, bbox_inches='tight')
         print("Figure saved to: {}".format(output_path))
-
-        if self.switch_backend:
-            plt.switch_backend('pgf')
-
         plt.close(self.fig)
