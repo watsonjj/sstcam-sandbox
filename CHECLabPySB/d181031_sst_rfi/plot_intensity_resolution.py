@@ -152,7 +152,7 @@ def main():
         "Prod3": d181030_MCOnsky_Prod3(),
         "Prod4": d181030_MCOnsky_Prod4(),
     }
-    ph = PlotHandler(high_nsb=False, switch_backend=True)
+    ph = PlotHandler(high_nsb=False)#, switch_backend=True)
     poi = list(path_dict.values())[0].poi
     ph.plot_camera_from_dict(path_dict)
     ph.p_cr.ax.set_xlim([x_min , x_max])
