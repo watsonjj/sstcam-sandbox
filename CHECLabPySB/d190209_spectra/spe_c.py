@@ -1,9 +1,8 @@
-# import scipy.special # TODO: Why is this needed?
 import ctypes
 import numpy as np
 import os
 
-# try:
+
 lib = np.ctypeslib.load_library("spe_functions", os.path.dirname(__file__))
 mapm_c = lib.mapm
 mapm_c.restype = None
@@ -35,9 +34,6 @@ sipm_c.argtypes = [
     ctypes.c_double,
     ctypes.c_double,
 ]
-
-# except OSError:
-#     pass
 
 
 def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):

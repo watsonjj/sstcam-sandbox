@@ -31,6 +31,7 @@ def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
     pe_signal = 0
     found = False
 
+    # Loop over the possible total number of cells fired
     for k in prange(1, 250):
         p = poisson(k, lambda_)  # Probability to get k avalanches
 
@@ -56,13 +57,12 @@ def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
 
     # Obtain pedestal peak
     p_ped = exp(-lambda_)
-    ped_signal = np.zeros(x.size)
-    for i, xi in enumerate(x):
-        ped_signal[i] += norm * p_ped * normal_pdf(xi, eped, eped_sigma)
+    ped_signal = norm * p_ped * normal_pdf(x, eped, eped_sigma)
 
     pe_signal = np.zeros(x.size)
     found = False
 
+    # Loop over the possible total number of cells fired
     for k in prange(1, 250):
         pk = 0
         for j in prange(1, k+1):
