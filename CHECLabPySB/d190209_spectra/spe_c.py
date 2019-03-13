@@ -36,13 +36,13 @@ sipm_c.argtypes = [
 ]
 
 
-def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
+def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, **kwargs):
     y = np.zeros(x.size, dtype=np.double)
     mapm_c(x, y, y.size, norm, eped, eped_sigma, spe, spe_sigma, lambda_)
     return y
 
 
-def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
+def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap, **kwargs):
     y = np.zeros(x.size, dtype=np.double)
     sipm_c(x, y, y.size,  norm, eped, eped_sigma, spe, spe_sigma,
            lambda_, opct, pap, dap)

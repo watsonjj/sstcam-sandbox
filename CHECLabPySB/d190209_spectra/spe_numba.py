@@ -23,7 +23,7 @@ def normal_pdf(x, mean=0, std_deviation=1):
 
 
 @jit(fastmath=True, parallel=True)
-def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
+def mapm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
     # Obtain pedestal peak
     p_ped = exp(-lambda_)
     ped_signal = norm * p_ped * normal_pdf(x, eped, eped_sigma)
@@ -52,7 +52,7 @@ def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
 
 
 @jit(fastmath=True, parallel=True)
-def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
+def sipm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
     sap = spe_sigma  # Assume the sigma of afterpulses is the same
 
     # Obtain pedestal peak
@@ -100,3 +100,11 @@ def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
         )
 
     return ped_signal + pe_signal
+
+
+def mapm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, **kwargs):
+    return mapm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_)
+
+
+def sipm(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap, **kwargs):
+    return sipm_nb(x,  norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap)
