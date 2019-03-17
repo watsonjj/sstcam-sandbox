@@ -1,34 +1,60 @@
 import numpy as np
-from numba import jit, prange
-from math import lgamma, exp, pow, sqrt, log
+from numba import njit, prange, vectorize, int64, float64
+from math import lgamma, exp, pow, sqrt, log, pi
 
 
-SQRT2PI = np.sqrt(2.0 * np.pi)
+SQRT2PI = sqrt(2.0 * pi)
 
 
-@jit(nopython=True, fastmath=True, parallel=True)
+@vectorize([float64(int64, int64)], fastmath=True)
 def binom(n, k):
+    """
+    Obtain the binomial coefficient, using a definition that is mathematically
+    equivalent but numerically stable to avoid arithmetic overflow.
+
+    The result of this method is "n choose k", the number of ways choose an
+    (unordered) subset of k elements from a fixed set of n elements.
+
+    Source: https://en.wikipedia.org/wiki/Binomial_coefficient
+    """
     return exp(lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1))
 
 
-@jit(nopython=True, fastmath=True, parallel=True)
+@vectorize([float64(int64, float64)], fastmath=True)
 def poisson(k, mu):
+    """
+    Obtain the poisson PMF, using a definition that is mathematically
+    equivalent but numerically stable to avoid arithmetic overflow.
+
+    The result is the probability of observing k events for an average number
+    of events per interval, lambda_.
+
+    Source: https://en.wikipedia.org/wiki/Poisson_distribution
+    """
     return exp(k * log(mu) - mu - lgamma(k + 1))
 
 
-@jit(nopython=True, fastmath=True, parallel=True)
+@vectorize([float64(float64, float64, float64)], fastmath=True)
 def normal_pdf(x, mean=0, std_deviation=1):
+    """
+    Obtain the normal PDF.
+
+    The result is the probability of obseving a value at a position x, for a
+    normal distribution described by a mean m and a standard deviation s.
+
+    Source: https://stackoverflow.com/questions/10847007/using-the-gaussian-probability-density-function-in-c
+    """
     u = (x - mean) / std_deviation
-    return np.exp(-0.5 * u ** 2) / (SQRT2PI * std_deviation)
+    return exp(-0.5 * u ** 2) / (SQRT2PI * std_deviation)
 
 
-@jit(fastmath=True, parallel=True)
+@njit(fastmath=True, parallel=True)
 def mapm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
     # Obtain pedestal peak
     p_ped = exp(-lambda_)
     ped_signal = norm * p_ped * normal_pdf(x, eped, eped_sigma)
 
-    pe_signal = 0
+    pe_signal = np.zeros(x.size)
     found = False
 
     # Loop over the possible total number of cells fired
@@ -36,9 +62,9 @@ def mapm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
         p = poisson(k, lambda_)  # Probability to get k avalanches
 
         # Skip insignificant probabilities
-        if (not found) & (p < 1e-5):
+        if (not found) & (p < 1e-4):
             continue
-        if found & (p < 1e-5):
+        if found & (p < 1e-4):
             break
         found = True
 
@@ -51,7 +77,7 @@ def mapm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_):
     return ped_signal + pe_signal
 
 
-@jit(fastmath=True, parallel=True)
+@njit(fastmath=True, parallel=True)
 def sipm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
     sap = spe_sigma  # Assume the sigma of afterpulses is the same
 
@@ -69,7 +95,7 @@ def sipm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
             pj = poisson(j, lambda_)  # Probability for j initial fired cells
 
             # Skip insignificant probabilities
-            if pj < 1e-5:
+            if pj < 1e-4:
                 continue
 
             # Sum the probability from the possible combinations which result
@@ -78,9 +104,9 @@ def sipm_nb(x, norm, eped, eped_sigma, spe, spe_sigma, lambda_, opct, pap, dap):
             pk += pj * pow(1-opct, j) * pow(opct, k-j) * binom(k-1, j-1)
 
         # Skip insignificant probabilities
-        if (not found) & (pk < 1e-5):
+        if (not found) & (pk < 1e-4):
             continue
-        if found & (pk < 1e-5):
+        if found & (pk < 1e-4):
             break
         found = True
 
