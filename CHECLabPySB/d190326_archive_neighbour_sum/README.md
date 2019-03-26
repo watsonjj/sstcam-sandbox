@@ -1,0 +1,1 @@
+Archive of the `get_neighbour_sum` ctypes-wrapped function that was in ctapipe
