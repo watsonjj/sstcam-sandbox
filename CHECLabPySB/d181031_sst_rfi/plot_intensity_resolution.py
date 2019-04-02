@@ -1,4 +1,4 @@
-from CHECLabPySB.plotting.intensity_resolution import IntensityResolutionPlotter, \
+from CHECLabPySB.d181031_sst_rfi.plotting import IntensityResolutionPlotter, \
     IntensityResolutionWRRPlotter
 from CHECLabPySB.plotting.resolutions import ChargeMeanPlotter
 from CHECLabPySB.d181031_sst_rfi.intensity_resolution import *
@@ -9,7 +9,9 @@ import numpy as np
 
 
 class PlotHandler:
-    def __init__(self, high_nsb=True, **kwargs):
+    def __init__(self, high_nsb=True, plot_scaling=False, **kwargs):
+        self.plot_scaling = plot_scaling
+
         self.p_cr = IntensityResolutionPlotter(**kwargs)
         self.p_crwrr = IntensityResolutionWRRPlotter(**kwargs)
         self.p_mean = ChargeMeanPlotter(**kwargs)
@@ -26,10 +28,12 @@ class PlotHandler:
     def plot_average(self, file, label, poi, n_bins=40):
         self.p_cr.set_file(file)
         self.p_cr.plot_average(label, n_bins)
-        self.p_cr.plot_scaling(label)
+        if self.plot_scaling:
+            self.p_cr.plot_scaling(label)
         self.p_crwrr.set_file(file)
         self.p_crwrr.plot_average(label, n_bins)
-        self.p_crwrr.plot_scaling(label)
+        if self.plot_scaling:
+            self.p_crwrr.plot_scaling(label)
         self.p_mean.set_path(file.intensity_resolution_path)
         self.p_mean.plot_pixel(poi, label)
 
@@ -103,19 +107,19 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV")
-    # path_dict = {
-    #     "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
-    #     "40MHz": d181010_LabSM_40MHz_100mV(),
-    #     "1000MHz": d181010_LabSM_1000MHz_100mV(),
-    # }
-    # ph = PlotHandler()
-    # poi = list(path_dict.values())[0].poi
-    # ph.plot_average_from_dict(path_dict, poi)
-    # ph.p_cr.ax.set_xlim([x_min , x_max])
-    # ph.p_cr.ax.set_ylim([0.01, 20])
-    # ph.p_crwrr.ax.set_ylim(top=2)
-    # ph.save(output_dir)
+    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV")
+    path_dict = {
+        # "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
+        "40MHz": d181010_LabSM_40MHz_100mV(),
+        "1000MHz": d181010_LabSM_1000MHz_100mV(),
+    }
+    ph = PlotHandler()
+    poi = list(path_dict.values())[0].poi
+    ph.plot_average_from_dict(path_dict, poi)
+    ph.p_cr.ax.set_xlim([x_min , x_max])
+    ph.p_cr.ax.set_ylim([0.01, 20])
+    ph.p_crwrr.ax.set_ylim(top=2)
+    ph.save(output_dir)
 
     # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/lab_vs_mc")
     # path_dict = {
@@ -147,15 +151,42 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/mc_prod")
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/mc_prod")
+    # path_dict = {
+    #     "Prod3": d181030_MCOnsky_Prod3(),
+    #     "Prod4": d181030_MCOnsky_Prod4(),
+    # }
+    # ph = PlotHandler(high_nsb=False)#, switch_backend=True)
+    # poi = list(path_dict.values())[0].poi
+    # ph.plot_camera_from_dict(path_dict)
+    # ph.p_cr.ax.set_xlim([x_min , x_max])
+    # ph.save(output_dir)
+
+    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV_mc_comparison")
     path_dict = {
-        "Prod3": d181030_MCOnsky_Prod3(),
-        "Prod4": d181030_MCOnsky_Prod4(),
+        "40MHz": d181010_LabSM_40MHz_100mV(),
+        "1000MHz": d181010_LabSM_1000MHz_100mV(),
+        "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
     }
-    ph = PlotHandler(high_nsb=False)#, switch_backend=True)
+    ph = PlotHandler()
     poi = list(path_dict.values())[0].poi
-    ph.plot_camera_from_dict(path_dict)
+    ph.plot_average_from_dict(path_dict, poi)
     ph.p_cr.ax.set_xlim([x_min , x_max])
+    ph.p_cr.ax.set_ylim([0.01, 20])
+    ph.p_crwrr.ax.set_ylim(top=2)
+    ph.save(output_dir)
+
+    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV_proj")
+    path_dict = {
+        "40MHz": d181010_LabSM_40MHz_100mV(),
+        "1000MHz": d181010_LabSM_1000MHz_100mV(),
+    }
+    ph = PlotHandler(plot_scaling=True)
+    poi = list(path_dict.values())[0].poi
+    ph.plot_average_from_dict(path_dict, poi)
+    ph.p_cr.ax.set_xlim([x_min , x_max])
+    ph.p_cr.ax.set_ylim([0.01, 20])
+    ph.p_crwrr.ax.set_ylim(top=2)
     ph.save(output_dir)
 
 

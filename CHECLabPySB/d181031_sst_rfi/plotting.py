@@ -126,7 +126,7 @@ class IntensityResolutionPlotter(Plotter):
 
     def plot_scaling(self, label=''):
         if self.scale_x is not None:
-            label = label + " (Prod4 Scaling)"
+            label = label + " (Improved SiPM Scaling)"
             self.ax.plot(self.scale_x, self.scale_y, ':', color=self.current_color, alpha=0.5, label=label)
 
     def finish(self):
