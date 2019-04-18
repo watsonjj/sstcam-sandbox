@@ -53,11 +53,11 @@ c2 = correlate1d(wf, reference_pulse, mode='constant')[0]
 # end = start + c2.size
 # c1 = c1[start:end]
 
-plt.plot(c1)
-plt.plot(c2)
+# plt.plot(c1)
+# plt.plot(c2)
 # plt.plot(wf[0])
 #
 # assert np.allclose(c1, c2)
-%timeit cross_correlate_1(wf, reference_pulse)
-%timeit cross_correlate_2(wf, reference_pulse2)
-%timeit correlate1d(wf, reference_pulse, mode='constant')
+# %timeit cross_correlate_1(wf, reference_pulse)
+# %timeit cross_correlate_2(wf, reference_pulse2)
+# %timeit correlate1d(wf, reference_pulse, mode='constant')
