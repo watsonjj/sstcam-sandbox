@@ -53,7 +53,7 @@ def main():
         np.random.shuffle(index)
     if max_events is not None:
         index = index[:max_events]
-    df = df.loc[index]
+    df = df.iloc[index]
 
     create_directory(dirname(output_path))
     df.to_csv(output_path, sep='\t', index=False, float_format="%.4f")
