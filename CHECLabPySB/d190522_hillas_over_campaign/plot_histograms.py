@@ -45,7 +45,7 @@ class HillasPlotter(Plotter):
 
     def finish(self):
         self.add_legend("best", fontsize=4)
-        # self.ax.set_yscale('log')
+        self.ax.set_yscale('log')
         # self.ax.get_yaxis().set_major_formatter(
         #     FuncFormatter(lambda y, _: '{:g}'.format(y)))
 
