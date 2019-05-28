@@ -133,10 +133,12 @@ c1 = cross_correlate_1(wf, reference_pulse)[0]
 c2 = cross_correlate_2(wf, reference_pulse2)[0]
 c3 = cross_correlate_3(wf, reference_pulse3)[0]
 c4 = cross_correlate_4(wf, reference_pulse3)[0]
+c5 = correlate1d(wf, reference_pulse3, mode='constant', origin=reference_pulse3.argmax() - reference_pulse3.size // 2)[0]
 
 assert np.allclose(cs, c2)
 assert np.allclose(cs, c3)
 assert np.allclose(cs, c4)
+assert np.allclose(cs, c5)
 
 # plt.plot(cs)
 # plt.plot(c1)
@@ -148,3 +150,4 @@ assert np.allclose(cs, c4)
 # %timeit cross_correlate_2(wf, reference_pulse2)
 # %timeit cross_correlate_3(wf, reference_pulse3)
 # %timeit cross_correlate_4(wf, reference_pulse3)
+# %timeit correlate1d(wf, reference_pulse3, mode='constant', origin=reference_pulse3.argmax() - reference_pulse3.size // 2)
