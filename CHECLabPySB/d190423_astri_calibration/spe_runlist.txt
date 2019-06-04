@@ -1,0 +1,12 @@
+nudge	spe_0.5pe	spe_0.8pe	spe_1.1pe	spe_1.7pe	spe_2.4pe
+-25	Run09151_dl1.h5	Run09102_dl1.h5	Run09114_dl1.h5	Run09126_dl1.h5	Run09138_dl1.h5
+-20	Run09152_dl1.h5	Run09103_dl1.h5	Run09115_dl1.h5	Run09127_dl1.h5	Run09139_dl1.h5
+-15	Run09153_dl1.h5	Run09104_dl1.h5	Run09116_dl1.h5	Run09128_dl1.h5	Run09140_dl1.h5
+-10	Run09154_dl1.h5	Run09105_dl1.h5	Run09117_dl1.h5	Run09129_dl1.h5	Run09141_dl1.h5
+-5	Run09155_dl1.h5	Run09106_dl1.h5	Run09118_dl1.h5	Run09130_dl1.h5	Run09142_dl1.h5
++0	Run09156_dl1.h5	Run09107_dl1.h5	Run09119_dl1.h5	Run09131_dl1.h5	Run09143_dl1.h5
++5	Run09157_dl1.h5	Run09108_dl1.h5	Run09120_dl1.h5	Run09132_dl1.h5	Run09144_dl1.h5
++10	Run09158_dl1.h5	Run09109_dl1.h5	Run09121_dl1.h5	Run09133_dl1.h5	Run09145_dl1.h5
++15	Run09159_dl1.h5	Run09110_dl1.h5	Run09122_dl1.h5	Run09134_dl1.h5	Run09146_dl1.h5
++20	Run09160_dl1.h5	Run09111_dl1.h5	Run09123_dl1.h5	Run09135_dl1.h5	Run09147_dl1.h5
++25	Run09161_dl1.h5	Run09112_dl1.h5	Run09124_dl1.h5	Run09136_dl1.h5	Run09148_dl1.h5
