@@ -3,11 +3,9 @@ from CHECLabPy.plotting.camera import CameraImage
 from CHECLabPy.utils.mapping import get_ctapipe_camera_geometry
 from CHECLabPy.core.io import TIOReader
 from CHECLabPy.calib import TimeCalibrator
-from CHECLabPy.waveform_reducers.cross_correlation \
-    import CrossCorrelationNeighbour
-from CHECOnsky.calib import AstriAmplitudeCalibrator, \
-    get_nudge_and_temperature_from_reader
-from CHECOnsky.calib import tailcut
+from CHECOnsky.calib import OnskyAmplitudeCalibrator, \
+    get_nudge_and_temperature_from_reader, OnskyExtractor
+from CHECOnsky.calib import obtain_cleaning_mask
 import argparse
 from argparse import ArgumentDefaultsHelpFormatter as Formatter
 from os.path import dirname, splitext, join
@@ -145,7 +143,7 @@ def main():
     geom = get_ctapipe_camera_geometry(
         mapping, plate_scale=37.56e-3
     )
-    charge_extractor = CrossCorrelationNeighbour(
+    charge_extractor = OnskyExtractor(
         n_pixels, n_samples,
         mapping=mapping,
         reference_pulse_path=reference_pulse_path,
@@ -162,7 +160,7 @@ def main():
         r1_path = path.replace("_hillas.h5", "_r1.tio")
         reader = TIOReader(r1_path)
         nudge, temperature = get_nudge_and_temperature_from_reader(reader)
-        amplitude_calibrator = AstriAmplitudeCalibrator(nudge, temperature)
+        amplitude_calibrator = OnskyAmplitudeCalibrator(nudge, temperature)
         readers[path] = reader
         amplitude_calibrators[path] = amplitude_calibrator
 
@@ -188,12 +186,12 @@ def main():
 
         shifted = time_calibrator(waveforms)
         extracted = charge_extractor.process(shifted)
-        charge = extracted['charge_cc_nn']
-        time = extracted['t_cc_nn']
+        charge = extracted['charge_onsky']
+        time = extracted['t_onsky']
         photons = amplitude_calibrator(charge, np.arange(n_pixels))
         pe = photons * 0.25
 
-        mask = tailcut(geom, photons, time)
+        mask = obtain_cleaning_mask(geom, photons, time)
         if not mask.any():
             msg = f"No pixels survived cleaning for: RUN {iobs} IEV {iev}"
             raise ValueError(msg)
