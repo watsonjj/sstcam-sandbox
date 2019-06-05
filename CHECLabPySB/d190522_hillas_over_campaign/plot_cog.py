@@ -82,6 +82,7 @@ def bin_cog(x, y, mapping):
 
 def main():
     path = get_data("d190522_hillas_over_campaign/hillas.h5")
+    # path = get_data("d190522_hillas_over_campaign/hillas_old.h5")
     path_mc = get_astri_2019("d2019-05-15_simulations/proton.h5")
 
     with HDF5Reader(path) as reader:
@@ -89,6 +90,8 @@ def main():
         mapping = reader.get_mapping()
 
         df = df.loc[(df['width'] * df['length'] / df['concentration_1']) < 20]
+        # df = df.loc[df['intensity'] > 1000*4]
+        print(f"N_EVENTS={df.index.size}")
 
     with HDF5Reader(path_mc) as reader:
         df_mc = reader.read("data")
@@ -133,9 +136,10 @@ def main():
     p_hist.plot(centre, "Centre")
     p_hist.save(join(output_dir, f"week1_hist.png"), dpi=1000)
     mean_camera = np.mean(camera)
+    mean_centre = np.mean(centre)
     std_camera = np.std(camera)
     std_centre = np.std(centre)
-    print(f"Week1: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_camera}")
+    print(f"Week1: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_centre}")
 
     df_week2 = df.loc[df['iinv'] >= 6]
     x = df_week2['x'].values
@@ -160,9 +164,10 @@ def main():
     p_hist.plot(centre, "Centre")
     p_hist.save(join(output_dir, f"mc_hist.png"), dpi=1000)
     mean_camera = np.mean(camera)
+    mean_centre = np.mean(centre)
     std_camera = np.std(camera)
     std_centre = np.std(centre)
-    print(f"MC: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_camera}")
+    print(f"MC: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_centre}")
 
 
 if __name__ == '__main__':
