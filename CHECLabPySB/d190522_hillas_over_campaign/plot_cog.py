@@ -1,4 +1,6 @@
+from CHECLabPySB import get_astri_2019
 from CHECLabPy.plotting.setup import Plotter
+from CHECLabPy.plotting.camera import CameraImage
 from CHECLabPy.core.io import HDF5Reader
 from CHECLabPySB import get_data, get_plot
 from os.path import join
@@ -11,7 +13,6 @@ from matplotlib.pyplot import cm
 import seaborn as sns
 from scipy.stats import kde
 from IPython import embed
-
 
 
 class COGPlotter(Plotter):
@@ -52,9 +53,36 @@ class COGPlotter(Plotter):
         )
 
 
+class Hist(Plotter):
+    def plot(self, values, label):
+        self.ax.hist(values, bins=100, label=label)
+
+    def finish(self):
+        self.add_legend("best")
+
+
+def bin_cog(x, y, mapping):
+    mid_row = mapping.metadata['n_rows'] // 2
+    mid_col = mapping.metadata['n_columns'] // 2
+
+    pix_x = np.sort(mapping.loc[mapping['row'] == mid_row]['xpix'].values)
+    pix_y = np.sort(mapping.loc[mapping['col'] == mid_col]['ypix'].values)
+    size = mapping.metadata['size']
+    pix_x = np.concatenate([[pix_x[0] - 5*size], pix_x, [pix_x[-1] + 5*size]])
+    pix_y = np.concatenate([[pix_y[0] - 5*size], pix_y, [pix_y[-1] + 5*size]])
+
+    bin_x = (pix_x[1:] + pix_x[:-1]) / 2
+    bin_y = (pix_y[1:] + pix_y[:-1]) / 2
+
+    hist, _, _ = np.histogram2d(x, y, bins=(bin_x, bin_y))
+    image = hist[mapping.col, mapping.row]
+
+    return image
+
+
 def main():
     path = get_data("d190522_hillas_over_campaign/hillas.h5")
-    path_mc = "/Volumes/gct-jason/astri_onsky_archive/d2019-05-15_simulations/proton.h5"
+    path_mc = get_astri_2019("d2019-05-15_simulations/proton.h5")
 
     with HDF5Reader(path) as reader:
         df = reader.read("data")
@@ -82,6 +110,11 @@ def main():
     p_cog = COGPlotter()
     p_cog.plot(x, y, mapping)
     p_cog.save(join(output_dir, f"all.png"), dpi=1000)
+    image = bin_cog(x, y, mapping)
+    ci = CameraImage.from_mapping(mapping)
+    ci.image = image
+    ci.add_colorbar()
+    ci.save(join(output_dir, f"all_image.png"), dpi=1000)
 
     df_week1 = df.loc[df['iinv'] < 6]
     x = df_week1['x'].values
@@ -89,6 +122,20 @@ def main():
     p_cog = COGPlotter()
     p_cog.plot(x, y, mapping)
     p_cog.save(join(output_dir, "week1.png"), dpi=1000)
+    camera = bin_cog(x, y, mapping)
+    centre = camera.reshape((32, 64))[[12, 13, 18, 19]].ravel()
+    ci = CameraImage.from_mapping(mapping)
+    ci.image = camera
+    ci.add_colorbar()
+    ci.save(join(output_dir, f"week1_image.png"), dpi=1000)
+    p_hist = Hist()
+    p_hist.plot(camera, "Camera")
+    p_hist.plot(centre, "Centre")
+    p_hist.save(join(output_dir, f"week1_hist.png"), dpi=1000)
+    mean_camera = np.mean(camera)
+    std_camera = np.std(camera)
+    std_centre = np.std(centre)
+    print(f"Week1: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_camera}")
 
     df_week2 = df.loc[df['iinv'] >= 6]
     x = df_week2['x'].values
@@ -100,8 +147,23 @@ def main():
     x = df_mc['x'].values
     y = df_mc['y'].values
     p_cog = COGPlotter()
-    p_cog.plot(x, y, mapping)
+    p_cog.plot(x, y, mapping_mc)
     p_cog.save(join(output_dir, f"mc.png"), dpi=1000)
+    camera = bin_cog(x, y, mapping)
+    centre = camera.reshape((32, 64))[[12, 13, 18, 19]].ravel()
+    ci = CameraImage.from_mapping(mapping)
+    ci.image = camera
+    ci.add_colorbar()
+    ci.save(join(output_dir, f"mc_image.png"), dpi=1000)
+    p_hist = Hist()
+    p_hist.plot(camera, "Camera")
+    p_hist.plot(centre, "Centre")
+    p_hist.save(join(output_dir, f"mc_hist.png"), dpi=1000)
+    mean_camera = np.mean(camera)
+    std_camera = np.std(camera)
+    std_centre = np.std(centre)
+    print(f"MC: camera_mean={mean_camera}, camera={std_camera/mean_camera}, centre={std_centre/mean_camera}")
+
 
 if __name__ == '__main__':
     main()
