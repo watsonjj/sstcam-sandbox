@@ -14,7 +14,7 @@ class Hist2D(Plotter):
         self.ax.set_ylabel(ylabel)
 
     def plot(self, x, y):
-        self.ax.hist2d(x, y, bins=(100, 100), norm=LogNorm())
+        self.ax.hist2d(x, y, bins=(100, 100))#, norm=LogNorm())
 
 
 def main():
@@ -36,7 +36,8 @@ def main():
     p.save(join(output, "tgradvslength.pdf"))
 
     p = Hist2D("Time Gradient (ns/degree)", "Impact Distance (m)")
-    p.plot(tgradient_mc, impact)
+    mask = np.logical_and(tgradient_mc < 20, tgradient_mc > -20)
+    p.plot(tgradient_mc[mask], impact[mask])
     p.save(join(output, "tgradvsimpact.pdf"))
 
     p = Hist2D("Time Gradient (ns/degree)", "Impact X (m)")
