@@ -42,15 +42,15 @@ class CameraAnimation(Plotter):
         self.ci_cimage = CameraImage.from_mapping(mapping, ax=self.ax_cimage)
         self.ci_cimage.add_colorbar("Pixel Amplitude (p.e.)", pad=0)
         self.fig_combined.subplots_adjust(
-            left=0.01, right=0.95, top=0.95, bottom=0.05, wspace=0, hspace=0
+            left=0.01, right=0.95, top=0.90, bottom=0.05, wspace=0, hspace=0
         )
 
         self.meta = None
         self.image = None
         self.waveforms = None
 
-    def set_meta(self, i, iobs, iev):
-        self.meta = (i, iobs, iev)
+    def set_meta(self, i, iobs, iev, tduration):
+        self.meta = (i, iobs, iev, tduration)
 
     def set_image(self, image, min_, max_):
         self.image = (image, min_, max_)
@@ -73,7 +73,7 @@ class CameraAnimation(Plotter):
         self.create_directory(dir_goldfish)
         self.create_directory(dir_combined)
 
-        index, iobs, iev = self.meta
+        index, iobs, iev, tduration = self.meta
         filename = f"i{index}_r{iobs}_e{iev}"
 
         image, imin_, imax_ = self.image
@@ -86,6 +86,7 @@ class CameraAnimation(Plotter):
         self.ci_cgf.set_limits_minmax(fmin_, fmax_)
         self.ci_cimage.set_limits_minmax(imin_, imax_)
         self.ci_cimage.image = image
+        self.ci_cimage.ax.set_title(f"Duration = {tduration:.0f} ns")
         with tqdm(total=self.n_timeslices*2, desc="Animating") as pbar:
             def animate_goldfish(i):
                 pbar.update(1)
@@ -96,6 +97,7 @@ class CameraAnimation(Plotter):
                 pbar.update(1)
                 frame = waveforms[:, i]
                 self.ci_cgf.image = frame
+                self.ci_cgf.ax.set_title(f"T= {i*4} ns")
 
             anim_goldfish = animation.FuncAnimation(
                 self.fig_gf, animate_goldfish, frames=self.n_timeslices,
@@ -178,6 +180,7 @@ def main():
         hillas_path = row['path']
         iev = row['iev']
         iobs = row['iobs']
+        tduration = row['tduration']
 
         reader = readers[hillas_path]
         amplitude_calibrator = amplitude_calibrators[hillas_path]
@@ -212,7 +215,7 @@ def main():
         st = st if st > 0 else 0
         et = et if et < n_samples else n_samples
 
-        p_animation.set_meta(i, iobs, iev)
+        p_animation.set_meta(i, iobs, iev, tduration)
         p_animation.set_image(pe, min_image, max_image)
         p_animation.set_waveforms(shifted[:, st:et:4], min_gf, max_gf)
         p_animation.animate(output_dir, interval=50)
