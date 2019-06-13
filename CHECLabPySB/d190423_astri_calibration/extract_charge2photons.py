@@ -133,7 +133,7 @@ def main():
 
     output = dict(
         charge2photons_coeff=charge2photons_coeff.tolist(),
-        nudge_min=int(nudges.min()),
+        nudge_min=-40, #int(nudges.min()),
         nudge_max=int(nudges.max()),
     )
     outpath = get_calib_data('charge2photons.yml')
