@@ -12,68 +12,8 @@ from IPython import embed
 
 
 class CameraPlotter(CameraPixelWaveformPlotter):
-    def __init__(self, mapping, pixelmask):
+    def __init__(self, mapping):
         super().__init__(mapping)
-        # self.pm = pixelmask
-        # for pix in np.where(pixelmask.dead)[0]:
-        #     for key, spine in self.ax_dict[pix].spines.items():
-        #         spine.set_visible(True)
-        #         spine.set_color('red')
-        #         spine.set_linewidth(1)
-        # for pix in np.where(pixelmask.low)[0]:
-        #     for key, spine in self.ax_dict[pix].spines.items():
-        #         spine.set_visible(True)
-        #         spine.set_color('yellow')
-        #         spine.set_linewidth(1)
-        # for pix in np.where(np.repeat(pixelmask.bad_hv, 4))[0]:
-        #     for key, spine in self.ax_dict[pix].spines.items():
-        #         spine.set_visible(True)
-        #         spine.set_color('purple')
-        #         spine.set_linewidth(1)
-
-    # def plot_waveforms(self, waveforms):
-    #     n_pix, n_samples = waveforms.shape
-    #
-    #     dead = np.logical_or(self.pm.dead, np.repeat(self.pm.bad_hv, 4))
-    #     waveforms_notdead = waveforms[~dead]
-    #
-    #     avg_wf = waveforms_notdead.mean(axis=0)
-    #     min_ = waveforms_notdead.min()
-    #     max_ = waveforms_notdead.max()
-    #
-    #     norm = mpl.colors.Normalize(
-    #         vmin=waveforms_notdead.max(1).min(),
-    #         vmax=waveforms_notdead.max(1).max(),
-    #     )
-    #
-    #     embed()
-    #
-    #     desc = "Plotting pixels"
-    #     for pixel, ax in tqdm(self.ax_dict.items(), desc=desc):
-    #         color = mpl.cm.viridis(norm(waveforms[pixel].max()))
-    #         ax.set_facecolor(color)
-    #         ax.plot(waveforms[pixel], color='white', lw=0.2, alpha=1)
-    #         ax.plot(avg_wf, color='black', ls='--', lw=0.2, alpha=0.5)
-    #
-    #         ax.set_xlim(0, n_samples)
-    #         ax.set_ylim(min_, max_)
-
-    # def highlight_turn_off(self, turn_off):
-    #     for ipix, t in enumerate(turn_off):
-    #         if t:
-    #             for key, spine in self.ax_dict[ipix].spines.items():
-    #                 spine.set_visible(True)
-    #                 spine.set_color('red')
-    #                 spine.set_linewidth(1)
-    #         # else:
-    #         #     for key, spine in self.ax_dict[ipix].spines.items():
-    #         #         spine.set_visible(False)
-    #
-    #     for pix in np.where(turn_off)[0]:
-    #         for key, spine in self.ax_dict[pix].spines.items():
-    #             spine.set_visible(True)
-    #             spine.set_color('red')
-    #             spine.set_linewidth(1)
 
     def save(self, output_path, **kwargs):
         super().save(output_path, **kwargs)
@@ -82,14 +22,13 @@ class CameraPlotter(CameraPixelWaveformPlotter):
 
 
 class GetPlot:
-    def __init__(self, mapping, pm_dict):
+    def __init__(self, mapping):
         self.mapping = mapping
-        self.pm_dict = pm_dict
         self.plots = dict()
 
     def __getitem__(self, item):
         if item not in self.plots:
-            self.plots[item] = CameraPlotter(self.mapping, self.pm_dict[item])
+            self.plots[item] = CameraPlotter(self.mapping)
         return self.plots[item]
 
 
@@ -130,40 +69,58 @@ def main():
         for key, wfs in sp_waveforms.items()
     }
 
-    turn_off = dict()
+    trigger_off = dict()
     for key, wfs in sp_waveforms_cal.items():
         amplitude = wfs.max(1)
         median = np.median(amplitude)
         threshold = median * 1.10
-        turn_off[key] = amplitude > threshold
+        trigger_off[key] = amplitude > threshold
 
-    turn_off['d190610'][[
+    trigger_off['d190610'][[
         355,356,357,358,359,382,375,460,459,457,458,465,289,489,
-        502,254,247,154,144,56,46,39,24,25,76]
-    ] = True
+        502,254,247,154,144,56,46,39,24,25,76
+    ]] = True
 
-    for key, sp in turn_off.items():
+    for key, sp in trigger_off.items():
         print(f"{key}: f{np.where(sp)}")
 
-    plots = GetPlot(mapping, pixelmasks)
-    plots['d190428T2149'].highlight_pixels(turn_off['d190502'])
+    plots = GetPlot(mapping)
+    plots['d190428T2149'].highlight_pixels(trigger_off['d190502'])
     plots['d190428T2149'].plot_waveforms(sp_waveforms['d190502'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/led/d190502.pdf"))
     plots['d190428T2149'].plot_waveforms(sp_waveforms_cal['d190502'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/coeff/d190502.pdf"))
+    plots['d190428T2149'].reset_pixel_highlight()
 
-    plots['d190428T2149'].highlight_pixels(turn_off['d190508'])
+    plots['d190428T2149'].highlight_pixels(trigger_off['d190508'])
     plots['d190428T2149'].plot_waveforms(sp_waveforms['d190508'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/led/d190508.pdf"))
     plots['d190428T2149'].plot_waveforms(sp_waveforms_cal['d190508'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/coeff/d190508.pdf"))
+    plots['d190428T2149'].reset_pixel_highlight()
 
-    plots['d190428T2149'].highlight_pixels(turn_off['d190610'])
+    plots['d190428T2149'].highlight_pixels(trigger_off['d190610'])
     plots['d190428T2149'].plot_waveforms(sp_waveforms['d190610'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/led/d190610.pdf"))
     plots['d190428T2149'].plot_waveforms(sp_waveforms_cal['d190610'])
     plots['d190428T2149'].save(get_plot("d190611_led_flasher/coeff/d190610.pdf"))
+    plots['d190428T2149'].reset_pixel_highlight()
 
+
+    hv_off = [24, 453]
+    hv_off_array = np.zeros(n_sp, dtype=bool)
+    hv_off_array[hv_off] = True
+    trigger_off_array = np.zeros(n_sp, dtype=bool)
+    trigger_off_array[trigger_off['d190610']] = True
+    df = pd.DataFrame(dict(
+        superpixel=np.arange(n_sp),
+        hv_on=(~hv_off_array).astype(int),
+        trigger_off=trigger_off_array.astype(int),
+    ))
+    df.to_csv(
+        get_plot("d190611_led_flasher/hv_list.txt"),
+        sep='\t', index=False
+    )
 
 if __name__ == '__main__':
     main()
