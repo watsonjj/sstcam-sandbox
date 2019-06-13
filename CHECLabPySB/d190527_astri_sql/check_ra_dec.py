@@ -1,18 +1,28 @@
 from CHECLabPy.plotting.setup import Plotter
 from CHECLabPySB.d190527_astri_sql.sqlquerier import SQLQuerier
 from CHECLabPySB import get_plot
+from CHECLabPy.core.io import HDF5Reader
 import pandas as pd
 from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 
 
 def main():
-    sql = SQLQuerier()
-    start = pd.Timestamp("2019-04-29 00:00")
-    end = pd.Timestamp("2019-05-13 00:00")
-    ra = sql.get_table_between_datetimes("TCU_ACTUAL_RA", start, end)
-    dec = sql.get_table_between_datetimes("TCU_ACTUAL_DEC", start, end)
-    alt = sql.get_table_between_datetimes("TCU_ELACTPOS", start, end)
-    az = sql.get_table_between_datetimes("TCU_AZACTPOS", start, end)
+    # sql = SQLQuerier()
+    # start = pd.Timestamp("2019-04-29 00:00")
+    # end = pd.Timestamp("2019-05-13 00:00")
+    # ra = sql.get_table_between_datetimes("TCU_ACTUAL_RA", start, end)
+    # dec = sql.get_table_between_datetimes("TCU_ACTUAL_DEC", start, end)
+    # alt = sql.get_table_between_datetimes("TCU_ELACTPOS", start, end)
+    # az = sql.get_table_between_datetimes("TCU_AZACTPOS", start, end)
+
+    # path = get_astri_2019("astri_database_d190429-d190513.h5")
+    path = "/Volumes/ICYBOX/astri_onsky_archive/astri_database_d190429-d190513.h5"
+    with HDF5Reader(path) as reader:
+        ra = reader.read("TCU_ACTUAL_RA")
+        dec = reader.read("TCU_ACTUAL_DEC")
+        alt = reader.read("TCU_ELACTPOS")
+        az = reader.read("TCU_AZACTPOS")
+
     df = pd.merge(
         pd.merge(ra, dec, on='timestamp').rename(columns=dict(
             value_x="ra",
