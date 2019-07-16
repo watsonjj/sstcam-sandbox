@@ -10,7 +10,7 @@ import os
 import numpy as np
 
 
-def sipm_enf(x, spe_sigma, opct, pap, dap):
+def sipm_enf(x, spe, spe_sigma, opct, pap, dap):
     """
     SiPM formula from Gentile 2010
     http://adsabs.harvard.edu/abs/2010arXiv1006.3263G
@@ -22,6 +22,8 @@ def sipm_enf(x, spe_sigma, opct, pap, dap):
     ----------
     x : ndarray
         X points to evaluate at
+    spe : float
+        Position of the single photoelectron peak
     spe_sigma : float
         Width of the single photoelectron peak
     opct : float
@@ -50,16 +52,17 @@ def sipm_enf(x, spe_sigma, opct, pap, dap):
 
         # Evaluate probability at each value of x
         pe_signal += (
-                p0ap * norm.pdf(x, k, pe_sigma) +
-                pap1 * norm.pdf(x, k * (1 - dap), ap_sigma)
+                p0ap * norm.pdf(x, k * spe, pe_sigma) +
+                pap1 * norm.pdf(x, k * spe * (1 - dap), ap_sigma)
         )
 
     return pe_signal
 
 
-def call(output_dir, spe_sigma, opct, pap, dap):
+def call(output_dir, spe, spe_sigma, opct, pap, dap):
     print(
         f"SPE Parameters:\n"
+        f"\tspe       = {spe}\n"
         f"\tspe_sigma = {spe_sigma}\n"
         f"\topct      = {opct}\n"
         f"\tpap       = {pap}\n"
@@ -67,14 +70,14 @@ def call(output_dir, spe_sigma, opct, pap, dap):
     )
 
     x = np.linspace(0, 100, 1000)
-    y = sipm_enf(x, spe_sigma, opct, pap, dap)
+    y = sipm_enf(x, spe, spe_sigma, opct, pap, dap)
     gt = y > 1E-15
     x = x[gt]
     y = y[gt]
 
     # Resample
     x = np.linspace(x.min(), x.max(), 1000)
-    y = sipm_enf(x, spe_sigma, opct, pap, dap)
+    y = sipm_enf(x, spe, spe_sigma, opct, pap, dap)
 
     if not os.path.exists(output_dir):
         print("Creating directory: {}".format(output_dir))
@@ -89,6 +92,9 @@ def call(output_dir, spe_sigma, opct, pap, dap):
     plt.savefig(output_path, bbox_inches='tight')
     print("Created figure : {}".format(output_path))
 
+    fadc_amplitude = np.average(x, weights=y)
+    print(f"FADC_AMPLITUDE = {fadc_amplitude}")
+
 
 def main():
     description = ('Obtain the single photoelectron response for an SiPM. '
@@ -99,12 +105,15 @@ def main():
     parser.add_argument('-o', '--output', dest='output_dir', action='store',
                         required=True,
                         help='Output directory for the files')
+    parser.add_argument('--spe', dest='spe', action='store',
+                        default=1, type=float,
+                        help='Position of the single photoelectron peak')
     parser.add_argument('--spe_sigma', dest='spe_sigma', action='store',
                         default=0.1, type=float,
-                        help='Value for the standard deviation of the single '
+                        help='Standard deviation of the single '
                              'photoelectron peak')
-    parser.add_argument('--opct', dest='opct', action='store', default=0.1,
-                        type = float,
+    parser.add_argument('--opct', dest='opct', action='store',
+                        default=0.1, type=float,
                         help='Value for optical crosstalk')
     parser.add_argument('--pap', dest='pap', action='store', default=0,
                         type=float,
@@ -116,12 +125,13 @@ def main():
     args = parser.parse_args()
 
     output_dir = args.output_dir
+    spe = args.spe
     spe_sigma = args.spe_sigma
     opct = args.opct
     pap = args.pap
     dap = args.dap
 
-    call(output_dir, spe_sigma, opct, pap, dap)
+    call(output_dir, spe, spe_sigma, opct, pap, dap)
 
 
 if __name__ == '__main__':

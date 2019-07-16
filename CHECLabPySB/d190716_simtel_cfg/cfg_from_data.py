@@ -20,14 +20,12 @@ def main():
         coeff = coeff.loc[~coeff['pixel'].isin(dead)]
 
     spe = np.median(coeff['spe'])
+    spe_mv = cc.get_pulse_height(spe)
     spe_sigma = np.median(coeff['spe_sigma'] / coeff['spe'])
     opct = np.median(coeff['opct'])
 
     output_dir = get_plot("d190716_simtel_cfg")
-    generate_spectrum.call(output_dir, spe_sigma, opct, 0, 0)
-
-    fadc_amplitude = cc.get_pulse_height(spe)
-    print(f"fadc_amplitude = {fadc_amplitude}")
+    generate_spectrum.call(output_dir, spe_mv, spe_sigma, opct, 0, 0)
 
 
 if __name__ == '__main__':
