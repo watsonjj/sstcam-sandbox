@@ -79,6 +79,8 @@ def call(output_dir, spe, spe_sigma, opct, pap, dap):
     x = np.linspace(x.min(), x.max(), 1000)
     y = sipm_enf(x, spe, spe_sigma, opct, pap, dap)
 
+    fadc_amplitude = np.average(x, weights=y)
+
     if not os.path.exists(output_dir):
         print("Creating directory: {}".format(output_dir))
         os.makedirs(output_dir)
@@ -92,7 +94,6 @@ def call(output_dir, spe, spe_sigma, opct, pap, dap):
     plt.savefig(output_path, bbox_inches='tight')
     print("Created figure : {}".format(output_path))
 
-    fadc_amplitude = np.average(x, weights=y)
     print(f"FADC_AMPLITUDE = {fadc_amplitude}")
 
 

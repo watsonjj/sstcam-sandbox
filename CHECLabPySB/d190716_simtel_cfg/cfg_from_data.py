@@ -19,13 +19,12 @@ def main():
         coeff = store['coeff_pixel']
         coeff = coeff.loc[~coeff['pixel'].isin(dead)]
 
-    spe = np.median(coeff['spe'])
-    spe_mv = cc.get_pulse_height(spe)
-    spe_sigma = np.median(coeff['spe_sigma'] / coeff['spe'])
+    spe = cc.get_pulse_height(np.median(coeff['spe']))
+    spe_sigma = cc.get_pulse_height(np.median(coeff['spe_sigma']))
     opct = np.median(coeff['opct'])
 
     output_dir = get_plot("d190716_simtel_cfg")
-    generate_spectrum.call(output_dir, spe_mv, spe_sigma, opct, 0, 0)
+    generate_spectrum.call(output_dir, spe, spe_sigma, opct, 0, 0)
 
 
 if __name__ == '__main__':
