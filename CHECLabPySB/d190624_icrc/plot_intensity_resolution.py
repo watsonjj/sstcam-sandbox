@@ -174,7 +174,7 @@ class IRPlotter(Plotter):
 
 def main():
 
-    p_ir = IRPlotter()
+    p_ir = IRPlotter(sidebyside=True)
 
     low_color = p_ir.get_color()
     mc_color = p_ir.get_color()
@@ -268,12 +268,12 @@ def main():
         "Poisson Limit",
         # "Requirement",
         # "Requirement (High NSB)",
-        "Lab (Nominal NSB)",
-        "Lab (Nominal NSB) (Proj. Improvement)",
-        "Lab MC Sim. (Nominal NSB)",
-        "Lab (High NSB)",
-        "Lab (High NSB) (Proj. Improvement)",
-    ], loc="best", frameon=False)
+        "Nominal NSB",
+        "Nominal NSB (Proj. Improvement)",
+        "Nominal NSB (MC Simulation)",
+        "High NSB",
+        "High NSB (Proj. Improvement)",
+    ], loc="best", frameon=False, fontsize=5.5)
 
     p_ir.save(get_plot("d190624_icrc/res.pdf"))
 
