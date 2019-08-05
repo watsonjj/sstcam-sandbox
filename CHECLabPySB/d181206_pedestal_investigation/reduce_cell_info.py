@@ -17,8 +17,8 @@ def process(input_path, output_path, poi):
 
     desc = "Looping over events"
     for r0 in tqdm(r0_reader, total=n_events, desc=desc):
-        iev = r0_reader.index
-        fci = np.asscalar(r0_reader.first_cell_ids[poi])
+        iev = r0.iev
+        fci = r0.first_cell_id[poi].item()
 
         df_list.append(pd.DataFrame(dict(
             iev=iev,

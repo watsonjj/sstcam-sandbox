@@ -54,7 +54,7 @@ def process(file):
     wfs = np.zeros((n_events, n_pixels, n_samples))
     desc = "Processing events"
     for wf in tqdm(reader, total=n_events, desc=desc):
-        wfs[reader.index] = wf
+        wfs[wf.iev] = wf
 
     reader = DL1Reader(dl1_path)
     iev, pixel, charge_1d = reader.select_columns(['iev', 'pixel', 'charge'])

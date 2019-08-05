@@ -52,7 +52,7 @@ def main():
 
             desc = "Looping over file"
             for wfs in tqdm(reader, total=reader.n_events, desc=desc):
-                iev = reader.index
+                iev = wfs.iev
                 if reader.stale.any():
                     continue
 

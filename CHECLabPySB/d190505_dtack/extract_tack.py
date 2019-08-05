@@ -12,13 +12,13 @@ def process(paths, output_path):
             print(f"File: {ipath+1}/{len(paths)}")
             reader = TIOReader(path)
             n_events = reader.n_events
-            for _ in tqdm(reader, total=n_events):
+            for wf in tqdm(reader, total=n_events):
                 data = dict(
                     ipath=ipath,
-                    iev=reader.index,
-                    tack=reader.current_tack,
-                    stale=reader.stale[0],
-                    fci=reader.first_cell_ids[0],
+                    iev=wf.iev,
+                    tack=wf.t_tack,
+                    stale=wf.stale[0],
+                    fci=wf.first_cell_id[0],
                 )
                 writer.append(pd.DataFrame(data, index=[0]))
             print(f"Memory Usage = {psutil.Process().memory_info().rss * 1E-9} GB")

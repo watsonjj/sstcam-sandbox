@@ -98,9 +98,9 @@ def main():
                     params[key] = extractor.process(waveforms)[column]
 
                 params['iobs'] = ipath
-                params['iev'] = reader.index
+                params['iev'] = waveforms.iev
                 params['pixel'] = pixel_array
-                params['true'] = reader.mc_true
+                params['true'] = waveforms.mc_true
 
                 writer.append(pd.DataFrame(params), key='data')
 

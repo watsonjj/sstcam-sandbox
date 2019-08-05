@@ -22,7 +22,7 @@ def main():
     extractor = Timing(n_pixels, n_samples)
     df_list = []
     for wfs in tqdm(reader, total=n_events):
-        iev = reader.index
+        iev = wfs.iev
         shifted = time_calibrator(wfs)
 
         params = extractor.process(wfs)

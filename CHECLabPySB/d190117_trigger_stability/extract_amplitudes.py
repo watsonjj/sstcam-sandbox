@@ -23,15 +23,10 @@ def process(readers, output_path):
         pixels = np.arange(n_pixels)
 
         for wfs in tqdm(reader, total=n_events, desc=desc1):
-            iev = reader.index
+            iev = wfs.iev
             if iev % 10:
                 continue
-            t_cpu_sec = reader.current_cpu_s
-            t_cpu_ns = reader.current_cpu_ns
-            t_cpu = pd.to_datetime(
-                np.int64(t_cpu_sec * 1E9) + np.int64(t_cpu_ns),
-                unit='ns'
-            )
+            t_cpu = wfs.t_cpu
 
             amplitude = wfs.max(axis=1)
             sum_wfs = wfs[sp_arr].sum(1)

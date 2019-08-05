@@ -12,7 +12,7 @@ def main():
     d_list = []
     for path in paths:
         reader = TIOReader(path)
-        reader[0]
+        wfs = reader[0]
         nudge, temperature = get_nudge_and_temperature_from_reader(reader)
 
         regexp = re.search(pattern, path)
@@ -22,7 +22,7 @@ def main():
         d_list.append(dict(
             investigation=investigation,
             run_id=run_id,
-            t_cpu=reader.t_cpu,
+            t_cpu=wfs.t_cpu,
             nudge=nudge,
             temperature=temperature
         ))

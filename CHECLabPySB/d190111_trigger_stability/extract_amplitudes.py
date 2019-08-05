@@ -32,13 +32,8 @@ def process(readers, output_path, superpixels):
         mappingsp = MappingSP(mapping)
 
         for wfs in tqdm(reader, total=n_events, desc=desc1):
-            iev = reader.index
-            t_cpu_sec = reader.current_cpu_s
-            t_cpu_ns = reader.current_cpu_ns
-            t_cpu = pd.to_datetime(
-                np.int64(t_cpu_sec * 1E9) + np.int64(t_cpu_ns),
-                unit='ns'
-            )
+            iev = wfs.iev
+            t_cpu = wfs.t_cpu
 
             for sp, p in pix_dict.items():
                 wfs_pix = wfs[p]

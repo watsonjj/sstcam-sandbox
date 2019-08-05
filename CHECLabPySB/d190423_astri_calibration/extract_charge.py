@@ -47,8 +47,8 @@ def main():
 
             desc = "Looping over file"
             for wfs in tqdm(reader, total=reader.n_events, desc=desc):
-                iev = reader.index
-                if reader.stale.any():
+                iev = wfs.iev
+                if wfs.stale.any():
                     continue
 
                 wfs = time_calibrator(wfs)

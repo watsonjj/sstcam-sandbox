@@ -66,7 +66,7 @@ def process(entry, poi):
         rd = ReducedDataframe()
 
         for r0 in r0_reader:
-            fci = np.asscalar(r0_reader.first_cell_ids[poi])
+            fci = r0.first_cell_id[poi].item()
             rd.add(amplitude, r0[poi].astype(np.int), fci, isam)
 
         df = rd.finish()

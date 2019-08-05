@@ -23,7 +23,7 @@ def process(wf_paths, data_path, poi, t_shift):
 
         desc = "Processing events"
         for wf in tqdm(reader, total=n_events, desc=desc):
-            iev = reader.index
+            iev = wf.iev
             if t_shift:
                 wf = shift_waveform(wf, t_shift)
             wfs[iev] = wf[poi]

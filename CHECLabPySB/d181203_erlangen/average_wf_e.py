@@ -25,7 +25,7 @@ def process(input_paths, data_path, poi):
 
         desc = "Processing events"
         for wf in tqdm(reader, total=n_events, desc=desc):
-            iev = reader.index
+            iev = wf.iev
             wfs[iev] = wf[poi]
 
         average_wf = wfs.mean(0)

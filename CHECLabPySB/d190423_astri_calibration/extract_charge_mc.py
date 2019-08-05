@@ -31,7 +31,7 @@ def main():
 
             desc = "Looping over file"
             for wfs in tqdm(reader, total=reader.n_events, desc=desc):
-                iev = reader.index
+                iev = wfs.iev
                 wfs = baseline_subtractor.subtract(wfs)
 
                 params = dict(
@@ -39,7 +39,7 @@ def main():
                     pixel=pixel_array,
                     onsky=extractor_onsky.process(wfs)['charge_onsky'],
                     waveform_max=common.process(wfs)['waveform_max'],
-                    mc_true=reader.mc_true,
+                    mc_true=wfs.mc_true,
                 )
 
                 df = pd.DataFrame(params)
