@@ -6,8 +6,11 @@ from os.path import exists
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--queue', dest='queue', action="store_true",
+                        default="lfc.q")
     parser.add_argument('--dry', dest='dry', action="store_true")
     args = parser.parse_args()
+    queue = args.queue
     dry = args.dry
 
     for ped_file in all_files:
@@ -29,7 +32,7 @@ def main():
             file.write("fi\n")
         call("chmod +x {}".format(shell_path), shell=True)
 
-        cmd = "qsub -cwd -V -q lfc.q {}".format(shell_path)
+        cmd = "qsub -cwd -V -q {} {}".format(queue, shell_path)
         print(cmd)
         if not dry:
             call(cmd, shell=True)
