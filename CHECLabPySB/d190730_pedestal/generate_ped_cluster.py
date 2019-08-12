@@ -14,7 +14,7 @@ def main():
         r0_path = ped_file.r0
         ped_path = ped_file.tcal
         shell_path = ped_path.replace(".tcal", ".sh")
-        generate_ped = f"generate_ped -i {r0_path} -o {ped_path} -t"
+        generate_ped = f"generate_ped -i {r0_path} -o {ped_path} -t\n"
 
         if not exists(r0_path):
             raise FileNotFoundError(f"Missing R0 file: {r0_path}")
