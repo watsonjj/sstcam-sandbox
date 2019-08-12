@@ -50,6 +50,7 @@ class File:
 
     @property
     def data_dir(self):
+        print("Name: ", self.name)
         return get_data(f"d190730_pedestal/{self.name}")
 
     @property
