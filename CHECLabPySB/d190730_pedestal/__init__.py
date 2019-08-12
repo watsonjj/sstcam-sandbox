@@ -49,21 +49,16 @@ class File:
         return self.__class__.__name__
 
     @property
-    def data_dir(self):
-        print("Name: ", self.name)
-        return get_data(f"d190730_pedestal/{self.name}")
-
-    @property
     def tcal(self):
-        return join(self.data_dir, "pedestal.tcal")
+        return get_data(f"d190730_pedestal/{self.name}/pedestal.tcal")
 
     @property
     def r1(self):
-        return join(self.data_dir, "r1.tio")
+        return get_data(f"d190730_pedestal/{self.name}/r1.tio")
 
     @property
     def reduced_cell_info(self):
-        return join(self.data_dir, "reduced_cell_info.h5")
+        return get_data(f"d190730_pedestal/{self.name}/reduced_cell_info.h5")
 
 
 class Test(File):
