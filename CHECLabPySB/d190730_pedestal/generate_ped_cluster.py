@@ -6,8 +6,7 @@ from os.path import exists
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--queue', dest='queue', action="store_true",
-                        default="lfc.q")
+    parser.add_argument('--queue', dest='queue', default="lfc.q")
     parser.add_argument('--dry', dest='dry', action="store_true")
     args = parser.parse_args()
     queue = args.queue
