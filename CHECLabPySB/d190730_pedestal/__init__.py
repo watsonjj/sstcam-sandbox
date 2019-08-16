@@ -17,8 +17,6 @@ from os.path import join
 #  - lab hits vs LED hits vs BP hits
 #  - Is value from LED or BP correct for internal trigger data?
 #  - Pedestal values versus time (by comparing residuals with first pedestal applied)
-#  - Pedestal values Python vs TargetCalib
-#  - Pedestal std Python vs TC
 #  - Python calib vs Online calib vs R1
 
 
@@ -59,6 +57,10 @@ class File:
     @property
     def reduced_cell_info(self):
         return get_data(f"d190730_pedestal/{self.name}/reduced_cell_info.h5")
+
+    @property
+    def reduced_residuals(self):
+        return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5")
 
 
 class Test(File):
@@ -236,6 +238,17 @@ all_files = [
     d20190612_mrk501(),
     d20190612_mrk501_moonlight(),
     d20190612_muon(),
+    d20190614_pedestal_0(),
+    d20190614_pedestal_1(),
+    d20190614_pedestal_2(),
+    d20190614_pedestal_3(),
+    d20190614_pedestal_4(),
+]
+
+
+method_comparison = [
+    Lab_bright(),
+    d20190502_mrk421(),
     d20190614_pedestal_0(),
     d20190614_pedestal_1(),
     d20190614_pedestal_2(),
