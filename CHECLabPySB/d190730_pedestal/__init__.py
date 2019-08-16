@@ -76,7 +76,7 @@ class InternalTrigger_0(File):
 
 
 class InternalTrigger_1(File):
-    r0 = get_astri_2019("d2019-06-12_mrk501/Run13680_r0.tio")
+    r0 = get_astri_2019("d2019-06-12_mrk501/Run13681_r0.tio")
 
 
 class Lab_bright(File):
