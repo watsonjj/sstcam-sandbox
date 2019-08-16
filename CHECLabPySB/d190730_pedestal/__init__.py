@@ -1,6 +1,6 @@
 import numpy as np
 from target_calib import CalculateRowColumnBlockPhase, GetCellIDTCArray
-from CHECLabPySB import get_astri_2019, get_data
+from CHECLabPySB import get_astri_2019, get_data, get_plot
 from os.path import join
 
 # TODO:
@@ -62,9 +62,21 @@ class File:
     def reduced_residuals(self):
         return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5")
 
+    @property
+    def plot_dir(self):
+        return get_plot(f"d190730_pedestal/{self.name}")
+
 
 class Test(File):
     r0 = "/Users/Jason/Downloads/tempdata/Run06136_r0.tio"
+
+
+class InternalTrigger_0(File):
+    r0 = get_astri_2019("d2019-05-02_mrk421/Run12913_r0.tio")
+
+
+class InternalTrigger_1(File):
+    r0 = get_astri_2019("d2019-06-12_mrk501/Run13680_r0.tio")
 
 
 class Lab_bright(File):
@@ -208,50 +220,41 @@ class d20190614_pedestal_4(File):
 
 
 all_files = [
-    Lab_bright(),
-    Lab_spe0p5(),
-    Lab_spe0p8(),
-    Lab_spe1p1(),
-    Lab_spe1p7(),
-    Lab_spe2p4(),
-    d20190501_cosmicray(),
-    d20190501_mrk501_0(),
-    d20190501_mrk501_1(),
-    d20190501_mrk501_2(),
-    d20190502_mrk421(),
-    d20190502_pedestal_0(),
-    d20190502_pedestal_1(),
-    d20190502_mrk501_0(),
-    d20190502_mrk501_1(),
-    d20190506_mrk501(),
-    d20190507_cosmicray_0(),
-    d20190507_cosmicray_1(),
-    d20190508_cosmicray_0(),
-    d20190508_cosmicray_1(),
-    d20190508_ledflashers_dynrange(),
-    d20190509_ledflashers_altscans(),
-    d20190509_mrk421(),
-    d20190611_ledflashers_reference_scans(),
-    d20190611_lookback(),
-    d20190611_ledflashers_dynrange(),
-    d20190612_mrk421_moonlight(),
-    d20190612_mrk501(),
-    d20190612_mrk501_moonlight(),
-    d20190612_muon(),
-    d20190614_pedestal_0(),
-    d20190614_pedestal_1(),
-    d20190614_pedestal_2(),
-    d20190614_pedestal_3(),
-    d20190614_pedestal_4(),
-]
-
-
-method_comparison = [
-    Lab_bright(),
-    d20190502_mrk421(),
-    d20190614_pedestal_0(),
-    d20190614_pedestal_1(),
-    d20190614_pedestal_2(),
-    d20190614_pedestal_3(),
-    d20190614_pedestal_4(),
+    InternalTrigger_0(),
+    InternalTrigger_1(),
+    # Lab_bright(),
+    # Lab_spe0p5(),
+    # Lab_spe0p8(),
+    # Lab_spe1p1(),
+    # Lab_spe1p7(),
+    # Lab_spe2p4(),
+    # d20190501_cosmicray(),
+    # d20190501_mrk501_0(),
+    # d20190501_mrk501_1(),
+    # d20190501_mrk501_2(),
+    # d20190502_mrk421(),
+    # d20190502_pedestal_0(),
+    # d20190502_pedestal_1(),
+    # d20190502_mrk501_0(),
+    # d20190502_mrk501_1(),
+    # d20190506_mrk501(),
+    # d20190507_cosmicray_0(),
+    # d20190507_cosmicray_1(),
+    # d20190508_cosmicray_0(),
+    # d20190508_cosmicray_1(),
+    # d20190508_ledflashers_dynrange(),
+    # d20190509_ledflashers_altscans(),
+    # d20190509_mrk421(),
+    # d20190611_ledflashers_reference_scans(),
+    # d20190611_lookback(),
+    # d20190611_ledflashers_dynrange(),
+    # d20190612_mrk421_moonlight(),
+    # d20190612_mrk501(),
+    # d20190612_mrk501_moonlight(),
+    # d20190612_muon(),
+    # d20190614_pedestal_0(),
+    # d20190614_pedestal_1(),
+    # d20190614_pedestal_2(),
+    # d20190614_pedestal_3(),
+    # d20190614_pedestal_4(),
 ]
