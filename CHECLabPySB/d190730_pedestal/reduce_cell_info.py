@@ -1,5 +1,5 @@
 from CHECLabPySB import get_data
-from CHECLabPySB.d190730_pedestal import Test
+from CHECLabPySB.d190730_pedestal import Test, all_files
 import numpy as np
 import pandas as pd
 from CHECLabPy.core.io import TIOReader, HDF5Writer
@@ -43,8 +43,11 @@ def process_file(file):
 
 
 def main():
-    file = Test()
-    process_file(file)
+    # file = Test()
+    # process_file(file)
+
+    for file in all_files:
+        process_file(file)
 
 
 
