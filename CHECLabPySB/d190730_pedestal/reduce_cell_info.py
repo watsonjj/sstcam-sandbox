@@ -24,9 +24,6 @@ def process(input_path, output_path, poi):
         fci = r0.first_cell_id
         adc = r0[poi]
 
-        if 0 in adc:
-            embed()
-
         df_list.append(pd.DataFrame(dict(
             iev=iev,
             fci=fci,

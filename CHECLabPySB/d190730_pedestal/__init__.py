@@ -200,61 +200,66 @@ class d20190612_muon(File):
 
 
 class d20190614_pedestal_0(File):
+    """Internal BP generator 1.25kHz"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13794_r0.tio")
 
 
 class d20190614_pedestal_1(File):
+    """Internal BP generator 1kHz"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13795_r0.tio")
 
 
 class d20190614_pedestal_2(File):
+    """Internal BP generator 5k events"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13798_r0.tio")
 
 
 class d20190614_pedestal_3(File):
+    """Internal BP generator 10k events"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13799_r0.tio")
 
 
 class d20190614_pedestal_4(File):
+    """Flasher input"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13800_r0.tio")
 
 
 all_files = [
-    # InternalTrigger_0(),
-    # InternalTrigger_1(),
-    # Lab_bright(),
-    # Lab_spe0p5(),
-    # Lab_spe0p8(),
-    # Lab_spe1p1(),
-    # Lab_spe1p7(),
-    # Lab_spe2p4(),
-    # d20190501_cosmicray(),
-    # d20190501_mrk501_0(),
+    InternalTrigger_0(),
+    InternalTrigger_1(),
+    Lab_bright(),
+    Lab_spe0p5(),
+    Lab_spe0p8(),
+    Lab_spe1p1(),
+    Lab_spe1p7(),
+    Lab_spe2p4(),
+    d20190501_cosmicray(),
+    d20190501_mrk501_0(),
     d20190501_mrk501_1(),
-    # d20190501_mrk501_2(),
-    # d20190502_mrk421(),
-    # d20190502_pedestal_0(),
-    # d20190502_pedestal_1(),
-    # d20190502_mrk501_0(),
-    # d20190502_mrk501_1(),
-    # d20190506_mrk501(),
-    # d20190507_cosmicray_0(),
-    # d20190507_cosmicray_1(),
-    # d20190508_cosmicray_0(),
-    # d20190508_cosmicray_1(),
-    # d20190508_ledflashers_dynrange(),
-    # d20190509_ledflashers_altscans(),
-    # d20190509_mrk421(),
-    # d20190611_ledflashers_reference_scans(),
-    # d20190611_lookback(),
-    # d20190611_ledflashers_dynrange(),
-    # d20190612_mrk421_moonlight(),
-    # d20190612_mrk501(),
-    # d20190612_mrk501_moonlight(),
-    # d20190612_muon(),
-    # d20190614_pedestal_0(),
-    # d20190614_pedestal_1(),
-    # d20190614_pedestal_2(),
-    # d20190614_pedestal_3(),
-    # d20190614_pedestal_4(),
+    d20190501_mrk501_2(),
+    d20190502_mrk421(),
+    d20190502_pedestal_0(),
+    d20190502_pedestal_1(),
+    d20190502_mrk501_0(),
+    d20190502_mrk501_1(),
+    d20190506_mrk501(),
+    d20190507_cosmicray_0(),
+    d20190507_cosmicray_1(),
+    d20190508_cosmicray_0(),
+    d20190508_cosmicray_1(),
+    d20190508_ledflashers_dynrange(),
+    d20190509_ledflashers_altscans(),
+    d20190509_mrk421(),
+    d20190611_ledflashers_reference_scans(),
+    d20190611_lookback(),
+    d20190611_ledflashers_dynrange(),
+    d20190612_mrk421_moonlight(),
+    d20190612_mrk501(),
+    d20190612_mrk501_moonlight(),
+    d20190612_muon(),
+    d20190614_pedestal_0(),
+    d20190614_pedestal_1(),
+    d20190614_pedestal_2(),
+    d20190614_pedestal_3(),
+    d20190614_pedestal_4(),
 ]
