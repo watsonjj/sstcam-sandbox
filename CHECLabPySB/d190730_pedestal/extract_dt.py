@@ -8,7 +8,7 @@ def process(input_path, output_path):
     reader = TIOReader(input_path)
     dt = np.zeros(reader.n_events-1)
     for iev in trange(1, reader.n_events):
-        dt[iev-1] = (reader[iev].t_tack - reader[iev-1].t_tack).value
+        dt[iev-1] = (reader[iev].t_tack - reader[iev-1].t_tack)
 
     np.save(output_path, dt)
 
