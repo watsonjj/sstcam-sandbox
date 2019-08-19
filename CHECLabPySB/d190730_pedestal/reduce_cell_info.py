@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from CHECLabPy.core.io import TIOReader, HDF5Writer
 from tqdm import tqdm
+from IPython import embed
 
 
 def process(input_path, output_path, poi):
@@ -20,6 +21,9 @@ def process(input_path, output_path, poi):
         fci = r0.first_cell_id[poi].item()
         adc = r0[poi]
 
+        if 0 in adc:
+            embed()
+
         df_list.append(pd.DataFrame(dict(
             iev=iev,
             fci=fci,
@@ -29,9 +33,9 @@ def process(input_path, output_path, poi):
 
     df = pd.concat(df_list, ignore_index=True)
 
-    with HDF5Writer(output_path) as writer:
-        writer.write(data=df)
-        writer.add_metadata(poi=poi)
+    # with HDF5Writer(output_path) as writer:
+    #     writer.write(data=df)
+    #     writer.add_metadata(poi=poi)
 
 
 def process_file(file):
