@@ -17,8 +17,11 @@ def process(input_path, output_path, poi):
 
     desc = "Looping over events"
     for r0 in tqdm(r0_reader, total=n_events, desc=desc):
+        if r0.missing_packets:
+            continue
+
         iev = r0.iev
-        fci = r0.first_cell_id[poi].item()
+        fci = r0.first_cell_id
         adc = r0[poi]
 
         if 0 in adc:
@@ -33,9 +36,9 @@ def process(input_path, output_path, poi):
 
     df = pd.concat(df_list, ignore_index=True)
 
-    # with HDF5Writer(output_path) as writer:
-    #     writer.write(data=df)
-    #     writer.add_metadata(poi=poi)
+    with HDF5Writer(output_path) as writer:
+        writer.write(data=df)
+        writer.add_metadata(poi=poi)
 
 
 def process_file(file):
