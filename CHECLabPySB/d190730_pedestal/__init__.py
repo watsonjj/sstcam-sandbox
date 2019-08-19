@@ -63,6 +63,10 @@ class File:
         return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5")
 
     @property
+    def reduced_dt(self):
+        return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5")
+
+    @property
     def plot_dir(self):
         return get_plot(f"d190730_pedestal/{self.name}")
 
