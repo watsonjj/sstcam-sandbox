@@ -60,7 +60,7 @@ class File:
 
     @property
     def reduced_residuals(self):
-        return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5")
+        return get_data(f"d190730_pedestal/{self.name}/reduced_residuals.h5.npz")
 
     @property
     def reduced_dt(self):
@@ -204,27 +204,27 @@ class d20190612_muon(File):
 
 
 class d20190614_pedestal_0(File):
-    """Internal BP generator 1.25kHz"""
+    """Internal BP generator 1.25kHz 1 6 10 15 19 20 24 29"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13794_r0.tio")
 
 
 class d20190614_pedestal_1(File):
-    """Internal BP generator 1kHz"""
+    """Internal BP generator 1kHz 1 6 10 15 19 20 24 29"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13795_r0.tio")
 
 
 class d20190614_pedestal_2(File):
-    """Internal BP generator 5k events"""
+    """Internal BP generator 5k events 2 7 11 12 16 21 25 30"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13798_r0.tio")
 
 
 class d20190614_pedestal_3(File):
-    """Internal BP generator 10k events"""
+    """Internal BP generator 10k events 0 5 9 14 18 23 27 28"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13799_r0.tio")
 
 
 class d20190614_pedestal_4(File):
-    """Flasher input"""
+    """Flasher input 4 12 20 28"""
     r0 = get_astri_2019("d2019-06-14_pedestal/Run13800_r0.tio")
 
 
