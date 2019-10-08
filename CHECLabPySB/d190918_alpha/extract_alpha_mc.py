@@ -103,10 +103,6 @@ def get_dataframe(path, x_onoff, y_onoff, norm_func):
 
 
 def process(path_gamma, path_proton, base_output, n_off):
-    # path_gamma = "/Users/Jason/Downloads/tempdata/alpha/mc/gamma_1deg.h5"
-    # path_proton = "/Users/Jason/Downloads/tempdata/alpha/mc/proton.h5"
-    # TODO: Electrons and gamma diffuse?
-
     angles = np.linspace(0, 360, n_off+2)[:-1] * u.deg
     n_onoff = len(angles)
     print(angles)
@@ -177,19 +173,25 @@ def process_gamma_only(path_gamma, base_output, n_off):
 def main():
     path_gamma = get_astri_2019("d2019-05-15_simulations/gamma_1deg.h5")
     path_proton = get_astri_2019("d2019-05-15_simulations/proton.h5")
-    base_output = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg")
+    base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg")
     n_off = 1
+    process(path_gamma, path_proton, base_output, n_off)
+
+    path_gamma = get_astri_2019("d2019-05-15_simulations/gamma_1deg.h5")
+    path_proton = get_astri_2019("d2019-05-15_simulations/proton.h5")
+    base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg_5off")
+    n_off = 5
     process(path_gamma, path_proton, base_output, n_off)
 
     path_gamma = get_astri_2019("d2019-05-15_simulations/gamma_0deg.h5")
     path_proton = get_astri_2019("d2019-05-15_simulations/proton.h5")
-    base_output = get_data("d190918_alpha/d2019-05-15_simulations_gamma0deg")
+    base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma0deg")
     n_off = 1
     process(path_gamma, path_proton, base_output, n_off)
 
     path_gamma = get_astri_2019("d2019-05-15_simulations/gamma_1deg.h5")
     path_proton = path_gamma
-    base_output = get_data("d190918_alpha/d2019-05-15_simulations_gammaonly")
+    base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gammaonly")
     n_off = 1
     process_gamma_only(path_gamma, base_output, n_off)
 

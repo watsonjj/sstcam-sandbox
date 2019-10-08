@@ -72,10 +72,10 @@ def main():
     process(path, output, title, None)
     output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_softcut.pdf")
     title = "ON/OFF MC (1deg) (Soft cuts)"
-    process(path, output, title, cuts_onoff_soft)
+    process(path, output, title, CUTS_ONOFF_SOFT)
     output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_harshcut.pdf")
     title = "ON/OFF MC (1deg) (Harsh cuts)"
-    process(path, output, title, cuts_onoff_harsh)
+    process(path, output, title, CUTS_ONOFF_HARSH)
 
     path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble.h5")
     output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_nocut.pdf")
@@ -83,7 +83,7 @@ def main():
     process(path, output, title, None)
     output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_cut.pdf")
     title = "Wobble MC (1deg)"
-    process(path, output, title, cuts_wobble)
+    process(path, output, title, CUTS_WOBBLE)
 
 
 if __name__ == '__main__':

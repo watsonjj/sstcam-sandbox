@@ -74,7 +74,6 @@ def process(path, output, title, cuts):
         df_off = reader.read("off")
         metadata = reader.get_metadata()
         alpha_li_ma = metadata['alpha_li_ma']
-        region_size = 5.63  # TODO
 
     if cuts is not None:
         df_on = df_on.query(cuts)
@@ -88,7 +87,7 @@ def process(path, output, title, cuts):
     rate_on_bins, rate_on_err_bins, edges_on = calculate_rates(
         alpha_on, weights_on, bins
     )
-    mask_on = alpha_on <= region_size
+    mask_on = alpha_on <= REGION_SIZE
     rate_on, rate_on_err, _ = calculate_rates(
         alpha_on[mask_on], weights_on[mask_on], 1
     )
@@ -101,7 +100,7 @@ def process(path, output, title, cuts):
     rate_off_bins, rate_off_err_bins, edges_off = calculate_rates(
         alpha_off, weights_off, bins
     )
-    mask_off = alpha_off <= region_size
+    mask_off = alpha_off <= REGION_SIZE
     rate_off, rate_off_err, _ = calculate_rates(
         alpha_off[mask_off], weights_off[mask_off], 1
     )
@@ -112,15 +111,18 @@ def process(path, output, title, cuts):
     significance = li_ma(n_on, n_off, alpha_li_ma)
     _, sig_per_sqrthour = polyfit(np.sqrt(time/3600), significance, [1])
 
+    rate_off_bins *= alpha_li_ma
+    rate_off_err_bins *= alpha_li_ma
+
     p_hist = Hist()
     p_hist.plot(rate_off_bins, rate_off_err_bins, edges_off, "OFF")
     p_hist.plot(rate_on_bins, rate_on_err_bins, edges_on, "ON")
-    p_hist.annotate_region(region_size)
+    p_hist.annotate_region(REGION_SIZE)
     p_hist.annotate_li_ma(
         sig_per_sqrthour,
         f"{rate_on:.2f}±{rate_on_err:.2f}",
         f"{rate_off:.2f}±{rate_off_err:.2f}",
-        region_size,
+        REGION_SIZE,
         alpha_li_ma
     )
     p_hist.ax.set_title(title)
@@ -129,32 +131,40 @@ def process(path, output, title, cuts):
 
 
 def main():
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff.h5")
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff_nocut.pdf")
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg_onoff.h5")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_onoff_nocut.pdf")
     title = "ON/OFF MC (1deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff_softcut.pdf")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_onoff_softcut.pdf")
     title = "ON/OFF MC (1deg) (Soft cuts)"
-    process(path, output, title, cuts_onoff_soft)
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff_harshcut.pdf")
+    process(path, output, title, CUTS_ONOFF_SOFT)
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_onoff_harshcut.pdf")
     title = "ON/OFF MC (1deg) (Harsh cuts)"
-    process(path, output, title, cuts_onoff_harsh)
+    process(path, output, title, CUTS_ONOFF_HARSH)
 
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble.h5")
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble_nocut.pdf")
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg_wobble.h5")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_wobble_nocut.pdf")
     title = "Wobble MC (1deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble_cut.pdf")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_wobble_cut.pdf")
     title = "Wobble MC (1deg)"
-    process(path, output, title, cuts_wobble)
+    process(path, output, title, CUTS_WOBBLE)
 
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gammaonly_wobble.h5")
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gammaonly_wobble_nocut.pdf")
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg_5off_wobble.h5")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_5off_wobble_nocut.pdf")
+    title = "Wobble MC (1deg) (5 OFF) (No cuts)"
+    process(path, output, title, None)
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gamma1deg_5off_wobble_cut.pdf")
+    title = "Wobble MC (1deg) (5 OFF)"
+    process(path, output, title, CUTS_WOBBLE)
+
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gammaonly_wobble.h5")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gammaonly_wobble_nocut.pdf")
     title = "Wobble MC (1deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d190918_alpha/d2019-05-15_simulations_gammaonly_wobble_cut.pdf")
+    output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gammaonly_wobble_cut.pdf")
     title = "Wobble MC (1deg)"
-    process(path, output, title, cuts_wobble)
+    process(path, output, title, CUTS_WOBBLE)
 
 
 if __name__ == '__main__':

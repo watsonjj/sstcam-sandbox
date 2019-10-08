@@ -66,9 +66,9 @@ def process(path, output_dir):
     n_gamma = df_gamma.index.size
     n_proton = df_proton.index.size
 
-    # cuts = cuts_onoff_soft
-    # cuts = cuts_onoff_harsh
-    # cuts = cuts_wobble
+    # cuts = CUTS_ONOFF_SOFT
+    # cuts = CUTS_ONOFF_HARSH
+    # cuts = CUTS_WOBBLE
     # df = df.query(cuts)
 
     df_gamma = df.loc[df['diffuse'] == 0]
