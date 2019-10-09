@@ -1,11 +1,9 @@
 from CHECLabPySB import get_plot
-from CHECLabPy.core.io import HDF5Reader
 from CHECLabPy.plotting.setup import Plotter
 from CHECOnsky.utils.astri_database import ASTRISQLQuerier
 import pandas as pd
 import matplotlib.dates as mdates
 import matplotlib.colors as mcolors
-from IPython import embed
 
 
 class Uptime(Plotter):
