@@ -23,7 +23,8 @@ class CalibPlotter(Plotter):
 
 def main():
     pixel_mask_path = get_astri_2019(
-        "d2019-04-23_nudges/mc/mc_chec_pixel_mask_190521.dat"
+        # "d2019-04-23_nudges/mc/mc_chec_pixel_mask_190521.dat"
+        "d2019-04-23_nudges/mc_191011/mc_chec_pixel_mask.dat"
     )
     pm = PixelMasks(pixel_mask_path)
     dead = np.where(pm.all_mask)[0]

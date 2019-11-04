@@ -10,8 +10,10 @@ from glob import glob
 
 
 def main():
-    paths = glob(get_astri_2019("d2019-04-23_nudges/mc/*.simtel.gz"))
-    output = get_astri_2019("d2019-04-23_nudges/mc/charge.h5")
+    # paths = glob(get_astri_2019("d2019-04-23_nudges/mc/*.simtel.gz"))
+    # output = get_astri_2019("d2019-04-23_nudges/mc/charge.h5")
+    paths = glob(get_astri_2019("d2019-04-23_nudges/mc_191011/*.simtel.gz"))
+    output = get_astri_2019("d2019-04-23_nudges/mc_191011/charge.h5")
 
     with HDF5Writer(output) as writer:
         for path in paths:
