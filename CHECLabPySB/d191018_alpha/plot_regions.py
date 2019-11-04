@@ -8,11 +8,12 @@ from matplotlib.patches import Rectangle, Ellipse
 from CHECLabPy.plotting.setup import Plotter
 from CHECLabPy.utils.mapping import get_clp_mapping_from_version
 from IPython import embed
+from time import sleep
 
 
 class ImagePlotter(Plotter):
 
-    def __init__(self, mapping):
+    def __init__(self, mapping, color):
         super().__init__()
 
         xpix = mapping['xpix'].values
@@ -43,12 +44,13 @@ class ImagePlotter(Plotter):
         self.ellipse = None
         self.line = None
         self.positions = {}
+        self.color = color
 
     def update_hillas(self, x, y, length, width, psi):
         if self.ellipse is None:
             self.ellipse = Ellipse(
                 xy=(0, 0), width=0.001, height=0.001,
-                angle=np.degrees(1), fill=False, color='red'
+                angle=np.degrees(1), fill=False, color=self.color
             )
             self.ax.add_patch(self.ellipse)
         self.ellipse.set_center((x, y))
@@ -69,7 +71,7 @@ class ImagePlotter(Plotter):
     def update_line(self, cog_x, cog_y, psi):
         if self.line is None:
             self.line, = self.ax.plot(
-                [0, 0], [0, 0], ls="--", c=".3"
+                [0, 0], [0, 0], ls="--", color=self.color
             )
         y_min, y_max = self.ax.get_ylim()
         x_min = cog_x - (cog_y - y_min) / np.tan(psi)
@@ -79,17 +81,21 @@ class ImagePlotter(Plotter):
 
 
 def main():
-    path = get_astri_2019("d2019-05-15_simulations/gamma_1deg.h5")
-    # path = get_astri_2019("d2019-05-15_simulations/proton.h5")
-
+    path = get_astri_2019("d2019-10-03_simulations/gamma_3deg.h5")
     with HDF5Reader(path) as reader:
         df_hillas = reader.read('data')
         df_alpha = reader.read('alpha')
         df = pd.concat([df_hillas, df_alpha], axis=1)
         angles = reader.get_metadata('alpha')['angles']
 
-    p_image = ImagePlotter(get_clp_mapping_from_version("1.1.0"))
+    gamma_first_row = df.iloc[0]
 
+    p_image = ImagePlotter(get_clp_mapping_from_version("1.1.0"), 'blue')
+    for angle in angles:
+        p_image.update_position(
+            angle, gamma_first_row[f'x_{angle}'], gamma_first_row[f'y_{angle}']
+        )
+    irow = 0
     for _, row in df.iterrows():
         p_image.update_hillas(
             row['x'], row['y'], row['length'], row['width'], row['psi']
@@ -97,44 +103,60 @@ def main():
         p_image.update_line(
             row['x'], row['y'], row['psi']
         )
-        for angle in angles:
-            p_image.update_position(
-                angle, row[f'x_{angle}'], row[f'y_{angle}']
-            )
+        # for angle in angles:
+        #     p_image.update_position(
+        #         angle, row[f'x_{angle}'], row[f'y_{angle}']
+        #     )
 
-        plt.pause(0.1)
-    #
-    # iinv = df_on['iinv'].values
-    # t_cpu = df_on['t_cpu'].values
-    # seperation = df_on['seperation'].values
-    #
-    # p_hist_sep = Hist()
-    # p_hist_sep.plot(seperation[seperation<10])
-    # p_hist_sep.save(get_plot("d190918_alpha/off_regions/hist_seperation.pdf"))
-    #
-    # p_sep_vs_time = Plotter()
-    # p_sep_vs_time.ax.plot(iinv, seperation, '.')
-    # p_sep_vs_time.save(get_plot("d190918_alpha/off_regions/sep_vs_time.pdf"))
-    #
-    #
-    # # p_xy = XYPlotter(get_clp_mapping_from_version("1.1.0"))
-    # # p_xy.ax.plot(df['source_x'], df['source_y'], '.', ms=1)
-    # # p_xy.ax.plot(0, 0, '.', ms=1)
-    # # p_xy.ax.plot(x_off, y_off, '.', ms=1)
-    #
-    # # files = glob("/Users/Jason/Downloads/tempdata/alpha/data/Run*_hillas.h5")
-    # # for file in files:
-    # #     with HDF5Reader(file) as reader:
-    # #         df_hillas = reader.read('data')
-    # #         df_source = reader.read('source')
-    # #         df_pointing = reader.read('pointing')
-    # #
-    # #     telescope_pointing = get_telescope_pointing(df_pointing)
-    # #     engineering_frame = get_engineering_frame(telescope_pointing)
-    # #
-    # #     x_off, y_off = get_off_coordinate(
-    # #         df_source, telescope_pointing, engineering_frame, 270 * u.deg
-    # #     )
+        p_image.ax.set_title(f"alpha ON = {row['alpha_0.0 deg']:.2f}")
+        ifile = np.random.randint(0, 100000)
+        p_image.save(get_plot(f"d191018_alpha/plot_regions/{ifile:05d}.png"), dpi=120)
+
+        irow += 1
+        if irow >= 50:
+            break
+
+    path = get_astri_2019("d2019-10-03_simulations/proton.h5")
+    with HDF5Reader(path) as reader:
+        df_hillas = reader.read('data')
+        df_alpha = reader.read('alpha')
+        df = pd.concat([df_hillas, df_alpha], axis=1)
+        angles = reader.get_metadata('alpha')['angles']
+
+    p_image = ImagePlotter(get_clp_mapping_from_version("1.1.0"), 'orange')
+    for angle in angles:
+        p_image.update_position(
+            angle, gamma_first_row[f'x_{angle}'], gamma_first_row[f'y_{angle}']
+        )
+    irow = 0
+    for _, row in df.iterrows():
+        p_image.update_hillas(
+            row['x'], row['y'], row['length'], row['width'], row['psi']
+        )
+        p_image.update_line(
+            row['x'], row['y'], row['psi']
+        )
+        # for angle in angles:
+        #     p_image.update_position(
+        #         angle, row[f'x_{angle}'], row[f'y_{angle}']
+        #     )
+
+        p_image.ax.set_title(f"alpha ON = {row['alpha_0.0 deg']:.2f}")
+        ifile = np.random.randint(0, 100000)
+        p_image.save(get_plot(f"d191018_alpha/plot_regions/{ifile:05d}.png"), dpi=120)
+
+        irow += 1
+        if irow >= 50:
+            break
+
+        # if i_row:
+        #     plt.pause(0.1)
+        #     start = False
+        #
+        # p_image.fig.canvas.draw()
+        # p_image.fig.canvas.flush_events()
+        # sleep(0.1)
+
 
 if __name__ == '__main__':
     main()

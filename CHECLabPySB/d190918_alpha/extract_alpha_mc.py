@@ -1,6 +1,7 @@
 from CHECLabPy.core.io import HDF5Reader, HDF5Writer
-from CHECOnsky.scripts_analysis.add_pointing_to_hillas import LOCATION, \
-    EngineeringCameraFrame, calculate_alpha
+from CHECOnsky.astri import LOCATION
+from CHECOnsky.scripts_pipeline.add_alpha import calculate_alpha
+from CHECOnsky.astronomy.frames import EngineeringCameraFrame
 from CHECLabPySB import get_data, get_astri_2019
 from CHECLabPySB.d190918_alpha.spectra import norm_crab, norm_proton
 import numpy as np
@@ -64,7 +65,11 @@ def get_dataframe(path, x_onoff, y_onoff, norm_func):
     with HDF5Reader(path) as reader:
         df_hillas = reader.read('data')
         df_mc = reader.read('mc')
-        mcheader = reader.read('mcheader').iloc[0]
+        iobs = df_mc['iobs'].values
+        mcheader = reader.read('mcheader')
+        n_simulated = (mcheader['num_showers'].values *
+                       mcheader['shower_reuse'].values).sum()
+        mcheader = mcheader.set_index('iobs').loc[iobs]
 
     x_cog = df_hillas['x'].values
     y_cog = df_hillas['y'].values
@@ -75,16 +80,20 @@ def get_dataframe(path, x_onoff, y_onoff, norm_func):
         )
         df_hillas[f'alpha{iangle}'] = np.rad2deg(alpha90)
 
+
     energies = df_mc['energy'].values * u.TeV
-    index = mcheader['spectral_index']
-    e_min = mcheader['energy_range_min'] * u.TeV
-    e_max = mcheader['energy_range_max'] * u.TeV
-    area = (mcheader['max_scatter_range'] * u.m) ** 2 * np.pi
-    solid_angle = (mcheader['max_viewcone_radius'] -
-                   mcheader['min_viewcone_radius']) * u.deg
+    index = mcheader['spectral_index'].values
+    e_min = mcheader['energy_range_min'].values * u.TeV
+    e_max = mcheader['energy_range_max'].values * u.TeV
+    area = (mcheader['max_scatter_range'].values * u.m) ** 2 * np.pi
+    solid_angle = (mcheader['max_viewcone_radius'].values -
+                   mcheader['min_viewcone_radius'].values) * u.deg
+
+    # embed()
     weights, t_norm = norm_func(
-        e_min, e_max, area, solid_angle, index, energies
+        e_min, e_max, area, solid_angle, index, energies, n_simulated
     )
+    print(f"tnorm={t_norm}")
     df_hillas['energies'] = energies
     df_hillas['index'] = index
     df_hillas['e_min'] = e_min
@@ -92,7 +101,7 @@ def get_dataframe(path, x_onoff, y_onoff, norm_func):
     df_hillas['area'] = area
     df_hillas['solid_angle'] = solid_angle
     df_hillas['weights'] = weights/t_norm
-    df_hillas['diffuse'] = mcheader['diffuse']
+    df_hillas['diffuse'] = mcheader['diffuse'].values
 
     plate_scale = FOCAL_LENGTH.to_value(u.m) * np.pi/180
     df_hillas['r'] = df_hillas['r'].values / plate_scale
@@ -194,6 +203,24 @@ def main():
     base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-05-15_simulations_gammaonly")
     n_off = 1
     process_gamma_only(path_gamma, base_output, n_off)
+
+    # path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
+    # path_proton = get_astri_2019("d2019-10-03_simulations/proton.h5")
+    # base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg")
+    # n_off = 1
+    # process(path_gamma, path_proton, base_output, n_off)
+    #
+    # path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
+    # path_proton = get_astri_2019("d2019-10-03_simulations/proton.h5")
+    # base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_5off")
+    # n_off = 5
+    # process(path_gamma, path_proton, base_output, n_off)
+    #
+    # path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
+    # path_proton = path_gamma
+    # base_output = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gammaonly")
+    # n_off = 1
+    # process_gamma_only(path_gamma, base_output, n_off)
 
 
 if __name__ == '__main__':

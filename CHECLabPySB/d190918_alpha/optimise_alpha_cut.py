@@ -2,7 +2,7 @@ from CHECLabPy.plotting.setup import Plotter
 from CHECLabPy.core.io import HDF5Reader
 from CHECLabPySB import get_data, get_plot
 from CHECLabPySB.d190918_alpha import *
-from CHECLabPySB.d190918_alpha.plot_alpha_onoff import calculate_rates, li_ma
+from CHECLabPySB.d190918_alpha.plot_alpha_mc import calculate_rates, li_ma
 import numpy as np
 from numpy.polynomial.polynomial import polyfit
 from IPython import embed
@@ -66,22 +66,41 @@ def process(path, output, title, cuts):
 
 
 def main():
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff.h5")
-    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_nocut.pdf")
+    # path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff.h5")
+    # output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_nocut.pdf")
+    # title = "ON/OFF MC (1deg) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_softcut.pdf")
+    # title = "ON/OFF MC (1deg) (Soft cuts)"
+    # process(path, output, title, CUTS_ONOFF_SOFT)
+    # output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_harshcut.pdf")
+    # title = "ON/OFF MC (1deg) (Harsh cuts)"
+    # process(path, output, title, CUTS_ONOFF_HARSH)
+    #
+    # path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble.h5")
+    # output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_nocut.pdf")
+    # title = "Wobble MC (1deg) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_cut.pdf")
+    # title = "Wobble MC (1deg)"
+    # process(path, output, title, CUTS_WOBBLE)
+
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_onoff.h5")
+    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-10-03_simulations_gamma1deg_onoff_nocut.pdf")
     title = "ON/OFF MC (1deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_softcut.pdf")
+    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-10-03_simulations_gamma1deg_onoff_softcut.pdf")
     title = "ON/OFF MC (1deg) (Soft cuts)"
     process(path, output, title, CUTS_ONOFF_SOFT)
-    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_onoff_harshcut.pdf")
+    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-10-03_simulations_gamma1deg_onoff_harshcut.pdf")
     title = "ON/OFF MC (1deg) (Harsh cuts)"
     process(path, output, title, CUTS_ONOFF_HARSH)
 
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_wobble.h5")
-    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_nocut.pdf")
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_wobble.h5")
+    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-10-03_simulations_gamma1deg_wobble_nocut.pdf")
     title = "Wobble MC (1deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-05-15_simulations_gamma1deg_wobble_cut.pdf")
+    output = get_plot("d190918_alpha/optimise_alpha_cut/d2019-10-03_simulations_gamma1deg_wobble_cut.pdf")
     title = "Wobble MC (1deg)"
     process(path, output, title, CUTS_WOBBLE)
 

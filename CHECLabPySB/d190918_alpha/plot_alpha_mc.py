@@ -27,10 +27,12 @@ def calculate_rates(alpha, weights, bins):
 
 class Hist(Plotter):
     def plot(self, rate, rate_err, edges, label):
+        color = self.ax._get_lines.get_next_color()
         between = (edges[1:] + edges[:-1]) * 0.5
+        self.ax.hist(between, weights=rate, bins=edges, histtype='step', color=color)
         caps = self.ax.errorbar(
             between, rate, yerr=rate_err, xerr=np.diff(edges) * 0.5,
-            linestyle='', capsize=1, elinewidth=0.5, label=label
+            linestyle='', capsize=1, elinewidth=0.5, label=label, color=color
         )
         for cap in caps[1]:
             cap.set_markeredgewidth(0.5)
@@ -87,6 +89,7 @@ def process(path, output, title, cuts):
     rate_on_bins, rate_on_err_bins, edges_on = calculate_rates(
         alpha_on, weights_on, bins
     )
+    print(f"Total Rate ON: {rate_on_bins.sum()}")
     mask_on = alpha_on <= REGION_SIZE
     rate_on, rate_on_err, _ = calculate_rates(
         alpha_on[mask_on], weights_on[mask_on], 1
@@ -100,6 +103,7 @@ def process(path, output, title, cuts):
     rate_off_bins, rate_off_err_bins, edges_off = calculate_rates(
         alpha_off, weights_off, bins
     )
+    print(f"Total Rate OFF: {rate_off_bins.sum()}")
     mask_off = alpha_off <= REGION_SIZE
     rate_off, rate_off_err, _ = calculate_rates(
         alpha_off[mask_off], weights_off[mask_off], 1
@@ -165,6 +169,41 @@ def main():
     output = get_plot("d190918_alpha/mc/d2019-05-15_simulations_gammaonly_wobble_cut.pdf")
     title = "Wobble MC (1deg)"
     process(path, output, title, CUTS_WOBBLE)
+
+    # path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_onoff.h5")
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_onoff_nocut.pdf")
+    # title = "ON/OFF MC (1deg) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_onoff_softcut.pdf")
+    # title = "ON/OFF MC (1deg) (Soft cuts)"
+    # process(path, output, title, CUTS_ONOFF_SOFT)
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_onoff_harshcut.pdf")
+    # title = "ON/OFF MC (1deg) (Harsh cuts)"
+    # process(path, output, title, CUTS_ONOFF_HARSH)
+    #
+    # path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_wobble.h5")
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_wobble_nocut.pdf")
+    # title = "Wobble MC (1deg) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_wobble_cut.pdf")
+    # title = "Wobble MC (1deg)"
+    # process(path, output, title, CUTS_WOBBLE)
+    #
+    # path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_5off_wobble.h5")
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_5off_wobble_nocut.pdf")
+    # title = "Wobble MC (1deg) (5 OFF) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gamma1deg_5off_wobble_cut.pdf")
+    # title = "Wobble MC (1deg) (5 OFF)"
+    # process(path, output, title, CUTS_WOBBLE)
+    #
+    # path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gammaonly_wobble.h5")
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gammaonly_wobble_nocut.pdf")
+    # title = "Wobble MC (1deg) (No cuts)"
+    # process(path, output, title, None)
+    # output = get_plot("d190918_alpha/d2019-10-03_simulations/gammaonly_wobble_cut.pdf")
+    # title = "Wobble MC (1deg)"
+    # process(path, output, title, CUTS_WOBBLE)
 
 
 if __name__ == '__main__':

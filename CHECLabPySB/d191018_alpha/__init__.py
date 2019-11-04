@@ -28,4 +28,4 @@ CUTS_WOBBLE = CUTS_GHOST + (
     "&(abs(skewness) < 2.1)"
 )
 # REGION_SIZE = 5.63
-REGION_SIZE = 5
+REGION_SIZE = 6

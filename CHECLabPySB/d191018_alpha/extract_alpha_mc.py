@@ -2,6 +2,8 @@ from CHECLabPy.core.io import HDF5Reader, HDF5Writer
 from CHECOnsky.astri import LOCATION
 from CHECOnsky.scripts_pipeline.add_alpha import calculate_alpha
 from CHECOnsky.astronomy.frames import EngineeringCameraFrame
+from CHECOnsky.astronomy.frames import get_telescope_pointing, \
+    get_engineering_frame, rotate_about_camera_centre
 from CHECOnsky.astronomy.spectra import get_t_norm_for_events, \
     calculate_t_norm_crab, calculate_t_norm_proton, calculate_weights_crab, \
     calculate_weights_proton
@@ -10,6 +12,7 @@ import numpy as np
 import pandas as pd
 from astropy.coordinates import SkyCoord, AltAz
 from astropy import units as u
+from IPython import embed
 
 
 FOCAL_LENGTH = u.Quantity(2.1500001, u.m)
@@ -17,44 +20,24 @@ FOCAL_LENGTH = u.Quantity(2.1500001, u.m)
 
 def get_on_off_positions(path_gamma1deg, angles):
     with HDF5Reader(path_gamma1deg) as reader:
-        df_source = reader.read('source')
-        df_pointing = reader.read('pointing')
+        df_mc = reader.read('mc').iloc[[0]]
+        df_pointing = reader.read('pointing').iloc[[0]]
 
-    obstime = df_pointing['t_cpu'].values[0]
-    alt = (df_pointing['altitude_raw'] +
-           df_pointing['altitude_cor']).values[0]
-    az = (df_pointing['azimuth_raw'] +
-          df_pointing['azimuth_cor']).values[0]
-    altaz_frame = AltAz(location=LOCATION, obstime=obstime)
-    telescope_pointing = SkyCoord(
-        alt=alt,
-        az=az,
-        unit='rad',
-        frame=altaz_frame,
-    )
-    engineering_frame = EngineeringCameraFrame(
-        n_mirrors=2,
-        location=LOCATION,
-        obstime=telescope_pointing.obstime,
-        focal_length=FOCAL_LENGTH,
-        telescope_pointing=telescope_pointing,
+    telescope_pointing = get_telescope_pointing(df_pointing)
+    engineering_frame = get_engineering_frame(
+        telescope_pointing, focal_length=FOCAL_LENGTH
     )
 
-    source_ra = df_source['source_ra'].values[0]
-    source_dec = df_source['source_dec'].values[0]
-
-    source_skycoord = SkyCoord(source_ra, source_dec, unit='deg', frame='icrs')
-    position_angle = telescope_pointing.position_angle(
-        source_skycoord
-    ).to(u.deg) - angles
-    seperation = telescope_pointing.separation(source_skycoord)
-    print(f"MC RA/DEC Offset = {seperation}")
-    skycoords = telescope_pointing.directional_offset_by(
-        position_angle=position_angle,
-        separation=seperation
+    alt = df_mc['alt'].values[0]
+    az = df_mc['az'].values[0]
+    source_skycoord = SkyCoord(
+        alt=alt, az=az, unit='rad', frame=telescope_pointing
+    )
+    rotated_skycoord = rotate_about_camera_centre(
+        telescope_pointing, source_skycoord, angles
     )
 
-    cam = skycoords.transform_to(engineering_frame)
+    cam = rotated_skycoord.transform_to(engineering_frame)
     x = cam.x.value
     y = cam.y.value
 
@@ -98,6 +81,10 @@ def get_weights(df_mc, df_mcheader):
         energies, e_min, e_max, t_norm
     )
 
+    print(f"Maximum t_norm: {t_norm_events.max()}")
+    print(f"Total simulated: {n_simulated.sum()}")
+    print(f"Total events: {energies.size}")
+
     return weights / t_norm_events
 
 
@@ -108,7 +95,7 @@ def get_dataframe(path, x_onoff, y_onoff):
         df_mcheader = reader.read('mcheader')
         
         iobs = df_mc['iobs'].values
-        mcheader = reader.read('mcheader')
+        mcheader = df_mcheader.copy()
         mcheader = mcheader.set_index('iobs').loc[iobs]
 
     x_cog = df_hillas['x'].values
@@ -159,7 +146,7 @@ def process(path_gamma, path_proton, base_output, n_off):
 
     output_path = base_output + "_onoff.h5"
     with HDF5Writer(output_path) as writer:
-        df_on = pd.concat([df_gamma, df_proton])
+        df_on = pd.concat([df_gamma, df_proton], ignore_index=True)
         df_on['alpha'] = df_on['alpha_0']
         df_off = df_proton.copy()
         df_off['alpha'] = df_off['alpha_0']
@@ -172,7 +159,7 @@ def process(path_gamma, path_proton, base_output, n_off):
 
     output_path = base_output + "_wobble.h5"
     with HDF5Writer(output_path) as writer:
-        df = pd.concat([df_gamma, df_proton])
+        df = pd.concat([df_gamma, df_proton], ignore_index=True)
         df_on = df.copy()
         df_on['alpha'] = df_on['alpha_0']
         df_list = []
@@ -240,20 +227,19 @@ def main():
     n_off = 1
     process_gamma_only(path_gamma, base_output, n_off)
 
-    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
+    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_3deg.h5")
     path_proton = get_astri_2019("d2019-10-03_simulations/proton.h5")
-    base_output = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg")
+    base_output = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma3deg")
     n_off = 1
     process(path_gamma, path_proton, base_output, n_off)
 
-    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
+    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_3deg.h5")
     path_proton = get_astri_2019("d2019-10-03_simulations/proton.h5")
-    base_output = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_5off")
+    base_output = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma3deg_5off")
     n_off = 5
     process(path_gamma, path_proton, base_output, n_off)
 
-    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_1deg.h5")
-    path_proton = path_gamma
+    path_gamma = get_astri_2019("d2019-10-03_simulations/gamma_3deg.h5")
     base_output = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gammaonly")
     n_off = 1
     process_gamma_only(path_gamma, base_output, n_off)

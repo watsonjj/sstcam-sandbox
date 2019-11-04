@@ -173,7 +173,7 @@ def process(path, output_dir):
     )
 
 def main():
-    path = get_data("d190918_alpha/d2019-05-15_simulations_gamma1deg_onoff.h5")
+    path = get_data("d190918_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_onoff.h5")
     output_dir = get_plot("d190918_alpha/alpha_mc/cuts")
     process(path, output_dir)
 

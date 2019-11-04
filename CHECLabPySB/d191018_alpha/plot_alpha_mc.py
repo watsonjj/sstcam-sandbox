@@ -29,7 +29,7 @@ class Hist(Plotter):
     def plot(self, rate, rate_err, edges, label):
         color = self.ax._get_lines.get_next_color()
         between = (edges[1:] + edges[:-1]) * 0.5
-        # self.ax.hist(between, weights=rate, bins=edges, histtype='step', color=color)
+        self.ax.hist(between, weights=rate, bins=edges, histtype='step', color=color)
         caps = self.ax.errorbar(
             between, rate, yerr=rate_err, xerr=np.diff(edges) * 0.5,
             linestyle='', capsize=1, elinewidth=0.5, label=label, color=color
@@ -137,6 +137,17 @@ def process(path, output, title, cuts):
 
 
 def main():
+    path = get_data("d191018_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma0deg_onoff.h5")
+    output = get_plot("d191018_alpha/d2019-05-15_simulations/gamma0deg_onoff_nocut.pdf")
+    title = "ON/OFF MC (1deg) (No cuts)"
+    process(path, output, title, None)
+    output = get_plot("d191018_alpha/d2019-05-15_simulations/gamma0deg_onoff_softcut.pdf")
+    title = "ON/OFF MC (1deg) (Soft cuts)"
+    process(path, output, title, CUTS_ONOFF_SOFT)
+    output = get_plot("d191018_alpha/d2019-05-15_simulations/gamma0deg_onoff_harshcut.pdf")
+    title = "ON/OFF MC (1deg) (Harsh cuts)"
+    process(path, output, title, CUTS_ONOFF_HARSH)
+
     path = get_data("d191018_alpha/extract_alpha_mc/d2019-05-15_simulations_gamma1deg_onoff.h5")
     output = get_plot("d191018_alpha/d2019-05-15_simulations/gamma1deg_onoff_nocut.pdf")
     title = "ON/OFF MC (1deg) (No cuts)"
@@ -172,39 +183,39 @@ def main():
     title = "Wobble MC (1deg)"
     process(path, output, title, CUTS_WOBBLE)
 
-    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_onoff.h5")
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_onoff_nocut.pdf")
-    title = "ON/OFF MC (1deg) (No cuts)"
+    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma3deg_onoff.h5")
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_onoff_nocut.pdf")
+    title = "ON/OFF MC (3deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_onoff_softcut.pdf")
-    title = "ON/OFF MC (1deg) (Soft cuts)"
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_onoff_softcut.pdf")
+    title = "ON/OFF MC (3deg) (Soft cuts)"
     process(path, output, title, CUTS_ONOFF_SOFT)
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_onoff_harshcut.pdf")
-    title = "ON/OFF MC (1deg) (Harsh cuts)"
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_onoff_harshcut.pdf")
+    title = "ON/OFF MC (3deg) (Harsh cuts)"
     process(path, output, title, CUTS_ONOFF_HARSH)
 
-    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_wobble.h5")
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_wobble_nocut.pdf")
-    title = "Wobble MC (1deg) (No cuts)"
+    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma3deg_wobble.h5")
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_wobble_nocut.pdf")
+    title = "Wobble MC (3deg) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_wobble_cut.pdf")
-    title = "Wobble MC (1deg)"
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_wobble_cut.pdf")
+    title = "Wobble MC (3deg)"
     process(path, output, title, CUTS_WOBBLE)
 
-    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma1deg_5off_wobble.h5")
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_5off_wobble_nocut.pdf")
-    title = "Wobble MC (1deg) (5 OFF) (No cuts)"
+    path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gamma3deg_5off_wobble.h5")
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_5off_wobble_nocut.pdf")
+    title = "Wobble MC (3deg) (5 OFF) (No cuts)"
     process(path, output, title, None)
-    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma1deg_5off_wobble_cut.pdf")
-    title = "Wobble MC (1deg) (5 OFF)"
+    output = get_plot("d191018_alpha/d2019-10-03_simulations/gamma3deg_5off_wobble_cut.pdf")
+    title = "Wobble MC (3deg) (5 OFF)"
     process(path, output, title, CUTS_WOBBLE)
 
     path = get_data("d191018_alpha/extract_alpha_mc/d2019-10-03_simulations_gammaonly_wobble.h5")
     output = get_plot("d191018_alpha/d2019-10-03_simulations/gammaonly_wobble_nocut.pdf")
-    title = "Wobble MC (1deg) (No cuts)"
+    title = "Wobble MC (3deg) (No cuts)"
     process(path, output, title, None)
     output = get_plot("d191018_alpha/d2019-10-03_simulations/gammaonly_wobble_cut.pdf")
-    title = "Wobble MC (1deg)"
+    title = "Wobble MC (3deg)"
     process(path, output, title, CUTS_WOBBLE)
 
 
