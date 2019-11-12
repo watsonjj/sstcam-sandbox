@@ -28,7 +28,7 @@ if is_platform_mac():
         current_system = LooseVersion(platform.mac_ver()[0])
         python_target = LooseVersion(
             get_config_var('MACOSX_DEPLOYMENT_TARGET'))
-        if python_target < '10.9' and current_system >= '10.9':
+        if (python_target <= '10.9') and (current_system >= '10.9'):
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = '10.9'
             os.environ['CC'] = 'clang'
             os.environ['CXX'] = 'clang++'
