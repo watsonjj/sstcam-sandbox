@@ -10,7 +10,7 @@ DATA = get_astri_2019("d2019-04-23_nudges")
 
 def main():
     spe_config = join(DIR, "spe_config.yml")
-    df_spe = pd.read_csv(join(DIR, "spe.dat"), sep='\t')
+    df_spe = pd.read_csv(join(DIR, "spe_runlist.txt"), sep='\t')
     for _, row in df_spe.iterrows():
         nudge = row['nudge']
         spe_paths = [
