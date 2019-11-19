@@ -33,7 +33,7 @@ def main():
             file.write("fi\n")
         call("chmod +x {}".format(shell_path), shell=True)
 
-        cmd = "qsub -cwd -V -q lfc.q {}".format(shell_path)
+        cmd = "qsub -cwd -V -P short {}".format(shell_path)
         print(cmd)
         if not dry:
             call(cmd, shell=True)
