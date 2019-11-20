@@ -5,11 +5,10 @@ from CHECLabPy.utils.files import sort_file_list
 import pandas as pd
 from glob import glob
 import re
-from IPython import embed
+from os.path import join
 
 
-def main():
-    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/*_ped.tcal"))
+def process(pedestal_paths, output_dir):
     pedestal_paths = sort_file_list(pedestal_paths)
 
     data = []
@@ -34,9 +33,9 @@ def main():
         delta_channel_mean = delta[0].mean()
         delta_channel_std = delta[0].std()
 
-        delta_spread = spread - reference_spread
-        spread_mean = delta_spread.mean()
-        spread_std = delta_spread.std()
+        # delta_spread = spread - reference_spread
+        spread_mean = spread.mean()
+        spread_std = spread.std()
 
         data.append(dict(
             temperature=temperature_pedestal_primary,
@@ -48,9 +47,19 @@ def main():
             spread_std=spread_std,
         ))
 
-    output_path = get_data(f"d191118_pedestal_temperature/adc_vs_temperature.h5")
+    output_path = join(output_dir, "adc_vs_temperature.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
+
+
+def main():
+    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*_ped.tcal"))
+    output_dir = get_data(f"d191118_pedestal_temperature/d191118")
+    process(pedestal_paths, output_dir)
+
+    # pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*_ped.tcal"))
+    # output_dir = get_data(f"d191118_pedestal_temperature/d191119")
+    # process(pedestal_paths, output_dir)
 
 
 if __name__ == '__main__':

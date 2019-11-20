@@ -23,7 +23,7 @@ class SpreadVsTemp(Plotter):
     def plot(self, temperature, mean, std):
         caps = self.ax.errorbar(
             temperature, mean, yerr=std,
-            linestyle='', capsize=1, elinewidth=0.5
+            linestyle='', capsize=1, elinewidth=0.5, fmt='.', markersize=1,
         )
         for cap in caps[1]:
             cap.set_markeredgewidth(0.5)
@@ -35,7 +35,7 @@ class SpreadVsTemp(Plotter):
 
 
 def main():
-    path = get_data(f"d191118_pedestal_temperature/adc_vs_temperature.h5")
+    path = get_data(f"d191118_pedestal_temperature/d191118/adc_vs_temperature.h5")
 
     with HDF5Reader(path) as reader:
         df = reader.read("data")
@@ -52,15 +52,15 @@ def main():
     p_delta = ValueVsTemp()
     p_delta.plot(temperature, delta_mean, delta_std, "TM")
     p_delta.plot(temperature, delta_channel_mean, delta_channel_std, "Channel 0")
-    p_delta.save(get_plot(f"d191118_pedestal_temperature/delta_vs_temp.pdf"))
+    p_delta.save(get_plot(f"d191118_pedestal_temperature/d191118/delta_vs_temp.pdf"))
 
-    p_delta = ValueVsTemp()
-    p_delta.plot(temperature, delta_channel_mean, delta_channel_std)
-    p_delta.save(get_plot(f"d191118_pedestal_temperature/delta_channel_vs_temp.pdf"))
+    # p_delta = ValueVsTemp()
+    # p_delta.plot(temperature, delta_channel_mean, delta_channel_std)
+    # p_delta.save(get_plot(f"d191118_pedestal_temperature/d191118/delta_channel_vs_temp.pdf"))
 
     p_delta = SpreadVsTemp()
     p_delta.plot(temperature, spead_mean, spread_std)
-    p_delta.save(get_plot(f"d191118_pedestal_temperature/spread_vs_temp.pdf"))
+    p_delta.save(get_plot(f"d191118_pedestal_temperature/d191118/spread_vs_temp.pdf"))
 
 
 if __name__ == '__main__':

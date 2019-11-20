@@ -7,7 +7,6 @@ from tqdm import tqdm
 import re
 import pandas as pd
 from glob import glob
-from IPython import embed
 
 
 class PedestalDB:
@@ -32,10 +31,8 @@ class PedestalDB:
         return self.lookup.iloc[loc]['pedestal']
 
 
-def main():
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
-    pedestal_db = PedestalDB(glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal")))
-
+def process(r0_paths, pedestal_paths, output_path):
+    pedestal_db = PedestalDB(pedestal_paths)
     data = []
 
     for ipath, r0_path in enumerate(r0_paths):
@@ -55,7 +52,7 @@ def main():
             if wfs.missing_packets:
                 continue
 
-            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)
+            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)[[0]]
             online_stats.add_to_stats(subtracted_tc)
             online_hist.add(subtracted_tc)
 
@@ -67,9 +64,20 @@ def main():
             edges=online_hist.edges,
         ))
 
-    output_path = get_data(f"d191118_pedestal_temperature/residuals_lookup.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
+
+
+def main():
+    # r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
+    # pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
+    # output_path = get_data(f"d191118_pedestal_temperature/d191118/residuals_lookup.h5")
+    # process(r0_paths, pedestal_paths, output_path)
+
+    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
+    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
+    output_path = get_data(f"d191118_pedestal_temperature/d191119/residuals_lookup.h5")
+    process(r0_paths, pedestal_paths, output_path)
 
 
 if __name__ == '__main__':

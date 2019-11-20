@@ -9,11 +9,7 @@ import pandas as pd
 from glob import glob
 
 
-def main():
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
-    # pedestal_path = get_checs("d191118_pedestal_temperature/lookup/pedestal_r0_fw11_external600Hz_tc20.2_tmc22.8125_ped.tcal")
-    pedestal_path = get_checs("d191118_pedestal_temperature/lookup/pedestal_r0_fw11_external600Hz_tc29.8_tmc31.25_ped.tcal")
-
+def process(r0_paths, pedestal_path, output_path):
     data = []
 
     for ipath, r0_path in enumerate(r0_paths):
@@ -42,7 +38,7 @@ def main():
             if wfs.missing_packets:
                 continue
 
-            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)
+            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)[[0]]
             online_stats.add_to_stats(subtracted_tc)
             online_hist.add(subtracted_tc)
 
@@ -57,9 +53,20 @@ def main():
             edges=online_hist.edges,
         ))
 
-    output_path = get_data(f"d191118_pedestal_temperature/residuals_single_30.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
+
+
+def main():
+    # r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
+    # pedestal_path = get_checs("d191118_pedestal_temperature/lookup/pedestal_r0_fw11_external600Hz_tc29.8_tmc31.25_ped.tcal")
+    # output_path = get_data(f"d191118_pedestal_temperature/d191118/residuals_single_30.h5")
+    # process(r0_paths, pedestal_path, output_path)
+
+    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
+    pedestal_path = get_checs("d191118_pedestal_temperature/lookup/pedestal_r0_fw11_external600Hz_tc29.8_tmc31.25_ped.tcal")
+    output_path = get_data(f"d191118_pedestal_temperature/d191119/residuals_single_30.h5")
+    process(r0_paths, pedestal_path, output_path)
 
 
 if __name__ == '__main__':

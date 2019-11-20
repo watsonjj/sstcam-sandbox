@@ -37,10 +37,8 @@ class PedestalDB:
         return self.pedestal_instance
 
 
-def main():
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
-    pedestaldb = PedestalDB(glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal")))
-
+def process(r0_paths, pedestal_paths, output_path):
+    pedestal_db = PedestalDB(pedestal_paths)
     data = []
 
     for ipath, r0_path in enumerate(r0_paths):
@@ -48,7 +46,7 @@ def main():
         regex_r0 = re.search(r".+_tc([\d.]+)_tmc([\d.]+).tio", r0_path)
         temperature_r0_primary = float(regex_r0.group(2))
 
-        pedestal = pedestaldb.get_pedestal(temperature_r0_primary)
+        pedestal = pedestal_db.get_pedestal(temperature_r0_primary)
         reader = TIOReader(r0_path)
 
         online_stats = OnlineStats()
@@ -60,7 +58,7 @@ def main():
             if wfs.missing_packets:
                 continue
 
-            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)
+            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)[[0]]
             online_stats.add_to_stats(subtracted_tc)
             online_hist.add(subtracted_tc)
 
@@ -72,9 +70,15 @@ def main():
             edges=online_hist.edges,
         ))
 
-    output_path = get_data(f"d191118_pedestal_temperature/residuals_pchip.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
+
+
+def main():
+    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
+    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
+    output_path = get_data(f"d191118_pedestal_temperature/d191118/residuals_pchip.h5")
+    process(r0_paths, pedestal_paths, output_path)
 
 
 if __name__ == '__main__':

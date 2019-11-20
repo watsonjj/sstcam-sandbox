@@ -45,13 +45,11 @@ class RelativeStdVsTemperature(Plotter):
 
 def main():
     paths = dict(
-        self=get_data("d191118_pedestal_temperature/residuals_self.h5"),
-        # single_20degree=get_data("d191118_pedestal_temperature/residuals_single_20.h5"),
-        single_31degree=get_data("d191118_pedestal_temperature/residuals_single_30.h5"),
-        # single_40degree=get_data("d191118_pedestal_temperature/residuals_single_40.h5"),
-        lookup=get_data("d191118_pedestal_temperature/residuals_lookup.h5"),
-        interp=get_data("d191118_pedestal_temperature/residuals_interp.h5"),
-        pchip=get_data("d191118_pedestal_temperature/residuals_pchip.h5"),
+        self=get_data("d191118_pedestal_temperature/d191118/residuals_self.h5"),
+        single_31degree=get_data("d191118_pedestal_temperature/d191118/residuals_single_30.h5"),
+        lookup=get_data("d191118_pedestal_temperature/d191118/residuals_lookup.h5"),
+        interp=get_data("d191118_pedestal_temperature/d191118/residuals_interp.h5"),
+        pchip=get_data("d191118_pedestal_temperature/d191118/residuals_pchip.h5"),
     )
 
     p_mean = MeanVsTemperature()
@@ -61,16 +59,12 @@ def main():
     with HDF5Reader(paths['self']) as reader:
         df = reader.read("data")
         df = df.set_index("temperature_r0_primary").sort_index()
-        # df = df.loc[df.index < 38]
-        # df = df.loc[df.index != 23.72]
         ref_std = df['std'].values
 
     for label, path in paths.items():
         with HDF5Reader(path) as reader:
             df = reader.read("data")
             df = df.set_index("temperature_r0_primary").sort_index()
-            # df = df.loc[df.index < 38]
-            # df = df.loc[df.index != 23.72]
 
         temperature = df.index.values
         mean = df['mean'].values
@@ -80,9 +74,9 @@ def main():
         p_std.plot(temperature, std, label)
         p_relstd.plot(temperature, std, ref_std, label)
 
-    p_mean.save(get_plot(f"d191118_pedestal_temperature/mean.pdf"))
-    p_std.save(get_plot(f"d191118_pedestal_temperature/std.pdf"))
-    p_relstd.save(get_plot(f"d191118_pedestal_temperature/rel_std.pdf"))
+    p_mean.save(get_plot(f"d191118_pedestal_temperature/d191118/mean.pdf"))
+    p_std.save(get_plot(f"d191118_pedestal_temperature/d191118/std.pdf"))
+    p_relstd.save(get_plot(f"d191118_pedestal_temperature/d191118/rel_std.pdf"))
 
     with HDF5Reader(paths['self']) as reader:
         df = reader.read("data")
@@ -92,7 +86,7 @@ def main():
 
     p_temp = TemperatureComparison()
     p_temp.plot(chamber, primary)
-    p_temp.save(get_plot(f"d191118_pedestal_temperature/temp.pdf"))
+    p_temp.save(get_plot(f"d191118_pedestal_temperature/d191118/temp.pdf"))
 
 
 if __name__ == '__main__':

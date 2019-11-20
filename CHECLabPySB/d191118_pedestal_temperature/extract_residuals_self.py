@@ -9,9 +9,7 @@ import pandas as pd
 from glob import glob
 
 
-def main():
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
-
+def process(r0_paths, output_path):
     data = []
 
     for ipath, r0_path in enumerate(r0_paths):
@@ -41,7 +39,7 @@ def main():
             if wfs.missing_packets:
                 continue
 
-            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)
+            subtracted_tc = pedestal.subtract_pedestal(wfs, wfs.first_cell_id)[[0]]
             online_stats.add_to_stats(subtracted_tc)
             online_hist.add(subtracted_tc)
 
@@ -56,9 +54,14 @@ def main():
             edges=online_hist.edges,
         ))
 
-    output_path = get_data(f"d191118_pedestal_temperature/residuals_self.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
+
+
+def main():
+    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
+    output_dir = get_data(f"d191118_pedestal_temperature/d191118/residuals_self.h5")
+    process(r0_paths, output_dir)
 
 
 if __name__ == '__main__':
