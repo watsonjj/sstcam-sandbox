@@ -73,14 +73,19 @@ def process(r0_paths, pedestal_paths, output_path):
 
 
 def main():
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
-    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
-    output_path = get_data(f"d191118_pedestal_temperature/d191118/residuals_interp.h5")
-    process(r0_paths, pedestal_paths, output_path)
+    # r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
+    # pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
+    # output_path = get_data(f"d191118_pedestal_temperature/d191118/residuals_interp.h5")
+    # process(r0_paths, pedestal_paths, output_path)
+    #
+    # r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
+    # pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
+    # output_path = get_data(f"d191118_pedestal_temperature/d191119/residuals_interp.h5")
+    # process(r0_paths, pedestal_paths, output_path)
 
-    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
+    r0_paths = glob(get_checs("d191118_pedestal_temperature/data/d191120/*.tio"))
     pedestal_paths = glob(get_checs("d191118_pedestal_temperature/lookup/*_ped.tcal"))
-    output_path = get_data(f"d191118_pedestal_temperature/d191119/residuals_interp.h5")
+    output_path = get_data(f"d191118_pedestal_temperature/d191120/residuals_interp.h5")
     process(r0_paths, pedestal_paths, output_path)
 
 

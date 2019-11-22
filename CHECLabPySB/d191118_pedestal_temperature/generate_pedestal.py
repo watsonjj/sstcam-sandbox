@@ -22,14 +22,17 @@ def process(input_paths):
 
 
 def main():
-    input_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
-    process(input_paths)
+    # input_paths = glob(get_checs("d191118_pedestal_temperature/data/*.tio"))
+    # process(input_paths)
 
     # input_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*.tio"))
     # process(input_paths)
 
-    # input_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
-    # process(input_paths)
+    input_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*.tio"))
+    process(input_paths)
+
+    input_paths = glob(get_checs("d191118_pedestal_temperature/data/d191120/*.tio"))
+    process(input_paths)
 
 
 if __name__ == '__main__':

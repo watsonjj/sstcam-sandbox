@@ -62,6 +62,24 @@ def main():
     p_delta.plot(temperature, spead_mean, spread_std)
     p_delta.save(get_plot(f"d191118_pedestal_temperature/d191118/spread_vs_temp.pdf"))
 
+    paths = dict(
+        d191118_60hz=get_data("d191118_pedestal_temperature/d191118/adc_vs_temperature.h5"),
+        d191119_600hz=get_data("d191118_pedestal_temperature/d191119/adc_vs_temperature.h5"),
+        d191120_200hz=get_data("d191118_pedestal_temperature/d191120/adc_vs_temperature.h5"),
+    )
+    p_delta = ValueVsTemp()
+    for label, path in paths.items():
+        with HDF5Reader(path) as reader:
+            df = reader.read("data")
+            df = df.set_index("temperature").sort_index()
+
+        temperature = df.index.values
+        delta_mean = df['delta_mean'].values
+        delta_std = df['delta_std'].values
+
+        p_delta.plot(temperature, delta_mean, delta_std, label)
+    p_delta.save(get_plot(f"d191118_pedestal_temperature/delta_vs_temp_vs_day.pdf"))
+
 
 if __name__ == '__main__':
     main()

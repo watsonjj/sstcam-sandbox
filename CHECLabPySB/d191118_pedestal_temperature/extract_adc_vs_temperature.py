@@ -5,10 +5,9 @@ from CHECLabPy.utils.files import sort_file_list
 import pandas as pd
 from glob import glob
 import re
-from os.path import join
 
 
-def process(pedestal_paths, output_dir):
+def process(pedestal_paths, output_path):
     pedestal_paths = sort_file_list(pedestal_paths)
 
     data = []
@@ -47,19 +46,22 @@ def process(pedestal_paths, output_dir):
             spread_std=spread_std,
         ))
 
-    output_path = join(output_dir, "adc_vs_temperature.h5")
     with HDF5Writer(output_path) as writer:
         writer.write(data=pd.DataFrame(data))
 
 
 def main():
     pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191118/*_ped.tcal"))
-    output_dir = get_data(f"d191118_pedestal_temperature/d191118")
-    process(pedestal_paths, output_dir)
+    output_path = get_data(f"d191118_pedestal_temperature/d191118/adc_vs_temperature.h5")
+    process(pedestal_paths, output_path)
 
-    # pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*_ped.tcal"))
-    # output_dir = get_data(f"d191118_pedestal_temperature/d191119")
-    # process(pedestal_paths, output_dir)
+    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191119/*_ped.tcal"))
+    output_path = get_data(f"d191118_pedestal_temperature/d191119/adc_vs_temperature.h5")
+    process(pedestal_paths, output_path)
+
+    pedestal_paths = glob(get_checs("d191118_pedestal_temperature/data/d191120/*_ped.tcal"))
+    output_path = get_data(f"d191118_pedestal_temperature/d191120/adc_vs_temperature.h5")
+    process(pedestal_paths, output_path)
 
 
 if __name__ == '__main__':

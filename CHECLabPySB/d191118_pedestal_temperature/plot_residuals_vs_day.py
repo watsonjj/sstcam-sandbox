@@ -25,8 +25,9 @@ class StdVsTemperature(Plotter):
 
 def main():
     paths = dict(
-        d191118_interp=get_data("d191118_pedestal_temperature/d191118/residuals_interp.h5"),
-        d191119_interp=get_data("d191118_pedestal_temperature/d191119/residuals_interp.h5"),
+        d191118_625Hz_interp=get_data("d191118_pedestal_temperature/d191118/residuals_interp.h5"),
+        d191119_625Hz_interp=get_data("d191118_pedestal_temperature/d191119/residuals_interp.h5"),
+        d191120_200Hz_interp=get_data("d191118_pedestal_temperature/d191120/residuals_interp.h5"),
     )
 
     p_mean = MeanVsTemperature()
