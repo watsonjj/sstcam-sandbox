@@ -20,8 +20,8 @@ class InternalVsExternal(Plotter):
         self.ax.plot(x_fit, y_fit, color=color)
 
     def finish(self):
-        plt.xlabel("External Temperature (°C)")
-        plt.ylabel("TM Primary Temperature (°C)")
+        self.ax.set_xlabel("External Temperature (°C)")
+        self.ax.ylabel("TM Primary Temperature (°C)")
 
 
 class FitPlot(Plotter):
