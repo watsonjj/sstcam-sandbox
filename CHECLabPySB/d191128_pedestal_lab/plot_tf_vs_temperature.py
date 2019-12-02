@@ -92,19 +92,21 @@ def main():
         before_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/before_25deg.h5")),
         before_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/before_35deg.h5")),
     )
-    # after_tfs = dict(
-    #     after_25deg_1=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_25deg.h5")),
-    #     after_25deg_2=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_25deg_3.h5")),
-    # )
+    after_tfs = dict(
+        c440pF_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_25deg.h5")),
+        c440pF_25deg_2=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_25deg_3.h5")),
+        c440pF_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_35deg.h5")),
+        c440pF_35deg_2=get_tf(get_data("d191128_pedestal_lab/dc_tf/after_35deg_3.h5")),
+    )
     # after_tfs = dict(
     #     c100pF_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/100pF_25deg.h5")),
     #     c100pF_1k_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/100pF_1k_25deg.h5")),
-    #     # c100pF_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/100pF_35deg.h5")),
+    #     c100pF_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/100pF_35deg.h5")),
     # )
-    after_tfs = dict(
-        c200pF_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/200pF_25deg.h5")),
-        c200pF_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/200pF_35deg.h5")),
-    )
+    # after_tfs = dict(
+    #     c200pF_25deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/200pF_25deg.h5")),
+    #     c200pF_35deg=get_tf(get_data("d191128_pedestal_lab/dc_tf/200pF_35deg.h5")),
+    # )
     channel = 8
     cell = 0
     title = f"BEFORE Capacitor Change, Channel = {channel}, Cell = {cell}"
