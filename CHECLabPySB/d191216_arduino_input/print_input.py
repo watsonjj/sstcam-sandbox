@@ -66,7 +66,7 @@ def convert(a, t):
 
 z_next = False
 
-for i in range(100):
+for i in range(30):
     rand = np.random.RandomState(i)
 
     x = rand.uniform(-1, 1, 1)[0] * u.m
@@ -76,7 +76,7 @@ for i in range(100):
     psi = rand.uniform(0, 360, 1)[0] * u.deg
     radius = 2.2 * u.m
     sigma = 0.3 * u.m
-    max_time = rand.uniform(4, 7, 1)[0]
+    max_time = rand.uniform(7, 12, 1)[0]
     max_amp = 15#rand.uniform(10, 15, 1)[0]
 
     longi, trans = camera_to_shower_coordinates(xpix, ypix, x, y, psi)
@@ -87,10 +87,12 @@ for i in range(100):
     if z_next:
         image = np.zeros(32, dtype=np.int)
         image[[5, 6, 7, 8, 13, 18, 25, 24, 23, 26]] = 5
+        time = np.full(32, 5, dtype=np.int)
         z_next = False
     elif type_rand == 3:
         image = np.zeros(32, dtype=np.int)
         image[[5, 6, 7, 8, 13, 19, 25, 24, 23]] = 5
+        time = np.full(32, 5, dtype=np.int)
         z_next = True
     elif type_rand == 7:
         ring = RingGaussian(x, y, radius, sigma)
