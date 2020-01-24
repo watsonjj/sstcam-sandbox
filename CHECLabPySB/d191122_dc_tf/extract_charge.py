@@ -68,7 +68,8 @@ def process(r0_paths, pedestal, tf, output_path):
             first_cell_id = wfs.first_cell_id
             wfs = correct_overflow(wfs)
             wfs = pedestal.subtract_pedestal(wfs, first_cell_id)
-            wfs = tf.apply_tf(wfs, first_cell_id)
+            if tf is not None:
+                wfs = tf.apply_tf(wfs, first_cell_id)
             charge = wfs[:, 4:21].sum(1)
 
             df_list.append(pd.DataFrame(dict(
@@ -102,6 +103,9 @@ def main():
     output_path = get_data("d191122_dc_tf/charge/ac_23deg_charge.h5")
     process(r0_paths, pedestal_23, tf_ac_23, output_path)
 
+    r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
+    output_path = get_data("d191122_dc_tf/charge/pedonly_23deg_charge.h5")
+    process(r0_paths, pedestal_23, None, output_path)
 
 if __name__ == '__main__':
     main()
