@@ -214,26 +214,33 @@ def main():
     # Bias per channel
     output_path = get_plot(f"d191122_dc_tf/plot_charge_resolution/bias_c.pdf")
     p_bias = ChargePlot()
-    for c in range(10):
+    for c in range(64):
         bias = average_dc_ext_23[c] / true_dc
-        rms = std_dc_ext_23[c] / true_dc
-        p_bias.plot(true_dc, bias, label=f"{c}")
-    p_bias.add_legend('best')
+        stddev = std_dc_ext_23[c] / true_dc
+        p_bias.ax.plot(true_dc, bias)
+    # p_bias.add_legend('best')
     p_bias.ax.set_xscale('log')
     p_bias.ax.get_xaxis().set_major_formatter(
         FuncFormatter(lambda x, _: '{:g}'.format(x)))
+    p_bias.ax.set_xlabel("Average Expected Charge (p.e.)")
+    p_bias.ax.set_ylabel("Charge Bias")
     p_bias.save(output_path)
 
     # RMS per channel
-    output_path = get_plot(f"d191122_dc_tf/plot_charge_resolution/rms_c.pdf")
+    output_path = get_plot(f"d191122_dc_tf/plot_charge_resolution/std_c.pdf")
     p_bias = ChargePlot()
-    for c in range(10):
-        rms = std_dc_ext_23[c] / true_dc
-        p_bias.plot(true_dc, rms, label=f"{c}")
-    p_bias.add_legend('best')
+    for c in range(64):
+        stddev = std_dc_ext_23[c] / true_dc
+        p_bias.ax.plot(true_dc, stddev)
+    # p_bias.add_legend('best')
     p_bias.ax.set_xscale('log')
     p_bias.ax.get_xaxis().set_major_formatter(
         FuncFormatter(lambda x, _: '{:g}'.format(x)))
+    # p_bias.ax.set_yscale('log')
+    # p_bias.ax.get_yaxis().set_major_formatter(
+    #     FuncFormatter(lambda x, _: '{:g}'.format(x)))
+    p_bias.ax.set_xlabel("Average Expected Charge (p.e.)")
+    p_bias.ax.set_ylabel("Charge StdDev")
     p_bias.save(output_path)
 
 if __name__ == '__main__':

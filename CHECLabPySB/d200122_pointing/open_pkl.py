@@ -27,6 +27,7 @@ class Timeseries(Plotter):
 def main():
     path = get_data("d200122_pointing/draco_pointing_assessment_ghost_supr1.pkl")
     # path = get_data("d200122_pointing/draco_pointing_assessment_ghost_supr2.pkl")
+    # path = get_data("d200122_pointing/draco_pointing_assessment_ghost_supr1_sim.pkl")
     with open(path, 'rb') as file:
         df = pd.DataFrame(pickle.load(file))
         # Fix for incorrect time storage (https://github.com/sstcam/SSDAQ/issues/92)
@@ -41,6 +42,9 @@ def main():
     x = df.index.values
     y = df['sep'].values
     rolling_std = df.rolling('60s', min_periods=5).std()['sep'].values
+    rolling_std /= df.rolling('60s', min_periods=5).count()['sep'].values
+
+    # embed()
 
     p_ts = Timeseries()
     p_ts.plot(x, y)
@@ -52,10 +56,10 @@ def main():
     p_ts = Timeseries()
     p_ts.plot(x, rolling_std)
     p_ts.ax.set_xlabel("Time")
-    p_ts.ax.set_ylabel("Rolling RMS (1 minute) (arcseconds)")
+    p_ts.ax.set_ylabel("Rolling StdDev (1 minute) (arcseconds)")
     p_ts.set_log_y()
-    p_ts.ax.axhline(60, color='red')
-    p_ts.ax.axhline(20, color='blue')
+    # p_ts.ax.axhline(60, color='red')
+    # p_ts.ax.axhline(20, color='blue')
     p_ts.save(get_plot("d200122_pointing/ts_std.pdf"))
 
 
