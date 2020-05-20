@@ -1,4 +1,4 @@
-from CHECLabPySB import HDF5Writer, HDF5Reader
+from CHECLabPySB.old.io import HDF5Writer, HDF5Reader
 from CHECLabPySB.d181031_sst_rfi.intensity_resolution import all_files
 from tqdm import tqdm
 from CHECLabPy.utils.files import open_runlist_dl1
@@ -29,11 +29,15 @@ def process(file):
         ff_m = df['ff_m'].values
         ff_c = df['ff_c'].values
 
-    with HDF5Reader(saturation_path) as reader:
-        df = reader.read("data")
-        sat_m = df['ff_m'].values
+    sat_m = None
+    try:
+        with HDF5Reader(saturation_path) as reader:
+            df = reader.read("data")
+            sat_m = df['ff_m'].values
+    except:
+        pass
 
-    cr = ChargeResolution()
+    cr = ChargeResolution(mc_true=False)
     cs = ChargeStatistics()
 
     desc0 = "Looping over files"
@@ -47,7 +51,7 @@ def process(file):
         true = transmission * fw_m[pixel]
         measured = (charge - ff_c[pixel]) / ff_m[pixel]
 
-        if true.mean() > 2000:
+        if (true.mean() > 2000) and (sat_m is not None):
             pixel, charge = reader.select_columns(['pixel', 'saturation_coeff'], stop=n_rows)
             measured = charge / sat_m[pixel]
 

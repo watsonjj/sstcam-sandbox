@@ -107,26 +107,26 @@ def main():
     # ph.p_crwrr.ax.set_ylim(top=2)
     # ph.save(output_dir)
 
-    output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV")
-    path_dict = {
-        # "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
-        "40MHz": d181010_LabSM_40MHz_100mV(),
-        "1000MHz": d181010_LabSM_1000MHz_100mV(),
-    }
-    ph = PlotHandler()
-    poi = list(path_dict.values())[0].poi
-    ph.plot_average_from_dict(path_dict, poi)
-    ph.p_cr.ax.set_xlim([x_min , x_max])
-    ph.p_cr.ax.set_ylim([0.01, 20])
-    ph.p_crwrr.ax.set_ylim(top=2)
-    ph.save(output_dir)
+    # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/nsb_100mV")
+    # path_dict = {
+    #     # "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
+    #     "40MHz": d181010_LabSM_40MHz_100mV(),
+    #     "1000MHz": d181010_LabSM_1000MHz_100mV(),
+    # }
+    # ph = PlotHandler()
+    # poi = list(path_dict.values())[0].poi
+    # ph.plot_average_from_dict(path_dict, poi)
+    # ph.p_cr.ax.set_xlim([x_min , x_max])
+    # ph.p_cr.ax.set_ylim([0.01, 20])
+    # ph.p_crwrr.ax.set_ylim(top=2)
+    # ph.save(output_dir)
 
     # output_dir = get_plot("d181031_sst_rfi/plot_intensity_resolution/lab_vs_mc")
     # path_dict = {
     #     "40MHz": d181010_LabSM_40MHz_100mV(),
     #     "MCLab 40MHz": d180907_MCLab_opct40_40MHz(),
-    #     "Prod3": d181030_MCOnsky_Prod3(),
-    #     "Prod4": d181030_MCOnsky_Prod4(),
+    #     # "Prod3": d181030_MCOnsky_Prod3(),
+    #     # "Prod4": d181030_MCOnsky_Prod4(),
     # }
     # ph = PlotHandler()
     # poi = list(path_dict.values())[0].poi

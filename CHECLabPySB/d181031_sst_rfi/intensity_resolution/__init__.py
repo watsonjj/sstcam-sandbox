@@ -1,4 +1,5 @@
-from CHECLabPySB import get_data, get_plot, HDF5Reader
+from CHECLabPySB import get_data, get_plot
+from CHECLabPySB.old.io import HDF5Reader
 from abc import abstractmethod, ABCMeta
 import os
 from CHECLabPy.utils.files import open_runlist_dl1, open_runlist_r1
@@ -262,7 +263,7 @@ fw_files = [
 
 all_files = [
     # d180907_MCLab_opct40_0MHz(),
-    # d180907_MCLab_opct40_40MHz(),
+    d180907_MCLab_opct40_40MHz(),
     # d181010_LabSM_0MHz_50mV(),
     # d181010_LabSM_0MHz_100mV(),
     # d181010_LabSM_0MHz_200mV(),
@@ -276,7 +277,7 @@ all_files = [
     # d181010_LabSM_250MHz_100mV(),
     # d181010_LabSM_250MHz_200mV(),
     # d181010_LabSM_1000MHz_50mV(),
-    # d181010_LabSM_1000MHz_100mV(),
+    d181010_LabSM_1000MHz_100mV(),
     # d181010_LabSM_1000MHz_200mV(),
 ]
 

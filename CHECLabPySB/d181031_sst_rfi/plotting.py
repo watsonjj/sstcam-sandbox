@@ -1,5 +1,5 @@
 from CHECLabPySB.plotting.setup import Plotter
-from CHECLabPySB import HDF5Reader
+from CHECLabPySB.old.io import HDF5Reader
 import numpy as np
 from scipy.stats import binned_statistic as bs
 from matplotlib.ticker import FuncFormatter

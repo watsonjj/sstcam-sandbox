@@ -1,4 +1,5 @@
-from CHECLabPySB import get_data, get_plot, HDF5Reader
+from CHECLabPySB import get_data, get_plot
+from CHECLabPySB.old.io import HDF5Reader
 from abc import abstractmethod, ABCMeta
 import os
 from CHECLabPy.utils.files import open_runlist_dl1, open_runlist_r1

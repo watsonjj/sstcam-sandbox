@@ -174,7 +174,7 @@ class IRPlotter(Plotter):
 
 def main():
 
-    p_ir = IRPlotter(sidebyside=True)
+    p_ir = IRPlotter()
 
     low_color = p_ir.get_color()
     mc_color = p_ir.get_color()
@@ -252,13 +252,19 @@ def main():
 
     true = np.geomspace(x.min(), 1100, 100)
     l_poisson = p_ir.plot_poisson(true)
-    # l_req = p_ir.plot_requirement(true)
-    # l_req_high = p_ir.plot_requirement_highNSB(true)
+    l_req = p_ir.plot_requirement(true)
+    l_req_high = p_ir.plot_requirement_highNSB(true)
+
+    from sstcam_simulation.camera.spe import SiPMGentileSPE
+    s = SiPMGentileSPE(spe_sigma=0.1, opct=0.08, x_max=40)
+    enf = s.excess_noise_factor
+    enf_limit = np.sqrt(enf * true * 0.39) / (true * 0.39)
+    p_ir.ax.plot(true, enf_limit, '--', color='black', alpha=0.1)
 
     p_ir.ax.legend([
         l_poisson,
-        # l_req,
-        # l_req_high,
+        l_req,
+        l_req_high,
         l_low,
         l_low_prog,
         l_mc,
@@ -266,8 +272,8 @@ def main():
         l_high_proj,
     ], [
         "Poisson Limit",
-        # "Requirement",
-        # "Requirement (High NSB)",
+        "Requirement",
+        "Requirement (High NSB)",
         "Nominal NSB",
         "Nominal NSB (Proj. Improvement)",
         "Nominal NSB (MC Simulation)",
