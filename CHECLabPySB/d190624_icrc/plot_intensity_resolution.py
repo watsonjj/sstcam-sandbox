@@ -174,7 +174,7 @@ class IRPlotter(Plotter):
 
 def main():
 
-    p_ir = IRPlotter()
+    p_ir = IRPlotter(sidebyside=True)
 
     low_color = p_ir.get_color()
     mc_color = p_ir.get_color()
@@ -207,20 +207,20 @@ def main():
     )
 
     # MCLab data points
-    path = get_data("d181031_sst_rfi/intensity_resolution/intensity_resolution/d180907_MCLab_opct40_40MHz.h5")
-    with pd.HDFStore(path) as store:
-        df_pixel = store['charge_resolution_pixel']
-    df_binned = bin_dataframe(df_pixel, 40)
-    df_camera_mean = df_binned.groupby(['bin']).mean()
-    df_camera_mean = df_camera_mean.loc[df_camera_mean['true'] < 1000]
-    bin_ = df_camera_mean.index
-    x = df_camera_mean['true'].values
-    y = df_camera_mean['charge_resolution'].values
-    df_camera_std = df_binned.groupby(['bin']).std()
-    yerr = df_camera_std['charge_resolution'].loc[bin_].values
-    df_err = df_binned[['bin', 'true_err']].groupby(['bin']).apply(sum_errors)
-    xerr = df_err['true_err'].loc[bin_].values
-    l_mc = p_ir.plot(x, y, xerr, yerr, label="Lab MC Sim. (Nominal NSB)", color=mc_color, marker='^')
+    # path = get_data("d181031_sst_rfi/intensity_resolution/intensity_resolution/d180907_MCLab_opct40_40MHz.h5")
+    # with pd.HDFStore(path) as store:
+    #     df_pixel = store['charge_resolution_pixel']
+    # df_binned = bin_dataframe(df_pixel, 40)
+    # df_camera_mean = df_binned.groupby(['bin']).mean()
+    # df_camera_mean = df_camera_mean.loc[df_camera_mean['true'] < 1000]
+    # bin_ = df_camera_mean.index
+    # x = df_camera_mean['true'].values
+    # y = df_camera_mean['charge_resolution'].values
+    # df_camera_std = df_binned.groupby(['bin']).std()
+    # yerr = df_camera_std['charge_resolution'].loc[bin_].values
+    # df_err = df_binned[['bin', 'true_err']].groupby(['bin']).apply(sum_errors)
+    # xerr = df_err['true_err'].loc[bin_].values
+    # l_mc = p_ir.plot(x, y, xerr, yerr, label="Lab MC Sim. (Nominal NSB)", color=mc_color, marker='^')
 
     # High NSB data points
     path = get_data(
@@ -255,11 +255,11 @@ def main():
     l_req = p_ir.plot_requirement(true)
     l_req_high = p_ir.plot_requirement_highNSB(true)
 
-    from sstcam_simulation.camera.spe import SiPMGentileSPE
-    s = SiPMGentileSPE(spe_sigma=0.1, opct=0.08, x_max=40)
-    enf = s.excess_noise_factor
-    enf_limit = np.sqrt(enf * true * 0.39) / (true * 0.39)
-    p_ir.ax.plot(true, enf_limit, '--', color='black', alpha=0.1)
+    # from sstcam_simulation.camera.spe import SiPMGentileSPE
+    # s = SiPMGentileSPE(spe_sigma=0.1, opct=0.08, x_max=40)
+    # enf = s.excess_noise_factor
+    # enf_limit = np.sqrt(enf * true * 0.39) / (true * 0.39)
+    # p_ir.ax.plot(true, enf_limit, '--', color='black', alpha=0.1)
 
     p_ir.ax.legend([
         l_poisson,
@@ -267,7 +267,7 @@ def main():
         l_req_high,
         l_low,
         l_low_prog,
-        l_mc,
+        # l_mc,
         l_high,
         l_high_proj,
     ], [
@@ -276,10 +276,10 @@ def main():
         "Requirement (High NSB)",
         "Nominal NSB",
         "Nominal NSB (Proj. Improvement)",
-        "Nominal NSB (MC Simulation)",
+        # "Nominal NSB (MC Simulation)",
         "High NSB",
         "High NSB (Proj. Improvement)",
-    ], loc="best", frameon=False, fontsize=5.5)
+    ], loc="best", frameon=False, fontsize=4.5)
 
     p_ir.save(get_plot("d190624_icrc/res.pdf"))
 
