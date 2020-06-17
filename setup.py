@@ -5,17 +5,17 @@ import platform
 from distutils.sysconfig import get_config_var
 from distutils.version import LooseVersion
 
-PACKAGENAME = "CHECLabPySB"
-DESCRIPTION = ("Sandbox package for personal scripts "
-               "primarily using the CHECLabPy Package")
+PACKAGENAME = "sstcam_sandbox"
+DESCRIPTION = ("Personal sandbox package for investigations "
+               "into the SST Camera and CTA")
 AUTHOR = "Jason J Watson"
 AUTHOR_EMAIL = "jason.watson@physics.ox.ac.uk"
 VERSION = "1.0.0"
 
 extensions = [
     Extension(
-        'CHECLabPySB.d190209_spectra.spe_functions',
-        sources=['CHECLabPySB/d190209_spectra/spe_functions.cc'],
+        'sstcam_sandbox.d190209_spectra.spe_functions',
+        sources=['sstcam_sandbox/d190209_spectra/spe_functions.cc'],
     ),
 ]
 
@@ -48,7 +48,8 @@ setup(
         'pandas>=0.21.0',
         'iminuit',
         'numba',
-        'PyYAML', 'seaborn'
+        'PyYAML',
+        'seaborn'
     ],
     setup_requires=['pytest-runner', ],
     tests_require=['pytest', ],
