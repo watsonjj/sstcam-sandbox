@@ -1,3 +1,3 @@
 # sstcam_sandbox
 
-Sandbox package for personal scripts primarily using the CHECLabPy Package
+Personal sandbox package for investigation into the SST Camera and CTA
