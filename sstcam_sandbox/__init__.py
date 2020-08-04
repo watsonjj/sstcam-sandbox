@@ -4,8 +4,8 @@ import warnings
 from CHECLabPy.utils.files import create_directory
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
-_DATA = os.path.expanduser(os.path.join(os.environ['dir_data'], "sstcam_sandbox/data"))
-_PLOT = os.path.expanduser(os.path.join(os.environ['dir_data'], "sstcam_sandbox/plots"))
+_DATA = os.path.expanduser(os.path.join(os.environ['dir_data'], "sstcam-sandbox/data"))
+_PLOT = os.path.expanduser(os.path.join(os.environ['dir_data'], "sstcam-sandbox/plots"))
 
 _LARGE = os.path.expanduser(os.environ['dir_data_large'])
 _CHECS = os.path.expanduser(os.path.join(_LARGE, "data_checs"))

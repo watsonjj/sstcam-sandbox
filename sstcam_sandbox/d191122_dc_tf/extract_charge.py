@@ -1,8 +1,8 @@
 from sstcam_sandbox import get_checs, get_data
+from sstcam_sandbox.d191122_dc_tf import get_dc_tf, get_ac_tf, get_ac_cc_tf
 from CHECLabPy.core.io import TIOReader
 from CHECLabPy.core.io import HDF5Writer
-from TargetCalibSB.tf import TFDC
-from TargetCalibSB import VpedCalibrator, correct_overflow
+from TargetCalibSB import correct_overflow
 from TargetCalibSB.pedestal import PedestalTargetCalib
 from TargetCalibSB import get_cell_ids_for_waveform
 import numpy as np
@@ -17,20 +17,6 @@ from IPython import embed
 
 def get_pedestal(pedestal_path):
     return PedestalTargetCalib.from_tcal(pedestal_path)
-
-
-def get_dc_tf(dc_tf_path, vped_calibration_path):
-    tf = TFDC.from_file(dc_tf_path)
-    vped_calibrator = VpedCalibrator()
-    vped_calibrator.load(vped_calibration_path)
-    tf.finish_generation(vped_calibrator)
-    return tf
-
-
-def get_ac_tf(ac_tf_path):
-    tf = TFDC.from_tcal(ac_tf_path)
-    tf.finish_generation()
-    return tf
 
 
 @njit
@@ -87,25 +73,31 @@ def process(r0_paths, pedestal, tf, output_path):
 
 def main():
     path_ac_23 = get_data("d191122_dc_tf/ac_tf/TFInput_File_SN0038_temp_23_180317.tcal")
+    path_ac_cc_23 = get_data("d191122_dc_tf/ac_tf/ac_23deg_tf.h5")
     path_dc_ext23 = get_data("d191122_dc_tf/dc_tf/dc_externalsync_23deg_tf.tcal")
     path_vped_23 = get_data("d191122_dc_tf/vped/VPED_23deg.h5")
     path_pedestal_23 = get_checs("d181203_erlangen/pedestal/Pedestal_23deg_ped.tcal")
 
     tf_ac_23 = get_ac_tf(path_ac_23)
+    tf_ac_cc_23 = get_ac_cc_tf(path_ac_cc_23)
     tf_dc_ext23 = get_dc_tf(path_dc_ext23, path_vped_23)
     pedestal_23 = get_pedestal(path_pedestal_23)
 
-    r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
-    output_path = get_data("d191122_dc_tf/charge/dc_externalsync_23deg_charge.h5")
-    process(r0_paths, pedestal_23, tf_dc_ext23, output_path)
+    # r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
+    # output_path = get_data("d191122_dc_tf/charge/dc_externalsync_23deg_charge.h5")
+    # process(r0_paths, pedestal_23, tf_dc_ext23, output_path)
+    #
+    # r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
+    # output_path = get_data("d191122_dc_tf/charge/ac_23deg_charge.h5")
+    # process(r0_paths, pedestal_23, tf_ac_23, output_path)
 
     r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
-    output_path = get_data("d191122_dc_tf/charge/ac_23deg_charge.h5")
-    process(r0_paths, pedestal_23, tf_ac_23, output_path)
+    output_path = get_data("d191122_dc_tf/charge/ac_cc_23deg_charge.h5")
+    process(r0_paths, pedestal_23, tf_ac_cc_23, output_path)
 
-    r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
-    output_path = get_data("d191122_dc_tf/charge/pedonly_23deg_charge.h5")
-    process(r0_paths, pedestal_23, None, output_path)
+    # r0_paths = glob(get_checs("d181203_erlangen/dynrange/23deg/r0/Amplitude_*_Run_0_r0.tio"))
+    # output_path = get_data("d191122_dc_tf/charge/pedonly_23deg_charge.h5")
+    # process(r0_paths, pedestal_23, None, output_path)
 
 if __name__ == '__main__':
     main()

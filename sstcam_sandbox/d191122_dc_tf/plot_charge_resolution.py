@@ -165,10 +165,12 @@ def calculate_charge_resolution(path):
 def main():
     path_dc_ext_23 = get_data("d191122_dc_tf/charge/dc_externalsync_23deg_charge.h5")
     path_ac_23 = get_data("d191122_dc_tf/charge/ac_23deg_charge.h5")
+    path_ac_cc_23 = get_data("d191122_dc_tf/charge/ac_cc_23deg_charge.h5")
     path_po_23 = get_data("d191122_dc_tf/charge/pedonly_23deg_charge.h5")
 
     true_dc_ext_23, res_dc_ext_23, average_dc_ext_23, std_dc_ext_23 = calculate_charge_resolution(path_dc_ext_23)
     true_ac_23, res_ac_23, average_ac_23, std_ac_23 = calculate_charge_resolution(path_ac_23)
+    true_ac_cc_23, res_ac_cc_23, average_ac_cc_23, std_ac_cc_23 = calculate_charge_resolution(path_ac_cc_23)
     true_po_23, res_po_23, average_po_23, std_po_23 = calculate_charge_resolution(path_po_23)
 
     channel = 8
@@ -178,6 +180,9 @@ def main():
     true_ac = true_ac_23.mean(0)
     mean_res_ac = res_ac_23.mean(0)
     std_res_ac = res_ac_23.std(0)
+    true_ac_cc = true_ac_cc_23.mean(0)
+    mean_res_ac_cc = res_ac_cc_23.mean(0)
+    std_res_ac_cc = res_ac_cc_23.std(0)
     true_po = true_po_23.mean(0)
     mean_res_po = res_po_23.mean(0)
     std_res_po = res_po_23.std(0)
@@ -186,6 +191,8 @@ def main():
     rms_dc = std_dc_ext_23.mean(0) / true_dc
     bias_ac = average_ac_23.mean(0) / true_ac
     rms_ac = std_ac_23.mean(0) / true_ac
+    bias_ac_cc = average_ac_cc_23.mean(0) / true_ac_cc
+    rms_ac_cc = std_ac_cc_23.mean(0) / true_ac_cc
     bias_po = average_po_23.mean(0) / true_po
     rms_po = std_po_23.mean(0) / true_po
 
@@ -193,6 +200,7 @@ def main():
     p_cr = ChargeResolutionPlot()
     p_cr.plot(true_dc, mean_res_dc, yerr=std_res_dc, label="DC")
     p_cr.plot(true_ac, mean_res_ac, yerr=std_res_ac, label="AC")
+    p_cr.plot(true_ac_cc, mean_res_ac_cc, yerr=std_res_ac_cc, label="AC CC")
     p_cr.plot(true_po, mean_res_po, yerr=std_res_po, label="Pedestal Only")
     true = np.geomspace(0.1, 1000, 100)
     p_cr.plot_poisson(true)
@@ -204,6 +212,7 @@ def main():
     p_bias = ChargePlot()
     p_bias.plot(true_dc, bias_dc, yerr=rms_dc, label="DC")
     p_bias.plot(true_ac, bias_ac, yerr=rms_ac, label="AC")
+    p_bias.plot(true_ac_cc, bias_ac_cc, yerr=rms_ac_cc, label="AC CC")
     p_bias.plot(true_po, bias_po, yerr=rms_po, label="Pedestal Only")
     p_bias.add_legend('best')
     p_bias.ax.set_xscale('log')

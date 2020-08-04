@@ -1,6 +1,5 @@
 from sstcam_sandbox import get_data, get_plot
-from TargetCalibSB.tf import TFDC
-from TargetCalibSB.vped import VpedCalibrator
+from sstcam_sandbox.d191122_dc_tf import get_dc_tf, get_ac_tf, get_ac_cc_tf
 from CHECLabPy.plotting.setup import Plotter
 import numpy as np
 from numba import guvectorize, float64
@@ -9,20 +8,6 @@ from numba import guvectorize, float64
 class TFPlot(Plotter):
     def plot(self, x, y, label=None):
         self.ax.plot(x, y, label=label)
-
-
-def get_dc_tf(dc_tf_path, vped_calibration_path):
-    tf = TFDC.from_file(dc_tf_path)
-    vped_calibrator = VpedCalibrator()
-    vped_calibrator.load(vped_calibration_path)
-    tf.finish_generation(vped_calibrator)
-    return tf
-
-
-def get_ac_tf(ac_tf_path):
-    tf = TFDC.from_tcal(ac_tf_path)
-    tf.finish_generation()
-    return tf
 
 
 def plot_single_comparison(tfs, channel, cell, output_path):
@@ -95,16 +80,19 @@ def plot_std(tf, channel, cell, output_path):
 
 def main():
     path_ac_23 = get_data("d191122_dc_tf/ac_tf/TFInput_File_SN0038_temp_23_180317.tcal")
+    path_ac_cc_23 = get_data("d191122_dc_tf/ac_tf/ac_23deg_tf.h5")
     path_dc_ext23 = get_data("d191122_dc_tf/dc_tf/dc_externalsync_23deg_tf.tcal")
     path_vped_23 = get_data("d191122_dc_tf/vped/VPED_23deg.h5")
 
     tf_ac_23 = get_ac_tf(path_ac_23)
+    tf_ac_cc_23 = get_ac_cc_tf(path_ac_cc_23)
     tf_dc_ext23 = get_dc_tf(path_dc_ext23, path_vped_23)
 
     # COMPARISON, SINGLE CHANNEL & CELL
     tfs = dict(
         DC=tf_dc_ext23,
         AC=tf_ac_23,
+        AC_CC=tf_ac_cc_23,
     )
     channel = 0
     cell = 0
